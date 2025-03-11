@@ -1,0 +1,38 @@
+{
+  "name": "express-backend-template",
+  "version": "1.0.0",
+  "description": "The **Doctor Finder Website** is a comprehensive platform where patients can search for doctors based on specialization, location, experience, and ratings. Patients can easily book appointments, view doctor profiles, and leave reviews. Doctors can manage their profiles and availability, while admins have control over users, doctor approvals, and appointments.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "chalk": "^5.4.1",
+    "cloudinary": "^1.41.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "form-data": "^4.0.2",
+    "helmet": "^8.0.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "multer": "^1.4.5-lts.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nocache": "^4.0.0",
+    "nodemailer": "^6.10.0",
+    "xss-clean": "^0.1.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
