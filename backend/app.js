@@ -65,6 +65,7 @@ app.use("/api/v1", router); // Notice the change here
 // app.get("*", function (req, res) {
 //   res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
 // });
+
 // Error handling for unexpected routes
 app.use((req, res, next) => {
     res.status(404).json({
