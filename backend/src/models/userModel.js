@@ -34,7 +34,10 @@ const dataSchema = new mongoose.Schema(
         type: String 
     },
   },
-  { timestamps: true }
+  {
+      timestamps: true,
+      versionKey: false,
+  }
 );
 
 const User = mongoose.model("user", dataSchema);

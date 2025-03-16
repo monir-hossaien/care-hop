@@ -1,11 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-export const MONGODB_CONNECTION= process.env.MONGODB_URL
-
 //ACCESS TOKEN
 export const JWT_SECRET_ACCESS_TOKEN= process.env.SECRET_KEY_ACCESS_TOKEN
 export const JWT_EXPIRATION_TIME_ACCESS_TOKEN = process.env.JWT_EXPIRATION_TIME_ACCESS_TOKEN
+export const COOKIE_EXPIRE_TIME = 24 * 60 * 60 * 1000
 
 //REFRESH TOKEN
 export const JWT_SECRET_REFRESH_TOKEN = process.env.SECRET_KEY_REFRESH_TOKEN

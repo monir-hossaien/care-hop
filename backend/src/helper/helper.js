@@ -10,17 +10,13 @@ cloudinary.config({
     api_secret: api_secret
 });
 
-// Cloudinary Storage Configuration
-const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: async (req, file) => {
-        const folderName = req.headers.folder || "mern-ecommerce/images";
-        return {
-            folder: folderName, // Cloudinary folder name
-            format: file.mimetype.split('/')[1], // Extract file format dynamically
-        };
+
+const storage = multer.diskStorage({
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + file.originalname;
+        cb(null, uniqueSuffix)
     }
-});
+})
 
 // File Filter Function (Only Allows Specific Image Formats)
 const fileFilter = (req, file, cb) => {
@@ -36,6 +32,15 @@ const fileFilter = (req, file, cb) => {
 // Multer Middleware (With Storage & File Filter)
 export const upload = multer({ storage, fileFilter });
 
+//file upload to cloudinary
+export const fileUpload = async (imageURL, folder)=>{
+    try {
+        let res = await cloudinary.uploader.upload(imageURL, {folder: folder});
+        return res.secure_url;
+    }catch(err){
+        throw new Error("Image upload failed!");
+    }
+}
 
 // Function to Delete Image from Cloudinary
 export const deleteImage = async (publicId) => {
@@ -56,7 +61,9 @@ export const deleteImage = async (publicId) => {
 };
 
 //extract public ID from image url
-export const getPublicID = (imageURL)=>{
-    const publicID = imageURL.split("/").pop().split(".")[0];
-    return publicID;
-}
+export const getPublicID = (imageURL) => {
+    return imageURL.split("/").slice(-3).join("/").split(".")[0];
+};
+
+
+

@@ -2,20 +2,49 @@ import mongoose from "mongoose";
 
 const dataSchema = new mongoose.Schema(
     {
-        name: { type: String, required: true },
-        address: {
-            area: { type: String, required: true },
-            district: { type: String, required: true },
-            division: { type: String, required: true },
+        name: {
+            type: String,
+            required: true,
+            unique: true
         },
-        contact: {
-            phone: { type: String, required: true },
-            email: { type: String },
-            website: { type: String },
+        image: {
+            type: String
         },
-        rating: { type: Number, min: 1, max: 5, default: 5 }, // Rating range 1-5
-    },
-    { timestamps: true }
+        division: {
+            type: String,
+            required: true
+        },
+        district: {
+            type: String,
+            required: true
+        },
+        post: {
+            type: String,
+            required: true
+        },
+        area: {
+            type: String,
+        },
+        phone: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String
+        },
+        website: {
+            type: String
+        },
+        rating: {
+            type: Number,
+            min: 1,
+            max: 5,
+            default: 5
+        }
+    },{
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
 const Hospital = mongoose.model("Hospital", dataSchema);

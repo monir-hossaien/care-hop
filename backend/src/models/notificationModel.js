@@ -22,8 +22,10 @@ const dataSchema = new mongoose.Schema(
             ref: "User",
             required: true
         }
-    },
-    { timestamps: true }
+    },{
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
 const Notification = mongoose.model("notification", dataSchema);

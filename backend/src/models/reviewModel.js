@@ -16,8 +16,10 @@ const dataSchema = new mongoose.Schema(
         ref: 'doctor',
         required: true
     }
-  },
-  { timestamps: true }
+  },{
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
 const Review = mongoose.model("review", dataSchema);

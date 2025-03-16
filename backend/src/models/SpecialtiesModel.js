@@ -5,7 +5,8 @@ const dataSchema = new mongoose.Schema(
   {
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
     description: {
         type: String,
@@ -15,9 +16,12 @@ const dataSchema = new mongoose.Schema(
         type: String
     }
   },
-  { timestamps: true }
+    {
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
-const Specialty = mongoose.model("specialties", dataSchema);
+const Specialties = mongoose.model("specialties", dataSchema);
 
-export default Specialty;
+export default Specialties;

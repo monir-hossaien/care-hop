@@ -22,8 +22,10 @@ const dataSchema = new mongoose.Schema(
             district: String,
             division: String
         },
-    },
-    { timestamps: true }
+    },{
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
 const Doctor = mongoose.model("Doctor", dataSchema);

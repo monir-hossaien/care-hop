@@ -23,7 +23,10 @@ const dataSchema = new mongoose.Schema(
             trim: true,
         }
 
-    },{timestamps:true})
+    },{
+        timestamps: true,
+        versionKey: false,
+    })
 
 const Contact = mongoose.model("contact", dataSchema);
 

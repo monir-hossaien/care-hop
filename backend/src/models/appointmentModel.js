@@ -25,8 +25,10 @@ const dataSchema = new mongoose.Schema(
             enum: ["pending", "confirmed", "canceled"],
             default: "pending"
         },
-    },
-    { timestamps: true }
+    },{
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
 const Appointment = mongoose.model("appointment", dataSchema);
