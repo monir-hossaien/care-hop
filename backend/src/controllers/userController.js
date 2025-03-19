@@ -1,5 +1,5 @@
 
-import {loginService, registerService} from "../services/userService.js";
+import {changePasswordService, loginService, registerService} from "../services/userService.js";
 import {COOKIE_EXPIRE_TIME} from "../config/config.js";
 
 // user register
@@ -30,4 +30,10 @@ export const logout = async(req, res)=>{
     } catch (error) {
         res.status(500).json({status: false, message: "Something went wrong"})
     }
+}
+
+// change password
+export const changePassword = async (req, res) => {
+    const result = await changePasswordService(req)
+    return res.status(result.statusCode).json(result)
 }

@@ -1,8 +1,7 @@
 import nodemailer from "nodemailer";
-import {EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER, EMAIL_FROM} from "../config/config";
+import {EMAIL_HOST, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USER, EMAIL_FROM} from "../config/config.js";
 
-const SendEmail = async(email, subject, emailBody)=>{
-
+const SendEmail = async(email, subject, text)=>{
 
     let transporter = nodemailer.createTransport({
         host: EMAIL_HOST,
@@ -21,7 +20,7 @@ const SendEmail = async(email, subject, emailBody)=>{
         from: EMAIL_FROM,
         to: email,
         subject,
-        html: emailBody
+        text: text
     }
 
 

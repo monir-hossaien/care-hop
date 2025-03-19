@@ -3,10 +3,6 @@ import { mongoose } from 'mongoose';
 
 const dataSchema = new mongoose.Schema(
   {
-    name: {
-        type: String,
-        required: true
-    },
     email: {
         type: String, 
         required: true, 
@@ -18,21 +14,14 @@ const dataSchema = new mongoose.Schema(
     },
     role: {
         type: String,
-        enum: ["doctor", "patient", "admin"],
-        required: true
+        enum: ["doctor", "user", "admin"],
+        default: "user"
     },
-    phone: {
-        type: String, 
-        required: true 
-    },
-    gender: { 
-        type: String, 
-        enum: ["male", "female", "other"], 
-        required: true 
-    },
-    profileImage: {
-        type: String 
-    },
+      status: {
+        type: String,
+          enum: ["Active", "Suspended"],
+          default: "Active"
+      }
   },
   {
       timestamps: true,

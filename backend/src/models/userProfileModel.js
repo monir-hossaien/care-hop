@@ -1,33 +1,37 @@
 
-import mongoose  from 'mongoose';
+import { mongoose } from 'mongoose';
 
 const dataSchema = new mongoose.Schema(
     {
-        message: {
+        name: {
             type: String,
             required: true
         },
-        type: {
+        phone: {
             type: String,
-            enum: ["email", "sms"],
             required: true
         },
-        status: {
+        gender: {
             type: String,
-            enum: ["sent", "pending"],
-            default: "pending"
+            enum: ["Male", "Female", "Other"],
+            required: true
         },
-        userId: {
+        profileImage: {
+            type: String,
+            default: "",
+        },
+        userID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
         }
-    },{
+    },
+    {
         timestamps: true,
         versionKey: false,
     }
 );
 
-const Notification = mongoose.model("notification", dataSchema);
+const UserProfile = mongoose.model("userProfile", dataSchema);
 
-export default Notification;
+export default UserProfile;

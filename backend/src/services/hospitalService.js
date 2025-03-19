@@ -53,9 +53,18 @@ export const assignHospitalService = async (req) => {
 // hospital list
 export const hospitalListService = async (req)=>{
     try {
-        const res = await Hospital.find();
+        // Extract page and limit from query params, with defaults
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
 
-        if(!res){
+        // Get total count for pagination metadata
+        const totalItems = await Hospital.countDocuments();
+
+        // Fetch paginated data
+        const result = await Hospital.find().skip(skip).limit(limit);
+
+        if(!result){
             return{
                 statusCode: 404,
                 status: false,
@@ -66,7 +75,52 @@ export const hospitalListService = async (req)=>{
             statusCode: 200,
             status: true,
             message: "Request success",
-            data: res
+            data: result,
+            pagination: {
+                totalItems,
+                totalPages: Math.ceil(totalItems / limit),
+                currentPage: page
+            }
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+// search hospital by keyword
+export const searchHospitalService = async (req)=>{
+    try {
+        const { division, district, post, area, name } = req.query;
+
+        // Create a dynamic search object
+        let searchQuery = {};
+        if (name) searchQuery.name = new RegExp(name, "i");
+        if (division) searchQuery.division = new RegExp(division, "i");
+        if (district) searchQuery.district = new RegExp(district, "i");
+        if (post) searchQuery.post = new RegExp(post, "i");
+        if (area) searchQuery.area = new RegExp(area, "i");
+
+
+        const result = await Hospital.find(searchQuery).select("-createdAt -updatedAt");
+
+        if(!result){
+            return{
+                statusCode: 404,
+                status: false,
+                message: "Request failed"
+            }
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result
         }
     }
     catch (e) {
@@ -124,7 +178,6 @@ export const updateHospitalInfoService = async (req)=>{
 // delete hospital info
 export const deleteHospitalInfoService = async (req)=>{
     try {
-        const reqBody = req.body;
         const hospitalID = new objID(req.params.id)
         const hospital = await Hospital.findOne({_id: hospitalID});
         if(!hospital){

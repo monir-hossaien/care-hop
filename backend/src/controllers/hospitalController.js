@@ -2,7 +2,7 @@
 import {
     assignHospitalService,
     deleteHospitalInfoService,
-    hospitalListService,
+    hospitalListService, searchHospitalService,
     updateHospitalInfoService
 } from "../services/hospitalService.js";
 
@@ -16,6 +16,12 @@ export const assignHospital = async (req, res) => {
 // hospital list
 export const hospitalList = async (req, res) => {
     const result = await hospitalListService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+// search hospital by keyword
+export const searchHospital = async (req, res) => {
+    const result = await searchHospitalService(req)
     return res.status(result.statusCode).json(result)
 }
 

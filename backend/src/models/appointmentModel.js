@@ -2,18 +2,18 @@ import mongoose from "mongoose";
 
 const dataSchema = new mongoose.Schema(
     {
-        patientId: {
+        patientID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true
         },
-        doctorId: {
+        doctorID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Doctor",
             required: true
         },
-        date: {
-            type: Date,
+        day: {
+            type: String,
             required: true
         },
         timeSlot: {
@@ -22,8 +22,8 @@ const dataSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: ["pending", "confirmed", "canceled"],
-            default: "pending"
+            enum: ["Pending", "Confirmed", "Canceled"],
+            default: "Pending"
         },
     },{
         timestamps: true,

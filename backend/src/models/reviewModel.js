@@ -13,7 +13,6 @@ const dataSchema = new mongoose.Schema(
     },
     doctorID :{
         type: mongoose.Types.ObjectId,
-        ref: 'doctor',
         required: true
     }
   },{
