@@ -1,6 +1,5 @@
 import { cloud_name, api_key, api_secret } from "../config/config.js";
 import { v2 as cloudinary } from 'cloudinary';
-import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
 
 // Configure Cloudinary

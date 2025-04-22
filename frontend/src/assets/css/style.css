@@ -1,0 +1,40 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+@import "tailwindcss";
+*{
+    box-sizing: border-box;
+    font-family: 'Mulish', sans-serif;
+}
+/*ul, li, p, h1, h2, h3, h4, h5, h6 {*/
+/*    padding: 0;*/
+/*    margin: 0;*/
+/*}*/
+
+body{
+    overflow-x: hidden;
+
+}
+
+
+.container{
+    max-width: 1220px;
+    margin: 0 auto;
+}
+
+.my-gradient{
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 0%, rgba(0,212,255,1) 100%);
+}
+/** Text Gradient Example */
+.text-gradient {
+    color: #164294;
+    background-image: linear-gradient(45deg, #164294 10%, #058EE3 23%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.input-shadow{
+    box-shadow: 0px 1px 11px 1px rgba(0,176,146,1)
+}
