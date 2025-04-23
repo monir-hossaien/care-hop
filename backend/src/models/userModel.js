@@ -1,31 +1,34 @@
-
-import { mongoose } from 'mongoose';
+import { mongoose } from "mongoose";
 
 const dataSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
     email: {
-        type: String, 
-        required: true, 
-        unique: true 
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String, 
-        required: true 
+      type: String,
+      required: true,
     },
     role: {
-        type: String,
-        enum: ["doctor", "user", "admin"],
-        default: "user"
+      type: String,
+      enum: ["doctor", "user", "admin"],
+      default: "user",
     },
-      status: {
-        type: String,
-          enum: ["Active", "Suspended"],
-          default: "Active"
-      }
+    status: {
+      type: String,
+      enum: ["Active", "Suspended"],
+      default: "Active",
+    },
   },
   {
-      timestamps: true,
-      versionKey: false,
+    timestamps: true,
+    versionKey: false,
   }
 );
 

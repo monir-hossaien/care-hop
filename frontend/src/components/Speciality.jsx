@@ -7,7 +7,7 @@ const Speciality = () => {
     return (
         <>
             {
-                location.pathname === "/doctor" ? (
+                location.pathname === "/doctors" ? (
                     <div className="text-center py-32 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat">
                         <h1 className="text-4xl text-[#357B7A] font-medium opacity-100">Doctor Specialties</h1>
                     </div>
@@ -20,7 +20,7 @@ const Speciality = () => {
             }
             {/* Grid Section */}
             <div className="container">
-                <div className="grid grid-cols-12 gap-6 py-14">
+                <div className="grid grid-cols-12 gap-6 py-14 px-4 md:px-0">
                     {
                         Array.from({ length: 8 }).map((_, i) => (
                             <div key={i} className="col-span-12 md:col-span-3">
@@ -35,6 +35,14 @@ const Speciality = () => {
                         ))
                     }
                 </div>
+
+                {
+                    location.pathname === "/" && (
+                        <div className="text-center pb-18">
+                            <button className="px-8 py-3 bg-[#00B092] text-white rounded-md cursor-pointer">View All</button>
+                        </div>
+                    )
+                }
             </div>
         </>
     );

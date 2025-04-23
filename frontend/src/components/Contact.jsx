@@ -12,22 +12,22 @@ const Contact = () => {
                 <div className="col-span-12 md:col-span-6 shadow-sm">
                 <div className="grid grid-cols-12 gap-5 px-10 py-14 space-y-4">
                         <div className="col-span-6">
-                            <input
+                            <input type="text"
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
                                 placeholder="Name"/>
                         </div>
                         <div className="col-span-6">
-                            <input
+                            <input type="email"
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
                                 placeholder="Email"/>
                         </div>
                         <div className="col-span-6">
-                            <input
+                            <input type="text"
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
                                 placeholder="Phone"/>
                         </div>
                         <div className="col-span-6">
-                            <input
+                            <input type="text"
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
                                 placeholder="Subject"/>
                         </div>

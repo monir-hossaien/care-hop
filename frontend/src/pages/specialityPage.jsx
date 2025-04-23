@@ -1,13 +1,13 @@
 import React from 'react';
 import MasterLayout from "../layout/MasterLayout.jsx";
-import Post from "../components/Post.jsx";
+import Speciality from "../components/Speciality.jsx";
 
-const PostPage = () => {
+const SpecialityPage = () => {
     return (
         <MasterLayout>
-            <Post/>
+            <Speciality/>
         </MasterLayout>
     );
 };
 
-export default PostPage;
+export default SpecialityPage;

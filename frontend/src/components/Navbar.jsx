@@ -11,11 +11,11 @@ const Navbar = () => {
     return (
         <div className="shadow-sm sticky top-0 bg-white z-50">
             <nav className="container">
-                <div className="flex justify-between items-center px-4 md:px-0">
+                <div className="flex justify-between items-center px-4 md:px-0 py-3">
                     {/* Logo */}
-                    <div>
+                    <div className="">
                         <Link to="/">
-                            <img className="w-28 h-22" src={"/images/logo.png"} alt="Logo" />
+                            <img className="w-22 h-15" src={"/images/logo.png"} alt="Logo" />
                         </Link>
                     </div>
 
@@ -44,12 +44,12 @@ const Navbar = () => {
                             open ? "translate-x-0" : "-translate-x-full"
                         }`}
                     >
-                        <ul className="flex flex-col md:flex-row gap-2 md:gap-6 md:p-0">
+                        <ul className="flex flex-col md:flex-row gap-2 md:gap-6 md:p-0 py-12">
                             {[
                                 { path: "/", label: "Home" },
                                 { path: "/about", label: "About Us" },
-                                { path: "/doctors", label: "Doctors" },
-                                { path: "/posts", label: "Posts" },
+                                { path: "/specialities", label: "Doctors" },
+                                { path: "/blogs", label: "Blogs" },
                                 { path: "/search", label: "Search" },
                                 { path: "/contact", label: "Contact" },
                             ].map((item) => (

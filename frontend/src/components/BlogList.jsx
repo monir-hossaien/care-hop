@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, useLocation} from "react-router-dom";
 
-const Post = () => {
+const BlogList = () => {
     const location = useLocation();
     return (
         <>
@@ -12,16 +12,16 @@ const Post = () => {
                     </div>
                 ): (
                     <div className="text-center mt-10">
-                        <h1 className="text-4xl text-[#164193] font-bold">Recent Posts</h1>
+                        <h1 className="text-4xl text-[#164193] font-bold">Recent Blogs</h1>
                     </div>
                 )
             }
             <div className="container">
-                <div className="grid grid-cols-12 gap-6 py-14">
+                <div className="grid grid-cols-12 gap-6 py-14 px-4 md:px-0">
                     {
                         Array.from({length: 8}).map((_, i) => (
-                            <div key={i} className="col-span-12 md:col-span-4">
-                                <div className="col-span-12 md:col-span-4 text-gray-500">
+                            <div key={i} className="col-span-12 md:col-span-4 text-gray-500">
+                                <div>
                                     <Link to={"/"}><img src="/images/post_image1.jpeg" alt="image"/></Link>
                                     <div className="space-y-4 py-7">
                                         <p>সেপ্টেম্বর ১১, ২০২৪</p>
@@ -39,4 +39,4 @@ const Post = () => {
     );
 };
 
-export default Post;
+export default BlogList;

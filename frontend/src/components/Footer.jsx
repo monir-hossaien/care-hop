@@ -24,10 +24,10 @@ const Footer = () => {
                     <div className="col-span-12 md:col-span-2 space-y-7">
                         <h2 className="text-[#1CA288] text-xl font-bold border-b-2 inline-block pb-2">Quick Links</h2>
                         <div className="flex flex-col gap-1 text-gray-600">
-                            <Link to="/">About us</Link>
-                            <Link to="/">Doctors</Link>
-                            <Link to="/">Posts</Link>
-                            <Link to="/">Contact</Link>
+                            <Link to="/about">About us</Link>
+                            <Link to="/specialities">Doctors</Link>
+                            <Link to="/blogs">Blogs</Link>
+                            <Link to="/contact">Contact</Link>
                         </div>
                     </div>
 
