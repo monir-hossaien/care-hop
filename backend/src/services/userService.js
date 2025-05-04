@@ -25,12 +25,6 @@ export const registerService = async (req)=>{
             email: email,
             password: hashPassword
         }
-        // file upload to cloudinary
-        // if(req.file){
-        //     let result = await fileUpload(req.file?.path ||"", "Doctor_finder/user");
-        //     reqBody.profileImage = result;
-        // }
-        // new user create
 
         const user = await User.create(newUser);
         if(!user){

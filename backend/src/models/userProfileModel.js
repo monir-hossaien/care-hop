@@ -12,7 +12,7 @@ const dataSchema = new mongoose.Schema(
             enum: ["Male", "Female", "Other"],
             required: true
         },
-        profileImage: {
+        image: {
             type: String,
             default: "",
         },

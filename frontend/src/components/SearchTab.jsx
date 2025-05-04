@@ -1,10 +1,45 @@
-import React, { useState } from "react";
-import { FaUserMd, FaHospital, FaPlus } from "react-icons/fa";
+import React, {useEffect, useState} from "react";
+
+import { FaUserMd, FaHospital} from "react-icons/fa";
 import { CiSquarePlus, CiLocationOn  } from "react-icons/ci";
+import {specialitiesStore} from "../store/specialitiesStore.js";
+import {useNavigate} from "react-router-dom";
+import {commonStore} from "../store/commmonStore.js";
 
-
-const Search = () => {
+const SearchTab = () => {
     const [activeTab, setActiveTab] = useState("doctor");
+    const {divisionList, fetchDivisionList, districtList, fetchDistrictList, postList, fetchPostList} = commonStore();
+    const {specialities, fetchSpecialityList} = specialitiesStore();
+    const {searchParams, inputOnChange} = commonStore()
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        (async ()=>{
+            await fetchDivisionList();
+            await fetchSpecialityList();
+        })()
+    },[])
+
+    const handleDistrictChange = async (e) => {
+        const division = e.target.value;
+        await fetchDistrictList(division);
+        inputOnChange("division", division);
+    }
+
+    const handlePostChange = async (e) => {
+        const district = e.target.value;
+        await fetchPostList(district);
+        inputOnChange("district", district);
+    }
+
+    const handleSearchDoctor = async () => {
+        navigate(`/search-doctor`)
+    }
+
+    const handleSearchHospital = async () => {
+        navigate(`/search-hospital`)
+    }
 
     return (
         <div className="bg-gray-100 md:bg-[#EDF8FA] px-3 py-20 md:py-0">
@@ -49,8 +84,15 @@ const Search = () => {
                                 </div>
                                 <div className="w-full">
                                     <label className="font-bold text-lg block">Division</label>
-                                    <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                        <option>Select Division</option>
+                                    <select
+                                        className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded bg-transparent"
+                                        value={searchParams.division}
+                                        onChange={handleDistrictChange}
+                                    >
+                                        <option value="">Select Division</option>
+                                        {divisionList?.map(({_id, name}) => (
+                                            <option value={name} key={_id}>{name}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -61,8 +103,15 @@ const Search = () => {
                                 </div>
                                 <div className="w-full">
                                     <label className="font-bold text-lg block">District</label>
-                                    <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                        <option>Select District</option>
+                                    <select
+                                        className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded  bg-transparent"
+                                        value={searchParams.district}
+                                        onChange={handlePostChange}
+                                    >
+                                        <option value="">Select District</option>
+                                        {districtList?.map(({_id, name}) => (
+                                            <option value={name} key={_id}>{name}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -73,8 +122,15 @@ const Search = () => {
                                 </div>
                                 <div className="w-full">
                                     <label className="font-bold text-lg block">Post</label>
-                                    <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                        <option>Select Post</option>
+                                    <select
+                                        className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded  bg-transparent"
+                                        value={searchParams.post}
+                                        onChange={(e) => inputOnChange("post", e.target.value)}
+                                    >
+                                        <option value="">Select Post</option>
+                                        {postList?.map(({_id, name}) => (
+                                            <option value={name} key={_id}>{name}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -85,8 +141,15 @@ const Search = () => {
                                 </div>
                                 <div className="w-full">
                                     <label className="font-bold text-lg block">Speciality</label>
-                                    <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                        <option>Select Speciality</option>
+                                    <select
+                                        className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded  bg-transparent"
+                                        value={searchParams.specialityID}
+                                        onChange={(e) => inputOnChange("specialityID", e.target.value)}
+                                    >
+                                        <option value="">Select Speciality</option>
+                                        {specialities?.data?.map(({_id, name}) => (
+                                            <option value={_id} key={_id}>{name}</option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -98,6 +161,9 @@ const Search = () => {
                                 <div className="w-full">
                                     <label className="font-bold text-lg block">Doctor</label>
                                     <input
+                                        value={searchParams.name}
+                                        onChange={(e) => {
+                                            inputOnChange("name", e.target.value)}}
                                         className="w-full border-b-1 border-b-gray-300 pb-1 text-sm py-1 focus:outline-0 focus:shadow-sm"
                                         placeholder="Doctor Name"/>
                                 </div>
@@ -105,7 +171,7 @@ const Search = () => {
 
                             <div className="col-span-12 md:col-span-4">
                                 <div className="w-full">
-                                    <button
+                                    <button onClick={handleSearchDoctor}
                                         className="w-full bg-[#00B092] py-3 text-white font-medium rounded cursor-pointer">Search
                                     </button>
                                 </div>
@@ -120,8 +186,15 @@ const Search = () => {
                             </div>
                             <div className="w-full">
                                 <label className="font-bold text-lg block">Division</label>
-                                <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                    <option>Select Division</option>
+                                <select
+                                    className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded  bg-transparent"
+                                    value={searchParams.division}
+                                    onChange={handleDistrictChange}
+                                >
+                                    <option value="">Select Division</option>
+                                    {divisionList?.map(({_id, name}) => (
+                                        <option value={name} key={_id}>{name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -132,8 +205,15 @@ const Search = () => {
                             </div>
                             <div className="w-full">
                                 <label className="font-bold text-lg block">District</label>
-                                <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                    <option>Select District</option>
+                                <select
+                                    className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded  bg-transparent"
+                                    value={searchParams.district}
+                                    onChange={handlePostChange}
+                                >
+                                    <option value="">Select District</option>
+                                    {districtList?.map(({_id, name}) => (
+                                        <option value={name} key={_id}>{name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -144,8 +224,15 @@ const Search = () => {
                             </div>
                             <div className="w-full">
                                 <label className="font-bold text-lg block">Post</label>
-                                <select className="w-full border-b-1 border-b-gray-300 pb-1">
-                                    <option>Select Post</option>
+                                <select
+                                    className="w-full text-sm text-gray-700 border border-gray-200 px-3 py-2 rounded  bg-transparent"
+                                    value={searchParams.post}
+                                    onChange={(e) => inputOnChange("post", e.target.value)}
+                                >
+                                    <option value="">Select Post</option>
+                                    {postList?.map(({_id, name}) => (
+                                        <option value={name} key={_id}>{name}</option>
+                                    ))}
                                 </select>
                             </div>
                         </div>
@@ -157,15 +244,19 @@ const Search = () => {
                             <div className="w-full">
                                 <label className="font-bold text-lg block">Hospital</label>
                                 <input
-                                    className="w-full border-b-1 border-b-gray-300 pb-1 text-sm py-1 focus:outline-0 focus:shadow-sm"
+                                    value={searchParams.name}
+                                    onChange={(e) => {
+                                        inputOnChange("name", e.target.value)
+                                    }}
+                                    className="w-full border border-gray-200 px-3 text-sm  py-1 rounded  focus:outline-0 focus:shadow-sm"
                                     placeholder="Hospital Name"/>
                             </div>
                         </div>
 
                         <div className="col-span-12 md:col-span-2">
                             <div className="w-full">
-                                <button
-                                    className="w-full bg-[#00B092] py-3 text-white font-medium rounded cursor-pointer">Search
+                            <button onClick={handleSearchHospital}
+                                    className="w-full bg-[#00B092] py-3  text-white font-medium rounded cursor-pointer">Search
                                 </button>
                             </div>
                         </div>
@@ -174,11 +265,9 @@ const Search = () => {
                     </div>
                 }
 
-                {/*hospital*/}
-
             </div>
         </div>
     );
 };
 
-export default Search;
+export default SearchTab;

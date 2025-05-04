@@ -1,5 +1,6 @@
 import {verifyToken} from "../utility/JWT.js";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 export const authenticateUser = async (req, res, next) => {
 
@@ -25,26 +26,26 @@ export const authenticateUser = async (req, res, next) => {
     }
 }
 
-export const isRole = (requiredRole) => {
+export const isRole = (allowedRoles) => {
     return async (req, res, next) => {
+        const id = req.headers.id
+        const userID = new mongoose.Types.ObjectId(id);
         try {
-            const user = await User.findOne({ email: req.headers.email });
-
+            const user = await User.findOne({ _id: userID });
             if (!user) {
                 return res.status(404).json({
                     status: false,
                     message: "User not found",
                 });
             }
-
-            if (user.role !== requiredRole) {
+            if (!allowedRoles.includes(user.role)) {
                 return res.status(403).json({
                     status: false,
-                    message: `Access denied! please contact with administrator`,
-                });
+                    message: "Access denied! Please contact the administrator.",
+                })
             }
 
-            next(); // Proceed if role matches
+            next(); // Proceed if role is allowed
         } catch (err) {
             return res.status(500).json({
                 status: false,
@@ -54,3 +55,4 @@ export const isRole = (requiredRole) => {
         }
     };
 };
+

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Search from './Search.jsx';
+import SearchTab from './SearchTab.jsx';
 
 const sliders = [
     {
@@ -69,7 +69,7 @@ const Hero = () => {
                     </div>
                 </div>
             </div>
-            <Search />
+            <SearchTab />
         </div>
     );
 };

@@ -39,7 +39,7 @@ const dataSchema = new mongoose.Schema(
         area: {
             type: String,
         },
-        profileImage: {
+        image: {
             type: String,
             default: "https://www.ibnsinatrust.com/upload/default.jpg"
         },

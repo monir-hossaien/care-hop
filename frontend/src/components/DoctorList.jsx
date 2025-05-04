@@ -1,59 +1,76 @@
-import React from 'react';
-import {CiSearch} from "react-icons/ci";
-import {RxDividerVertical} from "react-icons/rx";
+import React, {useEffect, useState} from 'react';
+import { doctorStore } from "../store/doctorStore.js";
+import AppointmentModal from "./AppointmentModal.jsx";
+
 
 const DoctorList = () => {
+    const { doctorList} = doctorStore();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
+
+    const handleModalOpen = (doctor) => {
+        setIsModalOpen(true);
+        setSelectedDoctor(doctor);
+    };
+
     return (
-        <div className="h-screen bg-slate-100">
-            <div className="container">
-                <div className="grid grid-cols-12 px-4 py-10 md:py-18 md:px-0">
-                    <div className="col-span-12 md:col-span-6">
-                        <h2 className="text-3xl font-bold text-[#00B092]">Cardiologist</h2>
-                    </div>
-
-                    <div className="col-span-12 md:col-span-6">
-                        <div className="grid grid-cols-12 gap-3">
-                            <div className="col-span-12 md:col-span-8">
-                                <div className="border border-gray-300 focus:shadow-sm rounded w-full flex items-center p-2">
-                                    <CiSearch className="text-xl text-gray-700" />
-                                    <RxDividerVertical className="text-3xl text-gray-300" />
-                                    <input type="text" className="w-full text-sm text-gray-600 outline-none bg-transparent" placeholder="Doctor Name"/>
+        <>
+            <div className="grid grid-cols-12 gap-5 px-4 md:px-0 py-5">
+                {doctorList === null ? (
+                    <p className="col-span-12 text-center text-gray-600 text-sm">Loading....</p>
+                ) : doctorList.length === 0 ? (<p className="col-span-12 text-center text-gray-600 text-sm">No Doctor found!</p>)  : (
+                    doctorList.map((doctor) => {
+                        const { _id, image, name, degrees, specialities} = doctor;
+                        return (
+                            <div className="col-span-12 md:col-span-6" key={_id}>
+                                <div className="bg-white border border-gray-300 shadow-sm rounded w-full flex flex-col sm:flex-row items-center sm:items-start px-5 py-8 gap-6 group">
+                                    <div className="w-44 h-44 flex justify-center items-center rounded-full bg-[#EFEFEF] shrink-0">
+                                        <img
+                                            src={image}
+                                            className="w-44 h-44 rounded-full object-cover"
+                                            alt="image"
+                                        />
+                                    </div>
+                                    <div className="space-y-2 md:space-y-3 text-sm w-full">
+                                        <div>
+                                            <h2 className="text-xl font-bold text-[#164193]">{name}</h2>
+                                            <p className="text-gray-500">{degrees}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-gray-400">Specialities:</p>
+                                            <p className="text-gray-500">{specialities.name}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-gray-400">Working in:</p>
+                                            <p className="text-gray-500">{doctor?.hospitalDetails?.name}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-gray-400">Working Area:</p>
+                                            <p className="text-gray-500">{doctor?.hospitalDetails?.area}</p>
+                                        </div>
+                                        <div className="hidden group-hover:block">
+                                            <button
+                                                onClick={() => handleModalOpen(doctor)}
+                                                className="cursor-pointer px-8 py-2 bg-sky-50 outline-0 rounded-lg text-gray-500 font-bold hover:bg-sky-100 duration-300"
+                                            >
+                                                Book Appointment
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="col-span-12 md:col-span-4">
-                                <button className="px-8 py-3 bg-[#00B092] w-full text-white rounded-md cursor-pointer">Search</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-span-12 md:col-span-6 py-18">
-                        <div className="border border-gray-300 focus:shadow-sm rounded w-full flex items-center p-2">
-                            <div className="w-44 h-44 flex justify-center items-center rounded-full bg-slate-200">
-                                <img src="/images/doctor_1.png" className="w-44 h-44 rounded-full" alt="image"/>
-                            </div>
-                            <div>
-                                <h2>DR MOSADDEQUL ALOM</h2>
-                                <div className="space-y-3">
-                                    <p>MD ( cardiology), MBBS</p>
-                                    <div>
-                                        <p>Specialities:</p>
-                                        <p>Cardiologist</p>
-                                    </div>
-                                    <div>
-                                        <p>Working in:</p>
-                                        <p>Modern Diagnostic Center</p>
-                                    </div>
-                                    <div>
-                                        <p>Working Area:</p>
-                                        <p>Dhaka,</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                        );
+                    })
+                )}
             </div>
-        </div>
+
+            {isModalOpen && (
+                <AppointmentModal
+                    doctor={selectedDoctor}
+                    onClose={() => setIsModalOpen(false)}
+                />
+            )}
+        </>
     );
 };
 

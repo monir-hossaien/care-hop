@@ -1,60 +1,174 @@
+// Import necessary libraries and icons
 import React from 'react';
-import {FaLocationDot} from "react-icons/fa6";
-import {MdEmail} from "react-icons/md";
+import { FaLocationDot } from "react-icons/fa6"; // Location icon
+import { MdEmail } from "react-icons/md";        // Email icon
+
+// Import global state stores
+import { commonStore } from "../store/commmonStore.js";
+import { contactStore } from "../store/contactStore.js";
+
+// Import reusable button component
+import UserButton from "./UserButton.jsx";
+
+// Import helper functions for validation and toast notifications
+import ValidationHelper, { errorToast, successToast } from "../helper.js";
 
 const Contact = () => {
+    // Destructure state and methods from stores
+    const { searchParams, inputOnChange, setLoading, resetSearchParams} = commonStore();
+    const { createContact } = contactStore();
+
+    // Prepare contact data payload
+    const data = {
+        name: searchParams.name,
+        email: searchParams.email,
+        phone: searchParams.phone,
+        subject: searchParams.subject,
+        message: searchParams.message,
+    };
+
+    // Handle contact form submission
+    const handleCreateContact = async () => {
+        // Client-side validation
+        if (ValidationHelper.IsEmpty(searchParams.name)) {
+            errorToast("Name is required");
+        } else if (ValidationHelper.IsEmpty(searchParams.email)) {
+            errorToast("Email is required");
+        }
+        else if(!ValidationHelper.IsEmail(searchParams.email)) {
+            errorToast("Enter valid email");
+        }
+        else if (ValidationHelper.IsEmpty(searchParams.phone)) {
+            errorToast("Phone number required");
+        } else if(!ValidationHelper.IsMobile(searchParams.phone)) {
+            errorToast("Enter valid phone number");
+        }
+        else if (ValidationHelper.IsEmpty(searchParams.subject)) {
+            errorToast("Subject is required");
+        } else if (ValidationHelper.IsEmpty(searchParams.message)) {
+            errorToast("Message is required");
+        } else {
+            // Submit data
+            try {
+                setLoading(true); // Show loading state
+                let result = await createContact(data);
+
+                if (result.status === true) {
+                    setLoading(false);
+                    successToast(result.message); // Show success toast
+                    resetSearchParams();
+
+                } else {
+                    setLoading(false);
+                    errorToast(result.message); // Show error toast
+                }
+            } catch (error) {
+                setLoading(false);
+                errorToast(error.response?.data?.message || "Something went wrong");
+            }
+        }
+    };
+
     return (
-        <div className="container py-20">
-            <div className="grid grid-cols-12 gap-12">
+        <div className="container py-10">
+            {/* Grid container for layout */}
+            <div className="grid grid-cols-12 gap-5 px-4 md:px-0">
+
+                {/* Section Heading */}
                 <div className="col-span-12">
-                    <h1 className="text-3xl font-bold text-[#00B092] px-4 md:px-1">Get In Touch</h1>
+                    <h1 className="text-3xl font-bold text-[#00B092]">Get In Touch</h1>
                 </div>
+
+                {/* Contact Form Section */}
                 <div className="col-span-12 md:col-span-6 shadow-sm">
-                <div className="grid grid-cols-12 gap-5 px-10 py-14 space-y-4">
-                        <div className="col-span-6">
-                            <input type="text"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
-                                placeholder="Name"/>
+                    <div className="grid grid-cols-12 gap-5 px-4 sm:px-6 md:px-10 py-10">
+
+                        {/* Name Field */}
+                        <div className="col-span-12 sm:col-span-6">
+                            <input
+                                value={searchParams.name}
+                                onChange={(e) => inputOnChange("name", e.target.value)}
+                                type="text"
+                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                placeholder="Name"
+                            />
                         </div>
-                        <div className="col-span-6">
-                            <input type="email"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
-                                placeholder="Email"/>
+
+                        {/* Email Field */}
+                        <div className="col-span-12 sm:col-span-6">
+                            <input
+                                value={searchParams.email}
+                                onChange={(e) => inputOnChange("email", e.target.value)}
+                                type="email"
+                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                placeholder="Email"
+                            />
                         </div>
-                        <div className="col-span-6">
-                            <input type="text"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
-                                placeholder="Phone"/>
+
+                        {/* Phone Field */}
+                        <div className="col-span-12 sm:col-span-6">
+                            <input
+                                value={searchParams.phone}
+                                onChange={(e) => inputOnChange("phone", e.target.value)}
+                                type="text"
+                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                placeholder="Phone"
+                            />
                         </div>
-                        <div className="col-span-6">
-                            <input type="text"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b-1 border-b-gray-200 px-3 py-2 rounded"
-                                placeholder="Subject"/>
+
+                        {/* Subject Field */}
+                        <div className="col-span-12 sm:col-span-6">
+                            <input
+                                value={searchParams.subject}
+                                onChange={(e) => inputOnChange("subject", e.target.value)}
+                                type="text"
+                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                placeholder="Subject"
+                            />
                         </div>
+
+                        {/* Message Field */}
                         <div className="col-span-12">
-                            <textarea rows={4}
-                                      className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm w-full focus:bg-slate-50 border-b-1 border-b-gray-200 px-3 py-2 rounded"
-                                      placeholder="Message"/>
+                            <textarea
+                                value={searchParams.message}
+                                onChange={(e) => inputOnChange("message", e.target.value)}
+                                rows={4}
+                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                placeholder="Message"
+                            />
                         </div>
-                        <div>
-                            <button className="text-white px-10 py-2 bg-[#00B092] rounded cursor-pointer">Send</button>
+
+                        {/* Submit Button */}
+                        <div className="col-span-12">
+                            <UserButton
+                                onClick={handleCreateContact}
+                                className="text-sm text-white px-8 py-3 font-medium bg-[#00B092] rounded cursor-pointer hover:bg-[#009e84] transition"
+                                text="Send Message"
+                            />
                         </div>
                     </div>
                 </div>
 
+                {/* Contact Info Section */}
                 <div className="col-span-12 md:col-span-6">
                     <div className="shadow-sm px-4 py-10 space-y-10">
-                        <div className="flex items-center gap-3">
-                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]"><FaLocationDot
-                                className="text-2xl"/></span>
+
+                        {/* Address Information */}
+                        <div className="flex items-start gap-3">
+                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]">
+                                <FaLocationDot className="text-2xl" />
+                            </span>
                             <div>
                                 <h2 className="text-xl font-bold text-[#00B092]">Address</h2>
                                 <p className="text-gray-500">House: #102, Road: #3, Uttara, Dhaka-1206</p>
                             </div>
                         </div>
-                        <div className="flex items-center gap-3">
-                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]"><MdEmail
-                                className="text-2xl"/></span>
+
+                        {/* Email Information */}
+                        <div className="flex items-start gap-3">
+                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]">
+                                <MdEmail className="text-2xl" />
+                            </span>
                             <div>
                                 <h2 className="text-xl font-bold text-[#00B092]">Email</h2>
                                 <p className="text-gray-500">info@doctorfinder.com</p>
@@ -62,6 +176,7 @@ const Contact = () => {
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     );

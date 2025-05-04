@@ -14,12 +14,12 @@ export const saveUserProfileService = async (req)=>{
         const userProfile = await UserProfile.findOne({userID});
         // file upload to cloudinary
         if(req.file){
-            if(userProfile && userProfile['profileImage']){
-                const publicID = getPublicID(userProfile['profileImage']);
+            if(userProfile && userProfile['image']){
+                const publicID = getPublicID(userProfile['image']);
                 await deleteImage(publicID);
             }
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/user");
-            reqBody.profileImage = result;
+            reqBody.image = result;
         }
         // save or update profile
         const result = await UserProfile.updateOne({userID: userID}, {$set: reqBody }, { upsert: true });

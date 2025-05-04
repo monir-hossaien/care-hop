@@ -5,7 +5,7 @@ import ImagePlaceholder from '../assets/image.json'
 
 const SpecialitySkeleton = () => {
     return (
-        <div className="container">
+        <div>
             <div className="grid grid-cols-12 gap-6 py-14 px-4 md:px-0">
                 {
                     Array.from({length: 8}).map((_, i) => (

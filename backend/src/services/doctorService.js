@@ -14,12 +14,12 @@ export const saveProfileService = async (req)=>{
         const profile = await DoctorProfile.findOne({userID});
         // file upload to cloudinary
         if(req.file){
-            if(profile && profile['profileImage']){
-                const publicID = getPublicID(profile['profileImage']);
+            if(profile && profile['image']){
+                const publicID = getPublicID(profile['image']);
                 await deleteImage(publicID);
             }
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/doctor");
-            reqBody.profileImage = result;
+            reqBody.image = result;
         }
         // save or update profile
         const result = await DoctorProfile.updateOne({userID: userID}, {$set: reqBody }, { upsert: true });
@@ -31,7 +31,7 @@ export const saveProfileService = async (req)=>{
             }
         }
         return {
-            statusCode: 201,
+            statusCode: 200,
             status: true,
             message: "Request success",
         }
@@ -264,9 +264,9 @@ export const fetchDoctorListService = async (req)=>{
         const pipeline = [
             matchStage,
             joinWithHospital,
-            {$unwind: "$hospitalDetails"},
+            {$unwind: {path:"$hospitalDetails", preserveNullAndEmptyArrays: true} },
             joinWithSpecialities,
-            {$unwind: "$specialities"},
+            {$unwind: {path:"$specialities", preserveNullAndEmptyArrays: true }},
             projection,
         ]
         const result = await DoctorProfile.aggregate(pipeline);
@@ -298,7 +298,8 @@ export const fetchDoctorListService = async (req)=>{
 // search doctors by keyword
 export const searchDoctorService = async (req)=>{
     try {
-        const { division, district, post, area, name, specialityID } = req.query;
+        const { division, district, post, name, specialityID } = req.query;
+        
 
         // Create a dynamic search object
         let searchQuery = {};
@@ -306,7 +307,7 @@ export const searchDoctorService = async (req)=>{
         if (division) searchQuery.division = new RegExp(division, "i");
         if (district) searchQuery.district = new RegExp(district, "i");
         if (post) searchQuery.post = new RegExp(post, "i");
-        if (area) searchQuery.specialityID = specialityID
+        if (specialityID) searchQuery.specialityID = new mongoose.Types.ObjectId(specialityID)
 
         // join with hospital collection
         const joinWithHospital = {
@@ -336,7 +337,7 @@ export const searchDoctorService = async (req)=>{
                 consultationFee: 1,
                 availableSlots: 1,
                 specialization: 1,
-                profileImage: 1,
+                image: 1,
                 "hospitalDetails.name": 1,
                 "hospitalDetails.area": 1,
                 "specialities.name": 1
@@ -345,12 +346,15 @@ export const searchDoctorService = async (req)=>{
         const pipeline = [
             { $match: searchQuery },
             joinWithHospital,
-            {$unwind: "$hospitalDetails"},
+            {$unwind: {path:"$hospitalDetails",  preserveNullAndEmptyArrays: true}},
             joinWithSpecialities,
-            {$unwind: "$specialities"},
+            {$unwind: {path:"$specialities",  preserveNullAndEmptyArrays: true}},
             projection,
         ]
-        const result = await DoctorProfile.aggregate(pipeline);
+        let result 
+        if(Object.keys(searchQuery).length > 0){
+           result = await DoctorProfile.aggregate(pipeline);
+        }
 
         if(!result){
             return{

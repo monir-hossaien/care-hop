@@ -5,11 +5,14 @@ import HomePage from "./pages/homePage.jsx";
 import AboutPage from "./pages/aboutPage.jsx";
 import BlogPage from "./pages/blogPage.jsx";
 import ContactPage from "./pages/contactPage.jsx";
-import SearchPage from "./pages/searchPage.jsx";
+import SearchDoctorByKeywordPage from "./pages/searchDoctorByKeywordPage.jsx";
 import LoginPage from "./pages/loginPage.jsx";
 import SignUpPage from "./pages/signUpPage.jsx";
 import SpecialityPage from "./pages/specialityPage.jsx";
-import DoctorPage from "./pages/doctorPage.jsx";
+import SearchDoctorBySpecialityPage from "./pages/searchDoctorBySpecialityPage.jsx";
+import SearchHospitalPage from "./pages/searchHospitalPage.jsx";
+import BlogDetailsPage from "./pages/blogDetailsPage.jsx";
+
 
 const ScrollToTopOnNavigation = () => {
     const { pathname } = useLocation();
@@ -31,8 +34,11 @@ const App = () => {
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/specialities" element={<SpecialityPage/>} />
                 <Route path="/blogs" element={<BlogPage />} />
-                <Route path="/department" element={<DoctorPage/>} />
-                <Route path="/search" element={<SearchPage />} />
+                <Route path="/blog-details/:category/:blogID" element={<BlogDetailsPage/>} />
+                <Route path="/department/:keyword/:specialityID" element={<SearchDoctorBySpecialityPage/>} />
+                <Route path="/search" element={<SearchDoctorByKeywordPage />} />
+                <Route path="/search-doctor" element={<SearchDoctorByKeywordPage />} />
+                <Route path="/search-hospital" element={<SearchHospitalPage/>} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/sign-up" element={<SignUpPage />} />
                 <Route path="/contact" element={<ContactPage />} />

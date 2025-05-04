@@ -11,11 +11,15 @@ const dataSchema = new mongoose.Schema(
             required: true,
             lowercase: true,
             trim: true,
-            unique: true
         },
         phone: {
             type: String,
             required: true,
+        },
+        subject: {
+            type: String,
+            required: true,
+            trim: true,
         },
         message: {
             type: String,

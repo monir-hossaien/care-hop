@@ -52,15 +52,16 @@ export const assignSpecialtyService = async (req) => {
 export const specialtiesListService = async (req) => {
     try {
         // Extract page and limit from query params, with defaults
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
+        // const page = parseInt(req.query.page) || 1;
+        // const limit = parseInt(req.query.limit) || 12;
+        // const skip = (page - 1) * limit;
 
         // Get total count for pagination metadata
-        const totalItems = await Specialties.countDocuments();
+        // const totalItems = await Specialties.countDocuments();
 
         // Fetch paginated data
-        const result = await Specialties.find().skip(skip).limit(limit);
+        let result = await Specialties.find()
+
 
         if (!result || result.length === 0) {
             return {
@@ -75,11 +76,12 @@ export const specialtiesListService = async (req) => {
             status: true,
             message: "Request success",
             data: result,
-            pagination: {
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-                currentPage: page
-            }
+            // pagination: {
+            //     totalItems,
+            //     totalPages: Math.ceil(totalItems / limit),
+            //     currentPage: page,
+            //     limit: limit
+            // }
         };
     } catch (e) {
         return {

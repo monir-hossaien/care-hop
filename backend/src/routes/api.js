@@ -1,5 +1,6 @@
 import express from "express";
 const router = express.Router();
+
 import * as UserController from "../controllers/userController.js";
 import * as HospitalController from "../controllers/hospitalController.js";
 import * as ContactController from "../controllers/contactController.js";
@@ -8,14 +9,11 @@ import * as ReviewController from "../controllers/reviewController.js";
 import * as DoctorController from "../controllers/doctorController.js";
 import * as PatientController from "../controllers/patientController.js";
 import * as AppointmentController from "../controllers/appointmentController.js";
+import * as BlogController from "../controllers/blogController.js"
 
 import {upload} from "../helper/helper.js";
 import {authenticateUser, isRole} from "../middleware/auth.js";
-import {
-    cancelAppointment,
-    getDoctorAppointments,
-    updateAppointmentStatus
-} from "../controllers/appointmentController.js";
+
 
 
 
@@ -25,7 +23,7 @@ router.post("/login", UserController.login);
 router.get("/logout", UserController.logout);
 router.post("/change-password", authenticateUser, UserController.changePassword);
 // patient api
-router.post("/save-profile", authenticateUser, isRole('user'), upload.single('profileImage'), PatientController.saveUserProfile);
+router.post("/save-profile", authenticateUser, isRole('user'), upload.single('image'), PatientController.saveUserProfile);
 router.get("/fetch-profile", authenticateUser, isRole('user'), PatientController.fetchUserProfile);
 
 
@@ -36,7 +34,7 @@ router.post("/assign-hospital",
     upload.single('image'),
     HospitalController.assignHospital);
 
-router.get("/hospital-list", authenticateUser, HospitalController.hospitalList);
+router.get("/hospital-list", HospitalController.hospitalList);
 router.get("/search-hospital", HospitalController.searchHospital);
 
 router.put("/update-hospital/:id",
@@ -74,8 +72,8 @@ router.get("/fetch-reviews", ReviewController.fetchReviews)
 
 
 // doctor api
-router.post("/save-profile", authenticateUser, isRole('doctor'), upload.single('profileImage'), DoctorController.saveProfile)
-router.get("/fetch-profile", authenticateUser, isRole('doctor'), DoctorController.fetchProfile)
+router.post("/save-doctor-profile", authenticateUser, isRole('doctor'), upload.single('image'), DoctorController.saveProfile)
+router.get("/fetch-doctor-profile", authenticateUser, isRole('doctor'), DoctorController.fetchProfile)
 router.get("/view-doctor-profile/:doctorID", DoctorController.viewProfile)
 router.get("/fetch-doctor-list/:specialityID", DoctorController.fetchDoctorList)
 router.get("/search-doctor", DoctorController.searchDoctor)
@@ -88,8 +86,13 @@ router.get("/get-doctor-appointments", authenticateUser, isRole('doctor'), Appoi
 router.put("/update-appointment-status", authenticateUser, isRole('doctor'), AppointmentController.updateAppointmentStatus)
 router.delete("/cancel-appointment/:appointmentID", authenticateUser, AppointmentController.cancelAppointment)
 
-
-
+// blog api
+router.post("/create-blog", authenticateUser, isRole(['doctor', 'admin']), upload.single('image'), BlogController.createBlog)
+router.get("/fetch-blogs",  BlogController.fetchBlogs)
+router.get("/fetch-blogs-by-category/:category",  BlogController.fetchBlogsByCategory)
+router.get("/read-blog/:blogID",  BlogController.readBlog)
+router.put("/update-blog/:blogID", upload.single('image'), BlogController.updateBlog)
+router.delete("/delete-blog/:blogID", authenticateUser, isRole(['doctor', 'admin']), BlogController.deleteBlog)
 
 
 

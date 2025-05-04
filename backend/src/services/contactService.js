@@ -16,7 +16,7 @@ export const contactService = async (req) => {
         return {
             statusCode: 201,
             status: true,
-            message: "Request success",
+            message: "Message sent success",
             data: newContact
         };
     } catch (e) {
