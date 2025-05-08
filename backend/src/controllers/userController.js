@@ -13,9 +13,9 @@ export const login = async (req, res) => {
     let result = await loginService(req);
     const cookieOptions = {
         httpOnly: true,
-        secure: false,
-        sameSite: "none", // Cross-site cookie support (CORS)
-        maxAge: COOKIE_EXPIRE_TIME, // 24 hours
+        secure: false, // only true in production with HTTPS
+        sameSite: "none", // "none" only works with secure: true
+        maxAge: COOKIE_EXPIRE_TIME,
         path: "/",
     };
     res.cookie("token", result.token, cookieOptions);

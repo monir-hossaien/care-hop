@@ -12,7 +12,7 @@ const UserButton = (props) => {
                 onClick={onClick}
             >
                 <div className="flex items-center justify-center gap-1">
-                    <CgSpinner className="animate-spin text-xl" />
+                    <CgSpinner className="animate-spin text-2xl" />
                     <span className="text-sm">Processing…</span>
                 </div>
             </button>

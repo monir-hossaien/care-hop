@@ -75,7 +75,7 @@ router.get("/fetch-reviews", ReviewController.fetchReviews)
 router.post("/save-doctor-profile", authenticateUser, isRole('doctor'), upload.single('image'), DoctorController.saveProfile)
 router.get("/fetch-doctor-profile", authenticateUser, isRole('doctor'), DoctorController.fetchProfile)
 router.get("/view-doctor-profile/:doctorID", DoctorController.viewProfile)
-router.get("/fetch-doctor-list/:specialityID", DoctorController.fetchDoctorList)
+router.get("/fetch-doctors-by-specialty/:specialityID", DoctorController.fetchDoctorsBySpecialty)
 router.get("/search-doctor", DoctorController.searchDoctor)
 
 

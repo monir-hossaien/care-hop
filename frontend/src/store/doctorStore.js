@@ -7,7 +7,7 @@ export const doctorStore = create((set)=>({
 
     doctorList: null,
     fetchDoctorListBySpeciality: async (specialityID)=>{
-        let result = await axios.get(`${base_url}/fetch-doctor-list/${specialityID}`)
+        let result = await axios.get(`${base_url}/fetch-doctors-by-specialty/${specialityID}`)
         if(result.data.status === true){
             const data = result.data.data
             set({doctorList: data})
@@ -15,7 +15,6 @@ export const doctorStore = create((set)=>({
     },
 
     fetchDoctorListByKeyword: async (searchParams)=>{
-        set({doctorList: null})
         // Convert searchParams object into query string
         const queryString = new URLSearchParams(searchParams).toString();
         let result = await axios.get(`${base_url}/search-doctor?${queryString}`)

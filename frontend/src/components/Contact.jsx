@@ -11,7 +11,8 @@ import { contactStore } from "../store/contactStore.js";
 import UserButton from "./UserButton.jsx";
 
 // Import helper functions for validation and toast notifications
-import ValidationHelper, { errorToast, successToast } from "../helper.js";
+import ValidationHelper, { errorToast, successToast } from "../helpers/helper.js";
+import Banner from "./Banner.jsx";
 
 const Contact = () => {
     // Destructure state and methods from stores
@@ -70,65 +71,61 @@ const Contact = () => {
     };
 
     return (
-        <div className="container py-10">
-            {/* Grid container for layout */}
-            <div className="grid grid-cols-12 gap-5 px-4 md:px-0">
+        <>
+            <Banner name={"Get In Touch"}/>
+            <div className="container py-10">
+                {/* Grid container for layout */}
+                <div className="grid grid-cols-12 gap-5 px-4 md:px-0">
+                    {/* Contact Form Section */}
+                    <div className="col-span-12 md:col-span-6 shadow-sm">
+                        <div className="grid grid-cols-12 gap-5 px-4 sm:px-6 md:px-10 py-10">
 
-                {/* Section Heading */}
-                <div className="col-span-12">
-                    <h1 className="text-3xl font-bold text-[#00B092]">Get In Touch</h1>
-                </div>
+                            {/* Name Field */}
+                            <div className="col-span-12 sm:col-span-6">
+                                <input
+                                    value={searchParams.name}
+                                    onChange={(e) => inputOnChange("name", e.target.value)}
+                                    type="text"
+                                    className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                    placeholder="Name"
+                                />
+                            </div>
 
-                {/* Contact Form Section */}
-                <div className="col-span-12 md:col-span-6 shadow-sm">
-                    <div className="grid grid-cols-12 gap-5 px-4 sm:px-6 md:px-10 py-10">
+                            {/* Email Field */}
+                            <div className="col-span-12 sm:col-span-6">
+                                <input
+                                    value={searchParams.email}
+                                    onChange={(e) => inputOnChange("email", e.target.value)}
+                                    type="email"
+                                    className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                    placeholder="Email"
+                                />
+                            </div>
 
-                        {/* Name Field */}
-                        <div className="col-span-12 sm:col-span-6">
-                            <input
-                                value={searchParams.name}
-                                onChange={(e) => inputOnChange("name", e.target.value)}
-                                type="text"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
-                                placeholder="Name"
-                            />
-                        </div>
+                            {/* Phone Field */}
+                            <div className="col-span-12 sm:col-span-6">
+                                <input
+                                    value={searchParams.phone}
+                                    onChange={(e) => inputOnChange("phone", e.target.value)}
+                                    type="text"
+                                    className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                    placeholder="Phone"
+                                />
+                            </div>
 
-                        {/* Email Field */}
-                        <div className="col-span-12 sm:col-span-6">
-                            <input
-                                value={searchParams.email}
-                                onChange={(e) => inputOnChange("email", e.target.value)}
-                                type="email"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
-                                placeholder="Email"
-                            />
-                        </div>
+                            {/* Subject Field */}
+                            <div className="col-span-12 sm:col-span-6">
+                                <input
+                                    value={searchParams.subject}
+                                    onChange={(e) => inputOnChange("subject", e.target.value)}
+                                    type="text"
+                                    className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
+                                    placeholder="Subject"
+                                />
+                            </div>
 
-                        {/* Phone Field */}
-                        <div className="col-span-12 sm:col-span-6">
-                            <input
-                                value={searchParams.phone}
-                                onChange={(e) => inputOnChange("phone", e.target.value)}
-                                type="text"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
-                                placeholder="Phone"
-                            />
-                        </div>
-
-                        {/* Subject Field */}
-                        <div className="col-span-12 sm:col-span-6">
-                            <input
-                                value={searchParams.subject}
-                                onChange={(e) => inputOnChange("subject", e.target.value)}
-                                type="text"
-                                className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
-                                placeholder="Subject"
-                            />
-                        </div>
-
-                        {/* Message Field */}
-                        <div className="col-span-12">
+                            {/* Message Field */}
+                            <div className="col-span-12">
                             <textarea
                                 value={searchParams.message}
                                 onChange={(e) => inputOnChange("message", e.target.value)}
@@ -136,49 +133,50 @@ const Contact = () => {
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
                                 placeholder="Message"
                             />
-                        </div>
-
-                        {/* Submit Button */}
-                        <div className="col-span-12">
-                            <UserButton
-                                onClick={handleCreateContact}
-                                className="text-sm text-white px-8 py-3 font-medium bg-[#00B092] rounded cursor-pointer hover:bg-[#009e84] transition"
-                                text="Send Message"
-                            />
-                        </div>
-                    </div>
-                </div>
-
-                {/* Contact Info Section */}
-                <div className="col-span-12 md:col-span-6">
-                    <div className="shadow-sm px-4 py-10 space-y-10">
-
-                        {/* Address Information */}
-                        <div className="flex items-start gap-3">
-                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]">
-                                <FaLocationDot className="text-2xl" />
-                            </span>
-                            <div>
-                                <h2 className="text-xl font-bold text-[#00B092]">Address</h2>
-                                <p className="text-gray-500">House: #102, Road: #3, Uttara, Dhaka-1206</p>
                             </div>
-                        </div>
 
-                        {/* Email Information */}
-                        <div className="flex items-start gap-3">
-                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]">
-                                <MdEmail className="text-2xl" />
-                            </span>
-                            <div>
-                                <h2 className="text-xl font-bold text-[#00B092]">Email</h2>
-                                <p className="text-gray-500">info@doctorfinder.com</p>
+                            {/* Submit Button */}
+                            <div className="col-span-12">
+                                <UserButton
+                                    onClick={handleCreateContact}
+                                    className="text-sm text-white px-8 py-3 font-medium bg-[#00B092] rounded cursor-pointer hover:bg-[#009e84] transition"
+                                    text="Send Message"
+                                />
                             </div>
                         </div>
                     </div>
-                </div>
 
+                    {/* Contact Info Section */}
+                    <div className="col-span-12 md:col-span-6">
+                        <div className="shadow-sm px-4 py-10 space-y-10">
+
+                            {/* Address Information */}
+                            <div className="flex items-start gap-3">
+                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]">
+                                <FaLocationDot className="text-2xl"/>
+                            </span>
+                                <div>
+                                    <h2 className="text-xl font-bold text-[#00B092]">Address</h2>
+                                    <p className="text-gray-500">House: #102, Road: #3, Uttara, Dhaka-1206</p>
+                                </div>
+                            </div>
+
+                            {/* Email Information */}
+                            <div className="flex items-start gap-3">
+                            <span className="bg-slate-100 p-2 rounded-full text-[#00B092]">
+                                <MdEmail className="text-2xl"/>
+                            </span>
+                                <div>
+                                    <h2 className="text-xl font-bold text-[#00B092]">Email</h2>
+                                    <p className="text-gray-500">info@doctorfinder.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

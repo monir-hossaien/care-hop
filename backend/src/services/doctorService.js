@@ -221,7 +221,7 @@ export const viewProfileService = async (req)=>{
 }
 
 // fetch doctors list
-export const fetchDoctorListService = async (req)=>{
+export const fetchDoctorsBySpecialtyService = async (req)=>{
     try {
         const specialityID = new objID(req.params.specialityID);
         const matchStage = {
@@ -248,6 +248,7 @@ export const fetchDoctorListService = async (req)=>{
         const projection = {
             $project: {
                 name: 1,
+                image: 1,
                 userID: 1,
                 designation: 1,
                 experience: 1,
@@ -351,7 +352,7 @@ export const searchDoctorService = async (req)=>{
             {$unwind: {path:"$specialities",  preserveNullAndEmptyArrays: true}},
             projection,
         ]
-        let result 
+        let result
         if(Object.keys(searchQuery).length > 0){
            result = await DoctorProfile.aggregate(pipeline);
         }

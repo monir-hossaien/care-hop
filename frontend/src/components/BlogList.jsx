@@ -1,48 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { blogStore } from "../store/blogStore.js";
-import { TimestampToDate } from "../helper.js";
+import { TimestampToDate } from "../helpers/helper.js";
+import BlogSkeleton from "../skeleton/blogSkeleton.jsx";
+import Banner from "./Banner.jsx";
 
 const BlogList = () => {
     const location = useLocation();
-    const { blogList, updateBlogRequest } = blogStore();
+    const { blogList, updateBlogRequest, fetchBlogList } = blogStore();
 
-    // State to track view counts for each blog (by blog ID)
-    const [viewCounts, setViewCounts] = useState({});
-
-    // Initialize viewCounts from blogList on component mount or update
     useEffect(() => {
-        if (blogList) {
-            const initialCounts = {};
-            blogList.forEach(blog => {
-                initialCounts[blog._id] = blog.views || 0;
-            });
-            setViewCounts(initialCounts);
-        }
-    }, [blogList]);
-
-    // Increment local view count and update the server via store method
-    const handleViewIncrement = async (_id) => {
-        const newViews = (viewCounts[_id] || 0) + 1;
-
-        // Update local state
-        setViewCounts(prev => ({
-            ...prev,
-            [_id]: newViews
-        }));
-
-        // Send updated view count to backend
-        await updateBlogRequest(_id, { views: newViews });
-    };
+        (async ()=>{
+            await fetchBlogList();
+        })()
+    },[]);
 
     return (
         <>
             {/* Hero banner section changes depending on the route */}
             {
                 location.pathname === "/blogs" ? (
-                    <div className="text-center py-32 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat">
-                        <h1 className="text-4xl text-[#357B7A] font-medium opacity-100">Blogs</h1>
-                    </div>
+                    <Banner name={"Blogs"}/>
                 ) : (
                     <div className="text-center mt-10">
                         <h1 className="text-4xl text-[#164193] font-bold">Recent Blogs</h1>
@@ -55,7 +33,7 @@ const BlogList = () => {
                 <div className="grid grid-cols-12 gap-6 py-14 px-4 md:px-0">
                     {
                         blogList === null ? (
-                            <p>Loading</p>
+                            <BlogSkeleton/>
                         ) : (
                             blogList.map((blog) => {
                                 const { _id, image, title, shortDes, createdAt, views, user, category } = blog;
@@ -64,7 +42,7 @@ const BlogList = () => {
                                     <div key={_id} className="col-span-12 md:col-span-4 text-gray-500">
                                         <div>
                                             {/* Image and title link both increment views */}
-                                            <Link onClick={() => handleViewIncrement(_id)} to={`/blog-details/${category}/${_id}`}>
+                                            <Link onClick={() => updateBlogRequest(_id, {views: views +1})} to={`/blog-details/${_id}`}>
                                                 <img src={image} className="rounded w-full h-64" alt="image" />
                                             </Link>
 
@@ -72,7 +50,7 @@ const BlogList = () => {
                                                 <p className="text-sm text-gray-500">{TimestampToDate(createdAt)}</p>
                                                 <div className="space-y-3 py-2">
                                                     <div>
-                                                        <Link onClick={() => handleViewIncrement(_id)} to={`/blog-details/${_id}`}>
+                                                        <Link onClick={() => updateBlogRequest(_id, {views: views +1})} to={`/blog-details/${_id}`}>
                                                             <h1 className="block font-bold text-xl text-[#1CA288] hover:text-[#164193]">{title}</h1>
                                                         </Link>
                                                     </div>
@@ -81,7 +59,7 @@ const BlogList = () => {
                                                     </div>
                                                     <div className="flex justify-between items-center text-sm text-gray-400">
                                                         {/* Display updated view count from local state */}
-                                                        <p>Views: {viewCounts[_id] || views}</p>
+                                                        <p>Views: {views || 0}</p>
                                                         <p>Created by: {user.role}</p>
                                                     </div>
                                                 </div>

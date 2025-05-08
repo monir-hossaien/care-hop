@@ -3,12 +3,12 @@ import Skeleton from "react-loading-skeleton";
 import Lottie from "lottie-react";
 import ImagePlaceholder from '../assets/image.json'
 
-const SpecialitySkeleton = () => {
+const BlogSkeleton = () => {
     return (
-        <div className="grid grid-cols-12 gap-5 py-14 px-4 md:px-0">
+        <>
             {
                 Array.from({length: 8}).map((_, i) => (
-                    <div key={i} className="col-span-12 sm:col-span-6 md:col-span-3">
+                    <div key={i} className="col-span-12 sm:col-span-6 md:col-span-4">
                         <div className="shadow-sm">
                             <Lottie className="w-60 mx-auto" animationData={ImagePlaceholder} loop={true}/>
                             <div className="p-4 space-y-3">
@@ -20,8 +20,8 @@ const SpecialitySkeleton = () => {
                     </div>
                 ))
             }
-        </div>
+        </>
     );
 };
 
-export default SpecialitySkeleton;
+export default BlogSkeleton;

@@ -34,8 +34,12 @@ const Hero = () => {
 
     return (
         <div className="relative">
-            <div className="h-screen py-9 px-3 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat flex items-center">
-                <div className="flex flex-col md:flex-row items-center gap-5">
+            {/* Hero Section */}
+            <div className="relative h-screen py-9 px-3 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat flex items-center">
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-[#57958C] opacity-40 z-10"></div>
+
+                <div className="relative z-20 flex flex-col md:flex-row items-center gap-5 w-full">
                     {/* Image Section */}
                     <div className="w-full h-full md:h-auto md:w-1/2">
                         <AnimatePresence mode="wait">
@@ -53,7 +57,7 @@ const Hero = () => {
                     </div>
 
                     {/* Text Section */}
-                    <div className="w-full md:w-1/2 text-gradient">
+                    <div className="w-full md:w-1/2 text-[#00B092]">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={sliders[currentIndex].content}
@@ -62,14 +66,20 @@ const Hero = () => {
                                 exit={{ opacity: 0, y: -30 }}
                                 transition={{ duration: 0.6 }}
                             >
-                                <h2 className="text-2xl md:text-6xl font-bold md:leading-20">{sliders[currentIndex]?.content}</h2>
-                                <p>{sliders[currentIndex]?.short_des}</p>
+                                <h2 className="text-2xl md:text-6xl font-bold md:leading-20">
+                                    {sliders[currentIndex]?.content}
+                                </h2>
+                                <p className="mt-4 text-lg text-[#164193]">{sliders[currentIndex]?.short_des}</p>
                             </motion.div>
                         </AnimatePresence>
                     </div>
                 </div>
             </div>
-            <SearchTab />
+
+            {/* SearchTab remains here below the hero section */}
+            <div className="relative z-50">
+                <SearchTab />
+            </div>
         </div>
     );
 };

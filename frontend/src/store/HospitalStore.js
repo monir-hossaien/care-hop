@@ -6,7 +6,6 @@ export const hospitalStore = create((set)=>({
 
     hospitalList: null,
     fetchHospitalListByKeyword: async (searchParams)=>{
-        set({hospitalList: null})
         // Convert searchParams object into query string
         const queryString = new URLSearchParams(searchParams).toString();
         let result = await axios.get(`${base_url}/search-hospital?${queryString}`)

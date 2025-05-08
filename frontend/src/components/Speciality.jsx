@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import {Link, useLocation} from "react-router-dom";
 import {specialitiesStore} from "../store/specialitiesStore.js";
 import SpecialitySkeleton from "../skeleton/specialitySkeleton.jsx";
+import Banner from "./Banner.jsx";
+import {doctorStore} from "../store/doctorStore.js";
 
 const Speciality = () => {
     const location = useLocation();
@@ -26,9 +28,7 @@ const Speciality = () => {
         <>
             {
                 location.pathname === "/specialities" ? (
-                    <div className="text-center py-32 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat">
-                        <h1 className="text-4xl text-[#357B7A] font-medium opacity-100">Doctor Specialties</h1>
-                    </div>
+                    <Banner name={"Doctor Specialties"}/>
                 ) : (
                     <div className="text-center mt-10">
                         <h1 className="text-4xl text-[#164193] font-bold">View Doctors by Specialities</h1>
@@ -48,7 +48,7 @@ const Speciality = () => {
                                         <div className="col-span-12 md:col-span-3" key={_id}>
                                             <Link to={`/department/${name}/${_id}`}>
                                                 <div
-                                                    className="shadow-lg rounded-lg text-gray-600 px-4 py-8 flex flex-col items-center space-y-4 hover:bg-[#164193] hover:text-white transition-all duration-300 hover:scale-102">
+                                                    className="text-center shadow-sm rounded-lg text-gray-600 px-4 py-8 flex flex-col items-center space-y-4 hover:bg-[#164193] hover:text-white transition-all duration-300 hover:scale-102">
                                                     <img className="w-28 bg-white rounded-full p-4" src={image}
                                                          alt="image"/>
                                                     <h3 className="text-lg font-extrabold text-[#1BA288] group-hover:text-white transition-all duration-300">{name}</h3>

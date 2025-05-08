@@ -8,7 +8,7 @@ const dataSchema = new mongoose.Schema(
             trim: true,
             unique: true,
             minLength: [10, "Title must be at least 10 characters"],
-            maxLength: [50, "Title must be under 50 characters"]
+            maxLength: [100, "Title must be under 50 characters"]
         },
         shortDes: {
             type: String,

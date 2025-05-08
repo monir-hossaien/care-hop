@@ -1,5 +1,7 @@
 // success toast
 import toast from "react-hot-toast";
+import {useLocation} from "react-router-dom";
+import {useEffect} from "react";
 
 class ValidationHelper{
 
@@ -42,3 +44,13 @@ export  const  TimestampToDate =(timestamp)=> {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     return date.getDate() + " " + monthNames[date.getMonth()] + ", " + date.getFullYear();
 }
+
+export const ScrollToTopOnNavigation = () => {
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, [pathname]);
+
+    return null;
+};

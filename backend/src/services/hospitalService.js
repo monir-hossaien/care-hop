@@ -2,6 +2,7 @@
 import Hospital from "../models/hospitalModel.js";
 import mongoose from "mongoose";
 import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
+import DoctorProfile from "../models/doctorProfileModel.js";
 const objID = mongoose.Types.ObjectId;
 
 // assign to hospital
@@ -106,8 +107,14 @@ export const searchHospitalService = async (req)=>{
         if (post) searchQuery.post = new RegExp(post, "i");
         if (area) searchQuery.area = new RegExp(area, "i");
 
-
-        const result = await Hospital.find(searchQuery).select("-createdAt -updatedAt");
+        const matchStage = {$match: searchQuery};
+        const pipeline = [
+            matchStage,
+        ]
+        let result
+        if(Object.keys(searchQuery).length > 0){
+            result = await Hospital.aggregate(pipeline);
+        }
 
         if(!result){
             return{

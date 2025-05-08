@@ -22,7 +22,7 @@ const app = express();
 
 // Global Application Middleware
 const corsOptions = {
-    origin: "*",
+    origin: "http://localhost:5173",
     credentials: true,
 };
 app.use(cors(corsOptions));
@@ -30,11 +30,11 @@ app.use(express.json({ limit: Max_JSON_SIZE }));
 app.use(express.urlencoded({ extended: URL_ENCODER }));
 app.use(hpp());
 app.use(cookieParser());
-app.use(
-    helmet({
-        crossOriginEmbedderPolicy: false,
-    })
-);
+// app.use(
+//     helmet({
+//         crossOriginEmbedderPolicy: false,
+//     })
+// );
 app.use(xss());
 
 // Rate Limiting middleware

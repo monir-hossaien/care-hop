@@ -20,7 +20,8 @@ export const commonStore = create((set)=>({
         email: '',
         phone: '',
         subject: '',
-        message: ''
+        message: '',
+        password: '',
     },
     inputOnChange: (name, value)=>{
         set((state)=>({
@@ -42,7 +43,8 @@ export const commonStore = create((set)=>({
             email: '',
             phone: '',
             subject: '',
-            message: ''
+            message: '',
+            password: '',
         }
     }),
 

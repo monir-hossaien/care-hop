@@ -3,8 +3,8 @@
 import {
     saveProfileService,
     fetchProfileService,
-    viewProfileService,
-    fetchDoctorListService, searchDoctorService
+    viewProfileService
+    , searchDoctorService, fetchDoctorsBySpecialtyService
 } from "../services/doctorService.js";
 
 export const saveProfile = async (req, res) => {
@@ -25,8 +25,8 @@ export const viewProfile = async (req, res) => {
 }
 
 // view doctorList by Specialty
-export const fetchDoctorList = async (req, res) => {
-    const result = await fetchDoctorListService(req)
+export const fetchDoctorsBySpecialty = async (req, res) => {
+    const result = await fetchDoctorsBySpecialtyService(req)
     return res.status(result.statusCode).json(result)
 }
 

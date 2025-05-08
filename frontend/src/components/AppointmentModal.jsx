@@ -1,6 +1,7 @@
 import React from 'react';
 import {IoMdClose} from "react-icons/io";
 
+
 const AppointmentModal = ({ doctor, onClose }) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center px-4">

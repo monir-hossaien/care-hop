@@ -1,12 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import { doctorStore } from "../store/doctorStore.js";
 import AppointmentModal from "./AppointmentModal.jsx";
-
+import DoctorSkeleton from "../skeleton/doctorSkeleton.jsx";
+import { useLocation } from "react-router-dom";
+import { commonStore } from "../store/commmonStore.js";
 
 const DoctorList = () => {
-    const { doctorList} = doctorStore();
+    const { doctorList } = doctorStore();
+    const { loading } = commonStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedDoctor, setSelectedDoctor] = useState(null);
+    const location = useLocation();
+
+    const isSearchPage = location.pathname === "/search-doctor" || location.pathname === "/search";
+    const noDoctors = doctorList?.length === 0;
 
     const handleModalOpen = (doctor) => {
         setIsModalOpen(true);
@@ -15,12 +22,19 @@ const DoctorList = () => {
 
     return (
         <>
-            <div className="grid grid-cols-12 gap-5 px-4 md:px-0 py-5">
+            <div className="grid grid-cols-12 gap-5 py-5">
                 {doctorList === null ? (
-                    <p className="col-span-12 text-center text-gray-600 text-sm">Loading....</p>
-                ) : doctorList.length === 0 ? (<p className="col-span-12 text-center text-gray-600 text-sm">No Doctor found!</p>)  : (
+                    isSearchPage ? (
+                        loading ? <DoctorSkeleton/> :
+                            <p className="col-span-12 text-center text-gray-600 text-sm">Search to get specialist doctor information !!</p>
+                    ) : (
+                        <DoctorSkeleton/>
+                    )
+                ) : noDoctors ? (
+                    <p className="col-span-12 text-center text-gray-600 text-sm">No Doctor found!</p>
+                ) : (
                     doctorList.map((doctor) => {
-                        const { _id, image, name, degrees, specialities} = doctor;
+                        const { _id, image, name, degrees, specialities } = doctor;
                         return (
                             <div className="col-span-12 md:col-span-6" key={_id}>
                                 <div className="bg-white border border-gray-300 shadow-sm rounded w-full flex flex-col sm:flex-row items-center sm:items-start px-5 py-8 gap-6 group">
@@ -28,7 +42,7 @@ const DoctorList = () => {
                                         <img
                                             src={image}
                                             className="w-44 h-44 rounded-full object-cover"
-                                            alt="image"
+                                            alt="Doctor"
                                         />
                                     </div>
                                     <div className="space-y-2 md:space-y-3 text-sm w-full">
@@ -38,7 +52,7 @@ const DoctorList = () => {
                                         </div>
                                         <div>
                                             <p className="text-gray-400">Specialities:</p>
-                                            <p className="text-gray-500">{specialities.name}</p>
+                                            <p className="text-gray-500">{specialities?.name}</p>
                                         </div>
                                         <div>
                                             <p className="text-gray-400">Working in:</p>
