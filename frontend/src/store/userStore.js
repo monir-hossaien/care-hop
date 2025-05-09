@@ -15,6 +15,7 @@ export const userStore = create((set)=>({
         let result = await axios.post(`${base_url}/login`, data, {withCredentials: true});
         if(result.data.status === true){
             cookies.set("token", result.data.token)
+            localStorage.setItem("role", result.data.role);
             return result.data
         }
     },

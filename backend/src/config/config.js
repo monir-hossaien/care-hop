@@ -12,12 +12,19 @@ export const JWT_EXPIRATION_TIME_REFRESH_TOKEN = process.env.JWT_EXPIRATION_TIME
 
 
 //if you use your own email
-export const EMAIL_HOST = process.env.EMAIL_HOST
-export const EMAIL_PORT = process.env.EMAIL_PORT
-export const EMAIL_USER = process.env.EMAIL_USER
-export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD
-export const MAIL_ENCRYPTION=process.env.MAIL_ENCRYPTION
-export const EMAIL_FROM=process.env.EMAIL_FROM
+// export const EMAIL_HOST = process.env.EMAIL_HOST
+// export const EMAIL_PORT = process.env.EMAIL_PORT
+// export const EMAIL_USER = process.env.EMAIL_USER
+// export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD
+// export const MAIL_ENCRYPTION=process.env.MAIL_ENCRYPTION
+// export const EMAIL_FROM=process.env.EMAIL_FROM
+
+export const EMAIL_HOST = "smtp.gmass.co.";
+export const EMAIL_PASSWORD = "37766468-6f2b-4601-83bb-6f22ffb233cf";
+export const EMAIL_USER = "gmass";
+export const EMAIL_PORT = 587;
+export const EMAIL_FROM = "monirhdigital@gmail.com";
+
 
 export const Max_JSON_SIZE = process.env.Max_JSON_SIZE
 export const URL_ENCODER = process.env.URL_ENCODER

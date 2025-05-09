@@ -6,19 +6,25 @@ import {blogStore} from "../store/blogStore.js";
 import {useLocation, useParams} from "react-router-dom";
 
 const BlogDetailsPage = () => {
-    const {blogDetails, readBlogRequest, fetchBlogsByCategory} = blogStore();
-    const {blogID} = useParams()
-    const category = blogDetails?.category
-    const pathName = useLocation().pathname;
+    const { blogDetails, readBlogRequest, fetchBlogsByCategory } = blogStore();
+    const { blogID } = useParams();
+    const pathname = useLocation().pathname;
 
-    useEffect(()=>{
-        (async ()=>{
+    // 1. Fetch blog details on pathname/blogID change
+    useEffect(() => {
+        (async () => {
             await readBlogRequest(blogID);
-            if(blogDetails !== null){
-                await fetchBlogsByCategory(category);
+        })();
+    }, [pathname, blogID]);
+
+    // 2. When blogDetails.category is available, fetch related blogs
+    useEffect(() => {
+        (async ()=>{
+            if (blogDetails?.category) {
+                await fetchBlogsByCategory(blogDetails.category);
             }
         })()
-    },[pathName, category, readBlogRequest, fetchBlogsByCategory])
+    }, [blogDetails?.category]);
 
     return (
         <MasterLayout>

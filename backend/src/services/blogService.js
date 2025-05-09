@@ -242,6 +242,43 @@ export const updateBlogService = async (req) => {
     }
 };
 
+export const viewIncrementService = async (req) => {
+    try {
+        let views = req.body.view;
+        const blogID = new objID(req.params.blogID);
+        const blog = await Blog.findOne({_id: blogID})
+        if(!blog || blog.length < 1){
+            return{
+                statusCode: 404,
+                status: false,
+                message: "Blog not found!"
+            }
+        }
+        //update blog view
+        const result = await Blog.updateOne({_id: blogID}, {$set: {views}, new: true})
+        if(!result){
+            return{
+                statusCode: 400,
+                status: false,
+                message: "Request failed"
+            }
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result
+        };
+    } catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        };
+    }
+};
+
 export const deleteBlogService = async (req) => {
     try {
         const blogID = new objID(req.params.blogID);

@@ -9,7 +9,7 @@ import BlogDetailsSkeleton from "../skeleton/blogDetailsSkeleton.jsx";
 import SidebarSkeleton from "../skeleton/sidebarSkeleton.jsx";
 
 const BlogDetails = () => {
-    const { blogDetails, blogList, updateBlogRequest } = blogStore();
+    const { blogDetails, blogList, viewIncrementRequest} = blogStore();
 
     if (blogDetails === null) {
         return <BlogDetailsSkeleton/>
@@ -44,7 +44,7 @@ const BlogDetails = () => {
                                 const {_id, image, title, views, createdAt} = blog
                                 return (
                                     <div key={index} className="mb-6">
-                                        <Link to={`/blog-details/${_id}`} onClick={()=> updateBlogRequest(_id, {views: views + 1})}><img src={image}
+                                        <Link to={`/blog-details/${_id}`} onClick={()=> viewIncrementRequest(_id, {view: views + 1})}><img src={image}
                                                                                            alt="Recent Blog"
                                                                                            className="w-full rounded"/></Link>
                                         <div className="mt-3 text-center border-b pb-4 border-gray-300">

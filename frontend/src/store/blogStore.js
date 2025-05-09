@@ -11,10 +11,10 @@ export const blogStore = create((set)=>({
             set({blogList: result.data.data})
         }
     },
-    updateBlogRequest: async (blogId, data) => {
-        let result = await axios.put(`${base_url}/update-blog/${blogId}`, data)
-        return result.data
+    viewIncrementRequest: async (blogID, data) => {
+         await axios.patch(`${base_url}/update-blog/view/${blogID}`, data)
     },
+
     blogDetails: null,
     readBlogRequest: async (blogID) => {
         let result = await axios.get(`${base_url}/read-blog/${blogID}`)

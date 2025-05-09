@@ -84,14 +84,15 @@ router.post("/book-appointment/:doctorID", authenticateUser, isRole('user'), App
 router.get("/get-user-appointments", authenticateUser, isRole('user'), AppointmentController.getUserAppointments)
 router.get("/get-doctor-appointments", authenticateUser, isRole('doctor'), AppointmentController.getDoctorAppointments)
 router.put("/update-appointment-status", authenticateUser, isRole('doctor'), AppointmentController.updateAppointmentStatus)
-router.delete("/cancel-appointment/:appointmentID", authenticateUser, AppointmentController.cancelAppointment)
+router.delete("/cancel-appointment/:appointmentID", authenticateUser, isRole('user'), AppointmentController.cancelAppointment)
 
 // blog api
 router.post("/create-blog", authenticateUser, isRole(['doctor', 'admin']), upload.single('image'), BlogController.createBlog)
 router.get("/fetch-blogs",  BlogController.fetchBlogs)
 router.get("/fetch-blogs-by-category/:category",  BlogController.fetchBlogsByCategory)
 router.get("/read-blog/:blogID",  BlogController.readBlog)
-router.put("/update-blog/:blogID", upload.single('image'), BlogController.updateBlog)
+router.patch("/update-blog/view/:blogID", BlogController.viewIncrement)
+router.put("/update-blog/:blogID", authenticateUser, isRole(['doctor', 'admin']), upload.single('image'), BlogController.updateBlog)
 router.delete("/delete-blog/:blogID", authenticateUser, isRole(['doctor', 'admin']), BlogController.deleteBlog)
 
 

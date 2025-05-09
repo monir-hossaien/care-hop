@@ -14,6 +14,9 @@ import SearchDoctorBySpecialityPage from "./pages/searchDoctorBySpecialityPage.j
 import SearchHospitalPage from "./pages/searchHospitalPage.jsx";
 import BlogDetailsPage from "./pages/blogDetailsPage.jsx";
 import {ScrollToTopOnNavigation} from "./helpers/helper.js";
+import AdminDashboardPage from "./pages/adminDashboardPage.jsx";
+import DoctorDashboardPage from "./pages/doctorDashboardPage.jsx";
+import UserDashboardPage from "./pages/userDashboardPage.jsx";
 
 
 const App = () => {
@@ -34,6 +37,10 @@ const App = () => {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/sign-up" element={<SignUpPage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+                <Route path="/doctor/dashboard" element={<DoctorDashboardPage />} />
+                <Route path="/user/dashboard" element={<UserDashboardPage />} />
+
             </Routes>
         </BrowserRouter>
     );

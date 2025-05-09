@@ -5,21 +5,31 @@ import { FaBarsStaggered } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
 import { userStore } from "../store/userStore.js";
 import { successToast } from "../helpers/helper.js";
-import cookies from "js-cookie";
 
 const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [menuOpen, setMenuOpen] = useState(false); // mobile menu
-    const [avatarOpen, setAvatarOpen] = useState(false); // avatar dropdown
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [avatarOpen, setAvatarOpen] = useState(false);
 
-    const { isLogin, logoutRequest} = userStore();
+    const { isLogin, logoutRequest } = userStore();
 
     const logoutHandler = () => {
-        let res = logoutRequest()
+        let res = logoutRequest();
         successToast(res?.message);
         window.location.reload();
+    };
+
+    const dashboardNavigateHandler = () => {
+        let role = localStorage.getItem("role");
+        if (role === "admin") {
+            navigate("/admin/dashboard");
+        } else if (role === "doctor") {
+            navigate("/doctor/dashboard");
+        } else if (role === "user") {
+            navigate("/user/dashboard");
+        }
     };
 
     const navItems = [
@@ -35,11 +45,10 @@ const Navbar = () => {
         <div className="shadow-sm sticky top-0 bg-white z-[100]">
             <nav className="container">
                 <div className="flex justify-between items-center px-4 md:px-0 py-3">
-
                     {/* Logo */}
-                    <div className="flex-1 md:flex-none flex  md:justify-start">
+                    <div className="flex-1 md:flex-none flex md:justify-start">
                         <Link to="/">
-                            <img className="w-15 h-11" src={"/images/logo.png"} alt="Logo" />
+                            <img className="w-15 h-11" src="/images/logo.png" alt="Logo" />
                         </Link>
                     </div>
 
@@ -83,12 +92,12 @@ const Navbar = () => {
                                     </button>
                                     {avatarOpen && (
                                         <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-md z-50">
-                                            <Link
-                                                to="/dashboard"
-                                                className="block px-4 py-2 text-sm hover:bg-gray-100"
+                                            <button
+                                                onClick={dashboardNavigateHandler}
+                                                className="cursor-pointer block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
                                             >
                                                 Dashboard
-                                            </Link>
+                                            </button>
                                             <button
                                                 onClick={logoutHandler}
                                                 className="cursor-pointer w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
@@ -138,13 +147,21 @@ const Navbar = () => {
 
                         {isLogin() ? (
                             <>
-                                <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100">Dashboard</Link>
+                                <button
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        dashboardNavigateHandler();
+                                    }}
+                                    className="cursor-pointer block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                >
+                                    Dashboard
+                                </button>
                                 <button
                                     onClick={() => {
                                         setMenuOpen(false);
                                         logoutHandler();
                                     }}
-                                    className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                                    className="cursor-pointer block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
                                 >
                                     Logout
                                 </button>

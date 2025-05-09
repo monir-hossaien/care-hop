@@ -22,6 +22,8 @@ export const commonStore = create((set)=>({
         subject: '',
         message: '',
         password: '',
+        day: '',
+        timeSlot: ''
     },
     inputOnChange: (name, value)=>{
         set((state)=>({

@@ -1,7 +1,7 @@
 
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import {createToken} from "../utility/JWT.js";
+import {createToken, verifyToken} from "../utility/JWT.js";
 import mongoose from "mongoose";
 
 
@@ -61,12 +61,15 @@ export const loginService = async (req) => {
         }
         let isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
-            let token = await createToken(user["email"], user["id"]);
+            let token = await createToken(user["email"], user["id"], user["role"]);
+            let decoded = await verifyToken(token);
+            let role = decoded.role;
             return {
                 statusCode: 200,
                 status: true,
                 message: "Login success",
                 token: token,
+                role: role,
             };
         }else{
             return {
@@ -102,7 +105,7 @@ export const changePasswordService = async (req)=>{
         }
         // Check if old password is correct
         const isMatch = await bcrypt.compare(oldPassword, existingUser.password);
-        console.log(isMatch)
+
         if (!isMatch) {
             return { statusCode: 400, status: false, message: "Incorrect old password" };
         }
@@ -110,12 +113,10 @@ export const changePasswordService = async (req)=>{
         // Hash the new password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(newPassword, salt);
-        console.log(hashedPassword)
         const result = await User.updateOne(
             {_id: userID},
             {$set: {password: hashedPassword}},
             {new: true});
-        console.log(result)
         if(!result){
             return{
                 statusCode: 400,

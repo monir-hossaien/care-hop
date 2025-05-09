@@ -12,7 +12,7 @@ export const bookAppointmentService = async (req) => {
         const patientID = new objectId(req.headers.id)
         const doctorID = new objectId(req.params.doctorID)
 
-        const existingAppointment = await Appointment.findOne({patientID})
+        const existingAppointment = await Appointment.findOne({patientID, doctorID, day, timeSlot})
         if (existingAppointment) {
             return {
                 statusCode: 400,
@@ -26,7 +26,6 @@ export const bookAppointmentService = async (req) => {
             timeSlot,
             day
         }
-        const result = await Appointment.create(newAppointment);
 
         // Fetch doctor and patient details
         const doctor = await DoctorProfile.aggregate([
@@ -67,13 +66,16 @@ export const bookAppointmentService = async (req) => {
         ]);
 
         // Prepare email & SMS content
-        const emailSubject = "Appointment Confirmation";
+        const PatientEmailSubject = "Appointment Confirmation";
+        const DoctorEmailSubject = "Appointment Request";
         const emailMessage = `Dear ${patient[0]['name']}, Your appointment with Dr. ${doctor[0]['name']} is booked for ${day} at ${timeSlot}.Thank you!`;
         const doctorEmailMessage = `Dear ${doctor[0]['name']}, You have a new appointment with ${patient[0]['name']} on ${day} at ${timeSlot}.Please confirm it.`;
 
         // Send email notifications asynchronously
-        await SendEmail(doctor[0]['doctorDetails'].email, emailSubject, doctorEmailMessage);
-        await SendEmail(patient[0]['patientDetails'].email, emailSubject, emailMessage);
+        await SendEmail(doctor[0]['doctorDetails'].email, DoctorEmailSubject, doctorEmailMessage);
+        await SendEmail(patient[0]['patientDetails'].email, PatientEmailSubject, emailMessage);
+
+        const result = await Appointment.create(newAppointment);
 
         return {
             statusCode: 201,

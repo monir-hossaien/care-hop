@@ -7,7 +7,7 @@ import Banner from "./Banner.jsx";
 
 const BlogList = () => {
     const location = useLocation();
-    const { blogList, updateBlogRequest, fetchBlogList } = blogStore();
+    const { blogList, viewIncrementRequest, fetchBlogList } = blogStore();
 
     useEffect(() => {
         (async ()=>{
@@ -36,13 +36,13 @@ const BlogList = () => {
                             <BlogSkeleton/>
                         ) : (
                             blogList.map((blog) => {
-                                const { _id, image, title, shortDes, createdAt, views, user, category } = blog;
+                                const { _id, image, title, shortDes, createdAt, views, user} = blog;
 
                                 return (
                                     <div key={_id} className="col-span-12 md:col-span-4 text-gray-500">
                                         <div>
                                             {/* Image and title link both increment views */}
-                                            <Link onClick={() => updateBlogRequest(_id, {views: views +1})} to={`/blog-details/${_id}`}>
+                                            <Link onClick={() => viewIncrementRequest(_id, {view: views +1})} to={`/blog-details/${_id}`}>
                                                 <img src={image} className="rounded w-full h-64" alt="image" />
                                             </Link>
 
@@ -50,7 +50,7 @@ const BlogList = () => {
                                                 <p className="text-sm text-gray-500">{TimestampToDate(createdAt)}</p>
                                                 <div className="space-y-3 py-2">
                                                     <div>
-                                                        <Link onClick={() => updateBlogRequest(_id, {views: views +1})} to={`/blog-details/${_id}`}>
+                                                        <Link onClick={() => viewIncrementRequest(_id, {view: views +1})} to={`/blog-details/${_id}`}>
                                                             <h1 className="block font-bold text-xl text-[#1CA288] hover:text-[#164193]">{title}</h1>
                                                         </Link>
                                                     </div>

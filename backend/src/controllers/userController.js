@@ -1,6 +1,6 @@
 
 import {changePasswordService, loginService, registerService} from "../services/userService.js";
-import {COOKIE_EXPIRE_TIME} from "../config/config.js";
+import {COOKIE_EXPIRE_TIME, JWT_SECRET_ACCESS_TOKEN} from "../config/config.js";
 
 // user register
 export const register = async (req, res) => {
@@ -11,6 +11,7 @@ export const register = async (req, res) => {
 // user login
 export const login = async (req, res) => {
     let result = await loginService(req);
+    const token = result?.token;
     const cookieOptions = {
         httpOnly: true,
         secure: false, // only true in production with HTTPS
@@ -18,7 +19,7 @@ export const login = async (req, res) => {
         maxAge: COOKIE_EXPIRE_TIME,
         path: "/",
     };
-    res.cookie("token", result.token, cookieOptions);
+    res.cookie("token", token, cookieOptions);
     return res.status(result.statusCode).json(result);
 };
 

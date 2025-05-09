@@ -4,7 +4,7 @@ import {
     fetchBlogListService,
     readBlogService,
     updateBlogService,
-    fetchBlogsByCategoryService
+    fetchBlogsByCategoryService, viewIncrementService
 } from "../services/blogService.js";
 
 export const createBlog  = async (req, res) => {
@@ -29,6 +29,11 @@ export const readBlog  = async (req, res) => {
 
 export const updateBlog  = async (req, res) => {
     const result = await updateBlogService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+export const viewIncrement  = async (req, res) => {
+    const result = await viewIncrementService(req)
     return res.status(result.statusCode).json(result)
 }
 

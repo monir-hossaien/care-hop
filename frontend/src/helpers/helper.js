@@ -2,6 +2,7 @@
 import toast from "react-hot-toast";
 import {useLocation} from "react-router-dom";
 import {useEffect} from "react";
+import cookies from "js-cookie";
 
 class ValidationHelper{
 
@@ -54,3 +55,11 @@ export const ScrollToTopOnNavigation = () => {
 
     return null;
 };
+
+export const unauthorized =(code)=>{
+    if(code === 401){
+        cookies.remove("token");
+        window.location.href="/login"
+    }
+}
+
