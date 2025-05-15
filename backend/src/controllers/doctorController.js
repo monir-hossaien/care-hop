@@ -1,20 +1,22 @@
 
 // save profile
 import {
-    saveProfileService,
-    fetchProfileService,
     viewProfileService
-    , searchDoctorService, fetchDoctorsBySpecialtyService
+    ,
+    searchDoctorService,
+    fetchDoctorsBySpecialtyService,
+    fetchDoctorProfileService,
+    updateDoctorProfileService
 } from "../services/doctorService.js";
 
-export const saveProfile = async (req, res) => {
-    const result = await saveProfileService(req)
+export const updateDoctorProfile = async (req, res) => {
+    const result = await updateDoctorProfileService(req)
     return res.status(result.statusCode).json(result)
 }
 
 // fetch profile
-export const fetchProfile = async (req, res) => {
-    const result = await fetchProfileService(req)
+export const fetchDoctorProfile = async (req, res) => {
+    const result = await fetchDoctorProfileService(req)
     return res.status(result.statusCode).json(result)
 }
 

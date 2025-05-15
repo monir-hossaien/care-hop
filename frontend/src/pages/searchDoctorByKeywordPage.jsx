@@ -8,13 +8,15 @@ import {commonStore} from "../store/commmonStore.js";
 import DoctorList from "../components/DoctorList.jsx";
 import MasterLayout from "../layout/MasterLayout.jsx";
 import DoctorSkeleton from "../skeleton/doctorSkeleton.jsx";
+import {userStore} from "../store/userStore.js";
 
 
 const SearchDoctorByKeywordPage = () => {
     const {districtList, fetchDistrictList, divisionList, fetchDivisionList, postList, fetchPostList} = commonStore()
     const {specialities, fetchSpecialityList} = specialitiesStore()
     const {fetchDoctorListByKeyword} = doctorStore()
-    const {searchParams, inputOnChange, setLoading} = commonStore()
+    const {searchParams, inputOnChange} = commonStore()
+    const {setLoading} = userStore()
 
 
     useEffect(() => {

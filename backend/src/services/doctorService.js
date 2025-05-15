@@ -5,11 +5,10 @@ import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
 const objID = mongoose.Types.ObjectId;
 
 // save doctor profile
-export const saveProfileService = async (req)=>{
+export const updateDoctorProfileService = async (req)=>{
     try {
         const reqBody = req.body;
         const userID = new objID(req.headers.id);
-        reqBody.userID = userID;
 
         const profile = await DoctorProfile.findOne({userID});
         // file upload to cloudinary
@@ -19,10 +18,10 @@ export const saveProfileService = async (req)=>{
                 await deleteImage(publicID);
             }
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/doctor");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // save or update profile
-        const result = await DoctorProfile.updateOne({userID: userID}, {$set: reqBody }, { upsert: true });
+        const result = await DoctorProfile.updateOne({userID}, {$set: reqBody }, { new: true });
         if(!result){
             return{
                 statusCode: 400,
@@ -47,11 +46,11 @@ export const saveProfileService = async (req)=>{
 }
 
 // fetch profile
-export const fetchProfileService = async (req)=>{
+export const fetchDoctorProfileService = async (req)=>{
     try {
         const userID = new objID(req.headers.id);
         const matchStage = {
-            $match: {userID: userID}
+            $match: {userID}
         }
         // join with hospital collection
         const joinWithHospital = {
@@ -85,10 +84,8 @@ export const fetchProfileService = async (req)=>{
             $project: {
                 _id: 1,
                 name: 1,
-                userID: 1,
                 designation: 1,
-                profileImage: 1,
-                experience: 1,
+                image: 1,
                 degrees: 1,
                 consultationFee: 1,
                 availableSlots: 1,
@@ -101,11 +98,11 @@ export const fetchProfileService = async (req)=>{
         const pipeline = [
             matchStage,
             joinWithHospital,
-            {$unwind: "$hospitalDetails"},
+            {$unwind: {path: "$hospitalDetails", preserveNullAndEmptyArrays: true}},
             joinWithSpecialities,
-            {$unwind: "$specialities"},
+            {$unwind: {path: "$specialities", preserveNullAndEmptyArrays: true}},
             joinWithReview,
-            // {$unwind: "$reviews"},
+            {$unwind: {path: "$reviews", preserveNullAndEmptyArrays: true}},
             projection,
         ]
         const result = await DoctorProfile.aggregate(pipeline);
@@ -224,8 +221,12 @@ export const viewProfileService = async (req)=>{
 export const fetchDoctorsBySpecialtyService = async (req)=>{
     try {
         const specialityID = new objID(req.params.specialityID);
+        const {status = 'approved'} = req.query;
         const matchStage = {
-            $match: {specialityID: specialityID}
+            $match: {
+                specialityID,
+                status: status.toLowerCase()
+            },
         }
         // join with hospital collection
         const joinWithHospital = {
@@ -299,16 +300,20 @@ export const fetchDoctorsBySpecialtyService = async (req)=>{
 // search doctors by keyword
 export const searchDoctorService = async (req)=>{
     try {
-        const { division, district, post, name, specialityID } = req.query;
-        
-
+        let { division, district, post, name, specialityID, status = "approved" } = req.query;
         // Create a dynamic search object
         let searchQuery = {};
         if (name) searchQuery.name = new RegExp(name, "i");
         if (division) searchQuery.division = new RegExp(division, "i");
         if (district) searchQuery.district = new RegExp(district, "i");
         if (post) searchQuery.post = new RegExp(post, "i");
+        if (status) searchQuery.status = new RegExp(status, "i");
         if (specialityID) searchQuery.specialityID = new mongoose.Types.ObjectId(specialityID)
+        // let {status = 'approved'} = req.query;
+
+        const matchStage = {
+            $match: searchQuery
+        }
 
         // join with hospital collection
         const joinWithHospital = {
@@ -345,7 +350,7 @@ export const searchDoctorService = async (req)=>{
             }
         }
         const pipeline = [
-            { $match: searchQuery },
+            matchStage,
             joinWithHospital,
             {$unwind: {path:"$hospitalDetails",  preserveNullAndEmptyArrays: true}},
             joinWithSpecialities,

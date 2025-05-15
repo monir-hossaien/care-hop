@@ -4,9 +4,8 @@ import { FaLocationDot } from "react-icons/fa6"; // Location icon
 import { MdEmail } from "react-icons/md";        // Email icon
 
 // Import global state stores
-import { commonStore } from "../store/commmonStore.js";
 import { contactStore } from "../store/contactStore.js";
-
+import {userStore} from "../store/userStore.js";
 // Import reusable button component
 import UserButton from "./UserButton.jsx";
 
@@ -14,39 +13,40 @@ import UserButton from "./UserButton.jsx";
 import ValidationHelper, { errorToast, successToast } from "../helpers/helper.js";
 import Banner from "./Banner.jsx";
 
+
 const Contact = () => {
     // Destructure state and methods from stores
-    const { searchParams, inputOnChange, setLoading, resetSearchParams} = commonStore();
+    const { formData, inputOnChange, setLoading, resetFormData} = userStore();
     const { createContact } = contactStore();
 
     // Prepare contact data payload
     const data = {
-        name: searchParams.name,
-        email: searchParams.email,
-        phone: searchParams.phone,
-        subject: searchParams.subject,
-        message: searchParams.message,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        subject: formData.subject,
+        message: formData.message,
     };
 
     // Handle contact form submission
     const handleCreateContact = async () => {
         // Client-side validation
-        if (ValidationHelper.IsEmpty(searchParams.name)) {
+        if (ValidationHelper.IsEmpty(formData.name)) {
             errorToast("Name is required");
-        } else if (ValidationHelper.IsEmpty(searchParams.email)) {
+        } else if (ValidationHelper.IsEmpty(formData.email)) {
             errorToast("Email is required");
         }
-        else if(!ValidationHelper.IsEmail(searchParams.email)) {
+        else if(!ValidationHelper.IsEmail(formData.email)) {
             errorToast("Enter valid email");
         }
-        else if (ValidationHelper.IsEmpty(searchParams.phone)) {
+        else if (ValidationHelper.IsEmpty(formData.phone)) {
             errorToast("Phone number required");
-        } else if(!ValidationHelper.IsMobile(searchParams.phone)) {
+        } else if(!ValidationHelper.IsMobile(formData.phone)) {
             errorToast("Enter valid phone number");
         }
-        else if (ValidationHelper.IsEmpty(searchParams.subject)) {
+        else if (ValidationHelper.IsEmpty(formData.subject)) {
             errorToast("Subject is required");
-        } else if (ValidationHelper.IsEmpty(searchParams.message)) {
+        } else if (ValidationHelper.IsEmpty(formData.message)) {
             errorToast("Message is required");
         } else {
             // Submit data
@@ -57,7 +57,7 @@ const Contact = () => {
                 if (result.status === true) {
                     setLoading(false);
                     successToast(result.message); // Show success toast
-                    resetSearchParams();
+                    resetFormData();
 
                 } else {
                     setLoading(false);
@@ -83,7 +83,7 @@ const Contact = () => {
                             {/* Name Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={searchParams.name}
+                                    value={formData.name}
                                     onChange={(e) => inputOnChange("name", e.target.value)}
                                     type="text"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -94,7 +94,7 @@ const Contact = () => {
                             {/* Email Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={searchParams.email}
+                                    value={formData.email}
                                     onChange={(e) => inputOnChange("email", e.target.value)}
                                     type="email"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -105,7 +105,7 @@ const Contact = () => {
                             {/* Phone Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={searchParams.phone}
+                                    value={formData.phone}
                                     onChange={(e) => inputOnChange("phone", e.target.value)}
                                     type="text"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -116,7 +116,7 @@ const Contact = () => {
                             {/* Subject Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={searchParams.subject}
+                                    value={formData.subject}
                                     onChange={(e) => inputOnChange("subject", e.target.value)}
                                     type="text"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -127,7 +127,7 @@ const Contact = () => {
                             {/* Message Field */}
                             <div className="col-span-12">
                             <textarea
-                                value={searchParams.message}
+                                value={formData.message}
                                 onChange={(e) => inputOnChange("message", e.target.value)}
                                 rows={4}
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import {JWT_EXPIRATION_TIME_ACCESS_TOKEN, JWT_SECRET_ACCESS_TOKEN} from "../config/config.js";
 
 export const createToken = (email, _id, role)=>{
-    const payload = {email, _id, role};
+    const payload = {email:email, _id: _id, role: role};
     const options = {expiresIn: JWT_EXPIRATION_TIME_ACCESS_TOKEN}
     const token  = jwt.sign(payload, JWT_SECRET_ACCESS_TOKEN, options);
     return token;

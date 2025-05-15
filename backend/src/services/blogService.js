@@ -21,7 +21,7 @@ export const createBlogService = async (req) => {
         // file upload to cloudinary
         if (req.file) {
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/blog");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // save or update profile
         const result = await Blog.create(reqBody)
@@ -215,7 +215,7 @@ export const updateBlogService = async (req) => {
                 await deleteImage(publicID);
             }
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/blog");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // save or update profile
         const result = await Blog.updateOne({_id: blogID}, {$set: reqBody, new: true})
@@ -282,15 +282,22 @@ export const viewIncrementService = async (req) => {
 export const deleteBlogService = async (req) => {
     try {
         const blogID = new objID(req.params.blogID);
-        const result = await Blog.findOne({_id: blogID})
-        if(!result || result.length < 1){
+        const blog = await Blog.findOne({_id: blogID})
+        if(!blog || blog.length < 1){
             return{
                 statusCode: 404,
                 status: false,
                 message: "Blog not found!"
             }
         }
+        // delete image from cloudinary
+        if(blog['image']){
+            const publicID = getPublicID(blog['image']);
+            await deleteImage(publicID);
+        }
+
         await Blog.deleteOne({_id: blogID})
+
         return {
             statusCode: 200,
             status: true,

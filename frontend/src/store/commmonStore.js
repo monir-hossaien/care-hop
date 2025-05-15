@@ -5,25 +5,13 @@ const base_url = "https://bdapi.editboxpro.com/api"
 
 export const commonStore = create((set)=>({
 
-    loading: false,
-    setLoading: (value)=>{
-        set({loading: value})
-    },
-
     searchParams: {
         division: '',
         district: '',
         post: '',
         name: '',
         specialityID: '',
-        area: '',
-        email: '',
-        phone: '',
-        subject: '',
-        message: '',
-        password: '',
-        day: '',
-        timeSlot: ''
+        area: ''
     },
     inputOnChange: (name, value)=>{
         set((state)=>({
@@ -41,12 +29,7 @@ export const commonStore = create((set)=>({
             post: '',
             name: '',
             specialityID: '',
-            area: '',
-            email: '',
-            phone: '',
-            subject: '',
-            message: '',
-            password: '',
+            area: ''
         }
     }),
 

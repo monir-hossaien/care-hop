@@ -7,9 +7,9 @@ import * as ContactController from "../controllers/contactController.js";
 import * as SpecialtyController from "../controllers/specialtiesController.js";
 import * as ReviewController from "../controllers/reviewController.js";
 import * as DoctorController from "../controllers/doctorController.js";
-import * as PatientController from "../controllers/patientController.js";
 import * as AppointmentController from "../controllers/appointmentController.js";
-import * as BlogController from "../controllers/blogController.js"
+import * as BlogController from "../controllers/blogController.js";
+import * as AdminController from "../controllers/adminController.js";
 
 import {upload} from "../helper/helper.js";
 import {authenticateUser, isRole} from "../middleware/auth.js";
@@ -21,10 +21,10 @@ import {authenticateUser, isRole} from "../middleware/auth.js";
 router.post("/register", UserController.register);
 router.post("/login", UserController.login);
 router.get("/logout", UserController.logout);
+router.post("/send-doctor-request", authenticateUser, isRole('user'), upload.single('image'), UserController.doctorProfileRequest);
 router.post("/change-password", authenticateUser, UserController.changePassword);
-// patient api
-router.post("/save-profile", authenticateUser, isRole('user'), upload.single('image'), PatientController.saveUserProfile);
-router.get("/fetch-profile", authenticateUser, isRole('user'), PatientController.fetchUserProfile);
+router.post("/save-profile", authenticateUser, isRole('user'), upload.single('image'), UserController.saveUserProfile);
+router.get("/fetch-profile", authenticateUser, isRole('user'), UserController.fetchUserProfile);
 
 
 // hospital api
@@ -72,8 +72,8 @@ router.get("/fetch-reviews", ReviewController.fetchReviews)
 
 
 // doctor api
-router.post("/save-doctor-profile", authenticateUser, isRole('doctor'), upload.single('image'), DoctorController.saveProfile)
-router.get("/fetch-doctor-profile", authenticateUser, isRole('doctor'), DoctorController.fetchProfile)
+router.post("/update-doctor-profile", authenticateUser, isRole('doctor'), upload.single('image'), DoctorController.updateDoctorProfile)
+router.get("/fetch-doctor-profile", authenticateUser, isRole('doctor'), DoctorController.fetchDoctorProfile)
 router.get("/view-doctor-profile/:doctorID", DoctorController.viewProfile)
 router.get("/fetch-doctors-by-specialty/:specialityID", DoctorController.fetchDoctorsBySpecialty)
 router.get("/search-doctor", DoctorController.searchDoctor)
@@ -95,6 +95,9 @@ router.patch("/update-blog/view/:blogID", BlogController.viewIncrement)
 router.put("/update-blog/:blogID", authenticateUser, isRole(['doctor', 'admin']), upload.single('image'), BlogController.updateBlog)
 router.delete("/delete-blog/:blogID", authenticateUser, isRole(['doctor', 'admin']), BlogController.deleteBlog)
 
+
+// admin api
+router.put("/verify-doctor-request/:doctorID", authenticateUser, isRole('admin'), AdminController.verifyDoctorRequest)
 
 
 

@@ -8,18 +8,27 @@ const dataSchema = new mongoose.Schema(
         },
         designation: {
             type: String,
-            default: "",
+            required: true,
+        },
+        registrationNo: {
+            type: String,
+            required: true,
+        },
+        phone:{
+            type: String,
+            required: true,
         },
         experience: { type: Number, required: true },
-        degrees: { type: String, default: ""},
+        degree: { type: String, required: true },
         consultationFee: { type: Number, required: true },
-        availableSlots: {
-            day: {
+        gender: { type: String, default: "" },
+        availableSlot: {
+            days: {
                 type: [String],
                 enum: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
                 required: true
             },
-            timeSlot: {
+            timeSlots: {
                 type: [String],
                 required: true
             }
@@ -38,6 +47,7 @@ const dataSchema = new mongoose.Schema(
         },
         area: {
             type: String,
+            required: true
         },
         image: {
             type: String,
@@ -58,7 +68,13 @@ const dataSchema = new mongoose.Schema(
             ref: "User",
             required: true,
             unique: true,
-        }
+        },
+        status: {
+            type: String,
+            enum: ['pending', 'approved', 'rejected'],
+            default: 'pending',
+            lowerCase: true,
+        },
     },{
         timestamps: true,
         versionKey: false,

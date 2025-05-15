@@ -1,28 +1,42 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
+
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { AiOutlineClose } from "react-icons/ai";
 import { userStore } from "../store/userStore.js";
-import { successToast } from "../helpers/helper.js";
+import {getRole, successToast} from "../helpers/helper.js";
+import {FiLogOut} from "react-icons/fi";
+import {MdDashboard} from "react-icons/md";
+
+const navItems = [
+    { path: "/", label: "Home" },
+    { path: "/registration-form", label: "Doctor Form" },
+    { path: "/about", label: "About Us" },
+    { path: "/specialities", label: "Doctors" },
+    { path: "/blogs", label: "Blogs" },
+    { path: "/search", label: "Search" },
+    { path: "/contact", label: "Contact" },
+];
 
 const Navbar = () => {
-    const navigate = useNavigate();
+    const role = getRole();
     const location = useLocation();
-
     const [menuOpen, setMenuOpen] = useState(false);
     const [avatarOpen, setAvatarOpen] = useState(false);
+    const { isLogin, logoutRequest, profile, fetchDoctorProfile } = userStore();
+    const navigate = useNavigate();
 
-    const { isLogin, logoutRequest } = userStore();
 
-    const logoutHandler = () => {
-        let res = logoutRequest();
-        successToast(res?.message);
-        window.location.reload();
-    };
+    useEffect(()=>{
+        (async ()=>{
+            if(role === "doctor"){
+                await fetchDoctorProfile()
+            }
+        })()
+    },[])
 
     const dashboardNavigateHandler = () => {
-        let role = localStorage.getItem("role");
         if (role === "admin") {
             navigate("/admin/dashboard");
         } else if (role === "doctor") {
@@ -30,16 +44,15 @@ const Navbar = () => {
         } else if (role === "user") {
             navigate("/user/dashboard");
         }
-    };
+    }
 
-    const navItems = [
-        { path: "/", label: "Home" },
-        { path: "/about", label: "About Us" },
-        { path: "/specialities", label: "Doctors" },
-        { path: "/blogs", label: "Blogs" },
-        { path: "/search", label: "Search" },
-        { path: "/contact", label: "Contact" },
-    ];
+    const logoutHandler = () => {
+        let res = logoutRequest();
+        successToast(res?.message);
+        localStorage.removeItem("role");
+        navigate("/");
+        window.location.reload();
+    };
 
     return (
         <div className="shadow-sm sticky top-0 bg-white z-[100]">
@@ -82,26 +95,43 @@ const Navbar = () => {
                                 <>
                                     <button
                                         onClick={() => setAvatarOpen(!avatarOpen)}
-                                        className="cursor-pointer w-8 h-8 rounded-full border p-1 border-[#529188] hover:shadow focus:outline-none"
+                                        className="flex justify-center items-center w-8 h-8 rounded-full border border-[#529188] p-1 cursor-pointer hover:shadow focus:outline-none"
+                                        aria-label="Toggle avatar menu"
                                     >
-                                        <img
-                                            src="/images/default-avatar.png"
-                                            alt="User Avatar"
-                                            className="w-full h-full object-cover rounded-full"
-                                        />
+                                        {
+                                            profile === null ? (
+                                                <img
+                                                    src="/images/default-avatar.png"
+                                                    alt="User Avatar"
+                                                    className="w-6 h-6 object-cover rounded-full"
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={profile?.image}
+                                                    alt="User Avatar"
+                                                    className="w-6 h-6 object-cover rounded-full"
+                                                />
+                                            )
+                                        }
                                     </button>
+
                                     {avatarOpen && (
-                                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-md z-50">
+                                        <div
+                                            className="py-4 absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded shadow-md z-50">
+                                            <p className="text-[12px] py-1 px-3 text-gray-600">{profile?.name || "Guest"}</p>
+                                            <hr className="border-gray-300"/>
                                             <button
                                                 onClick={dashboardNavigateHandler}
-                                                className="cursor-pointer block w-full text-left px-4 py-2 text-sm hover:bg-gray-100"
+                                                className="flex items-center gap-1 cursor-pointer block w-full text-left px-3 py-2 text-sm text-gray-700 hover:text-gray-800 hover:bg-gray-100"
                                             >
+                                                <MdDashboard />
                                                 Dashboard
                                             </button>
                                             <button
                                                 onClick={logoutHandler}
-                                                className="cursor-pointer w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                                className="flex items-center gap-1 cursor-pointer w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-100"
                                             >
+                                                <FiLogOut/>
                                                 Logout
                                             </button>
                                         </div>
@@ -109,7 +139,7 @@ const Navbar = () => {
                                 </>
                             ) : (
                                 <div className="flex items-center gap-1 text-sm md:text-base text-[#529188]">
-                                    <FaUser />
+                                    <FaUser/>
                                     <Link to="/login" className="hover:underline">Login</Link>
                                 </div>
                             )}

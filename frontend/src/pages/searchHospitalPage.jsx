@@ -6,11 +6,13 @@ import {hospitalStore} from "../store/hospitalStore.js";
 import {commonStore} from "../store/commmonStore.js";
 import HospitalList from "../components/HospitalList.jsx";
 import MasterLayout from "../layout/MasterLayout.jsx";
+import {userStore} from "../store/userStore.js";
 
 
 const SearchHospitalPage = () => {
     const {districtList, fetchDistrictList, divisionList, fetchDivisionList, postList, fetchPostList} = commonStore()
-    const {searchParams, inputOnChange, setLoading} = commonStore()
+    const {searchParams, inputOnChange} = commonStore()
+    const {setLoading} = userStore()
     const {fetchHospitalListByKeyword}= hospitalStore()
 
     useEffect(() => {

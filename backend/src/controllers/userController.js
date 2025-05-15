@@ -1,6 +1,13 @@
+import {COOKIE_EXPIRE_TIME} from "../config/config.js";
 
-import {changePasswordService, loginService, registerService} from "../services/userService.js";
-import {COOKIE_EXPIRE_TIME, JWT_SECRET_ACCESS_TOKEN} from "../config/config.js";
+import {
+    changePasswordService, doctorProfileRequestService,
+    fetchUserProfileService,
+    loginService,
+    registerService,
+    saveUserProfileService
+} from "../services/userService.js";
+
 
 // user register
 export const register = async (req, res) => {
@@ -36,5 +43,25 @@ export const logout = async(req, res)=>{
 // change password
 export const changePassword = async (req, res) => {
     const result = await changePasswordService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+
+// save user profile
+export const saveUserProfile = async (req, res) => {
+    const result = await saveUserProfileService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+
+// fetch user profile
+export const fetchUserProfile = async (req, res) => {
+    const result = await fetchUserProfileService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+// request send to create doctor profile
+export const doctorProfileRequest = async (req, res) => {
+    const result = await doctorProfileRequestService(req)
     return res.status(result.statusCode).json(result)
 }

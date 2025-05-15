@@ -2,7 +2,11 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import {createToken, verifyToken} from "../utility/JWT.js";
+import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
+import UserProfile from "../models/userProfileModel.js";
 import mongoose from "mongoose";
+import DoctorProfile from "../models/doctorProfileModel.js";
+const objID = mongoose.Types.ObjectId;
 
 
 
@@ -128,6 +132,161 @@ export const changePasswordService = async (req)=>{
             statusCode: 200,
             status: true,
             message: "Password updated successfully",
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+// request send to create doctor profile
+export const doctorProfileRequestService = async (req)=>{
+    try {
+        const reqBody = req.body;
+        const userID = new objID(req.headers.id);
+        reqBody.userID = userID;
+        let availableSlot = reqBody.availableSlot;
+        if (typeof availableSlot === 'string') {
+            availableSlot = JSON.parse(availableSlot);
+        }
+        reqBody.availableSlot = availableSlot;
+        const doctorProfile = await DoctorProfile.findOne({userID});
+        if(doctorProfile){
+            return{
+                statusCode: 400,
+                status: false,
+                message: "Request already exists"
+            }
+        }
+        // file upload to cloudinary
+        if(req.file){
+            let result = await fileUpload(req.file?.path || "", "Doctor_finder/doctor");
+            reqBody.image = result.secure_url;
+        }
+        // save or update profile
+        const result = await DoctorProfile.create(reqBody)
+        if(!result){
+            return{
+                statusCode: 400,
+                status: false,
+                message: "Request failed"
+            }
+        }
+        return {
+            statusCode: 201,
+            status: true,
+            message: "Request success",
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+// save user profile
+export const saveUserProfileService = async (req)=>{
+    try {
+        const reqBody = req.body;
+        const userID = new objID(req.headers.id);
+        reqBody.userID = userID;
+
+        const userProfile = await UserProfile.findOne({userID});
+        // file upload to cloudinary
+        if(req.file){
+            if(userProfile && userProfile['image']){
+                const publicID = getPublicID(userProfile['image']);
+                await deleteImage(publicID);
+            }
+            let result = await fileUpload(req.file?.path || "", "Doctor_finder/user");
+            reqBody.image = result.secure_url;
+        }
+        // save or update profile
+        const result = await UserProfile.updateOne({userID: userID}, {$set: reqBody }, { upsert: true });
+        if(!result){
+            return{
+                statusCode: 400,
+                status: false,
+                message: "Request failed"
+            }
+        }
+        return {
+            statusCode: 201,
+            status: true,
+            message: "Request success",
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+// fetch user profile
+export const fetchUserProfileService = async (req)=>{
+    try {
+        const userID = new objID(req.headers.id);
+        const matchStage = {
+            $match:{userID:userID},
+        }
+        // join with user collection
+        const joinWithUser = {
+            $lookup: {
+                from: "users",
+                localField: "userID",
+                foreignField: "_id",
+                as: "userDetails",
+            }
+
+        }
+        const projection = {
+            $project: {
+                _id: 1,
+                userID: 1,
+                name: 1,
+                gender:1,
+                profileImage: 1,
+                phone: 1,
+                "userDetails.status": 1
+            }
+        }
+        const unwind = {
+            $unwind:{path: "$userDetails", preserveNullAndEmptyArrays: true}
+        }
+        const pipeline = [
+            matchStage,
+            joinWithUser,
+            unwind,
+            projection,
+        ]
+
+        const result = await UserProfile.aggregate(pipeline);
+
+        if(!result){
+            return{
+                statusCode: 404,
+                status: false,
+                message: "User not found"
+            }
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result
         }
     }
     catch (e) {

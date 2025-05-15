@@ -34,8 +34,8 @@ export const upload = multer({ storage, fileFilter });
 //file upload to cloudinary
 export const fileUpload = async (imageURL, folder)=>{
     try {
-        let res = await cloudinary.uploader.upload(imageURL, {folder: folder});
-        return res.secure_url;
+        let result = await cloudinary.uploader.upload(imageURL, {folder: folder});
+        return result;
     }catch(err){
         throw new Error("Image upload failed!");
     }

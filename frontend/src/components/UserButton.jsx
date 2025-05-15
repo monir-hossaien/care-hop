@@ -1,9 +1,9 @@
 import React from 'react';
-import {commonStore} from "../store/commmonStore.js";
 import {CgSpinner} from "react-icons/cg";
+import {userStore} from "../store/userStore.js";
 
 const UserButton = (props) => {
-    const {loading} = commonStore()
+    const {loading} = userStore();
     const {className, onClick, text} = props;
     if (loading) {
         return (

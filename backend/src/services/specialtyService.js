@@ -20,7 +20,7 @@ export const assignSpecialtyService = async (req) => {
         // file upload to cloudinary
         if (req.file) {
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/Specialty");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // new hospital info save
         const newSpecialties = await Specialties.create(reqBody);
@@ -116,7 +116,7 @@ export const updateSpecialtyService = async (req)=>{
                 await deleteImage(publicID);
             }
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/Specialty");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // update hospital info
         await Specialties.updateOne({_id: specialtyID}, { $set: reqBody }, { new: true })

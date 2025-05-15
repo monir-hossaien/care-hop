@@ -1,34 +1,30 @@
-import { mongoose } from "mongoose";
+import {mongoose} from "mongoose";
 
 const dataSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
+    {
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        role: {
+            type: String,
+            enum: ["doctor", "user", "admin"],
+            default: "user",
+        },
+        isDoctorApproved: {
+            type: Boolean,
+            default: false
+        }
     },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    },
-    role: {
-      type: String,
-      enum: ["doctor", "user", "admin"],
-      default: "user",
-    },
-    status: {
-      type: String,
-      enum: ["Active", "Suspended"],
-      default: "Active",
-    },
-  },
-  {
-    timestamps: true,
-    versionKey: false,
-  }
+    {
+        timestamps: true,
+        versionKey: false,
+    }
 );
 
 const User = mongoose.model("user", dataSchema);

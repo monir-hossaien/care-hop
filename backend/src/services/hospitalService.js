@@ -22,7 +22,7 @@ export const assignHospitalService = async (req) => {
         // file upload to cloudinary
         if (req.file) {
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/hospital");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // new hospital info save
         const newHospital = await Hospital.create(reqBody);
@@ -54,22 +54,17 @@ export const assignHospitalService = async (req) => {
 // hospital list
 export const hospitalListService = async (req)=>{
     try {
-        // Extract page and limit from query params, with defaults
-        const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
-        const skip = (page - 1) * limit;
-
         // Get total count for pagination metadata
         const totalItems = await Hospital.countDocuments();
 
         // Fetch paginated data
-        const result = await Hospital.find().skip(skip).limit(limit);
+        const result = await Hospital.find().select('name')
 
-        if(!result){
+        if(!result || result.length === 0) {
             return{
                 statusCode: 404,
                 status: false,
-                message: "Request failed"
+                message: "No hospitals found"
             }
         }
         return {
@@ -77,11 +72,7 @@ export const hospitalListService = async (req)=>{
             status: true,
             message: "Request success",
             data: result,
-            pagination: {
-                totalItems,
-                totalPages: Math.ceil(totalItems / limit),
-                currentPage: page
-            }
+            totalItems: totalItems
         }
     }
     catch (e) {
@@ -161,7 +152,7 @@ export const updateHospitalInfoService = async (req)=>{
                 await deleteImage(publicID);
             }
             let result = await fileUpload(req.file?.path || "", "Doctor_finder/hospital");
-            reqBody.image = result;
+            reqBody.image = result.secure_url;
         }
         // update hospital info
         await Hospital.updateOne({_id: hospitalID}, { $set: reqBody }, { new: true })

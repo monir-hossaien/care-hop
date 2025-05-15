@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { userStore } from "../store/userStore.js";
-import { commonStore } from "../store/commmonStore.js";
 import ValidationHelper, { errorToast, successToast } from "../helpers/helper.js";
 import UserButton from "./UserButton.jsx";
 
@@ -12,16 +11,14 @@ const Login = () => {
     const [show, setShow] = useState(false);
 
     // Access state and methods from global stores
-    const { searchParams, resetSearchParams, inputOnChange, setLoading } = commonStore();
-    const { loginRequest } = userStore();
-
+    const { formData, inputOnChange, setLoading, resetFormData, loginRequest} = userStore();
     // React Router hook for navigation
     const navigate = useNavigate();
 
     // Prepare login data from store state
     const data = {
-        email: searchParams.email,
-        password: searchParams.password
+        email: formData.email,
+        password: formData.password
     };
 
     // Handle login request
@@ -29,11 +26,11 @@ const Login = () => {
         try {
 
             // Validate input fields
-            if (ValidationHelper.IsEmpty(searchParams.email)) {
+            if (ValidationHelper.IsEmpty(formData.email)) {
                 errorToast("Email is required");
-            } else if (!ValidationHelper.IsEmail(searchParams.email)) {
+            } else if (!ValidationHelper.IsEmail(formData.email)) {
                 errorToast("Invalid email");
-            } else if (ValidationHelper.IsEmpty(searchParams.password)) {
+            } else if (ValidationHelper.IsEmpty(formData.password)) {
                 errorToast("Password is required");
             } else {
                 setLoading(true); // Show loading state
@@ -45,8 +42,8 @@ const Login = () => {
                     // Success: show toast, reset form, and redirect
                     setLoading(false);
                     successToast(result?.message);
-                    resetSearchParams();
-                    navigate("/");
+                    resetFormData();
+                    window.location.replace("/")
                 } else {
                     // Failed login
                     errorToast(result?.message);
@@ -72,7 +69,7 @@ const Login = () => {
                     {/* Email input */}
                     <div>
                         <input
-                            value={searchParams?.email}
+                            value={formData?.email}
                             onChange={(e) => inputOnChange("email", e.target.value)}
                             className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b border-gray-200 px-3 py-2 rounded"
                             type="email"
@@ -83,7 +80,7 @@ const Login = () => {
                     {/* Password input with visibility toggle */}
                     <div className="relative">
                         <input
-                            value={searchParams?.password}
+                            value={formData?.password}
                             onChange={(e) => inputOnChange("password", e.target.value)}
                             className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border-b border-gray-200 px-3 py-2 rounded pr-10"
                             type={show ? "text" : "password"}

@@ -16,6 +16,10 @@ const dataSchema = new mongoose.Schema(
             type: String,
             default: "",
         },
+        address: {
+            type: String,
+            default: "",
+        },
         userID: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",

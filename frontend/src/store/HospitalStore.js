@@ -13,5 +13,12 @@ export const hospitalStore = create((set)=>({
             const data = result.data.data
             set({hospitalList: data})
         }
+    },
+    fetchAllHospitalList: async () => {
+        let result = await axios.get(`${base_url}/hospital-list`)
+        if(result.data.status === true){
+            const data = result.data.data
+            set({hospitalList: data})
+        }
     }
 }))
