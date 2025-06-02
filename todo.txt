@@ -1,2 +1,0 @@
-// must be separate profile model for patient and doctor
-// change user model
