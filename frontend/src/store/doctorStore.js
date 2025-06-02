@@ -4,7 +4,7 @@ import { unauthorized } from "../helpers/helper.js";
 import { userStore } from "./userStore.js";
 
 
-const base_url = "http://localhost:5000/api/v1";
+const base_url = "https://care-hop.vercel.app/api/v1";
 
 export const doctorStore = create((set, get) => ({
     doctorList: null,

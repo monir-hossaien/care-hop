@@ -2,7 +2,7 @@
 import {create} from "zustand"
 import axios from "axios";
 import {unauthorized} from "../helpers/helper.js";
-const base_url = "http://localhost:5000/api/v1"
+const base_url = "https://care-hop.vercel.app/api/v1"
 
 
 export const contactStore = create((set)=>({
