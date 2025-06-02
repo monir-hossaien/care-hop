@@ -1,6 +1,6 @@
-# 🩺 **Doctor Finder Website**
+# 🩺 **CareHop**
 
-The **Doctor Finder Website** is a comprehensive platform where patients can search for doctors based on specialization, location, experience, and ratings. Patients can easily book appointments, view doctor profiles, and leave reviews. Doctors can manage their profiles and availability, while admins have control over users, doctor approvals, and appointments.
+**CareHop** is a comprehensive platform where patients can search for doctors based on specialization, location, experience, and ratings. Patients can easily book appointments, view doctor profiles, and leave reviews. Doctors can manage their profiles and availability, while admins have control over users, doctor approvals, and appointments.
 
 ---
 
