@@ -63,7 +63,7 @@ const SearchHospitalPage = () => {
                                         value={searchParams.division}
                                         onChange={handleDistrictChange}
                                     >
-                                        <option value="">Select Division</option>
+                                        <option value="">Division</option>
                                         {divisionList?.map(({_id, name}) => (
                                             <option value={name} key={_id}>{name}</option>
                                         ))}
@@ -81,7 +81,7 @@ const SearchHospitalPage = () => {
                                         value={searchParams.district}
                                         onChange={handlePostChange}
                                     >
-                                        <option value="">Select District</option>
+                                        <option value="">District</option>
                                         {districtList?.map(({_id, name}) => (
                                             <option value={name} key={_id}>{name}</option>
                                         ))}
@@ -99,7 +99,7 @@ const SearchHospitalPage = () => {
                                         value={searchParams.post}
                                         onChange={(e) => inputOnChange("post", e.target.value)}
                                     >
-                                        <option value="">Select Post</option>
+                                        <option value="">Post</option>
                                         {postList?.map(({_id, name}) => (
                                             <option value={name} key={_id}>{name}</option>
                                         ))}

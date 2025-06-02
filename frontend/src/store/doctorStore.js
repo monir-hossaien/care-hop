@@ -1,35 +1,102 @@
-
-import {create} from "zustand";
+import { create } from "zustand";
 import axios from "axios";
-import {unauthorized} from "../helpers/helper.js";
-const base_url = "http://localhost:5000/api/v1"
+import { unauthorized } from "../helpers/helper.js";
+import { userStore } from "./userStore.js";
 
-export const doctorStore = create((set)=>({
 
+const base_url = "http://localhost:5000/api/v1";
+
+export const doctorStore = create((set, get) => ({
     doctorList: null,
-    fetchDoctorListBySpeciality: async (specialityID)=>{
-        let result = await axios.get(`${base_url}/fetch-doctors-by-specialty/${specialityID}?status=approved`)
-        if(result.data.status === true){
-            const data = result.data.data
-            set({doctorList: data})
+
+    formData: userStore.getState().formData,
+
+
+    // Fetch all doctors (for admin or public)
+    fetchDoctorList: async () => {
+        try {
+            const result = await axios.get(`${base_url}/fetch-doctor-list`, {
+                withCredentials: true,
+            });
+            if (result.data.status === true) {
+                set({ doctorList: result.data.data });
+            }
+        } catch (err) {
+            unauthorized(err?.response?.status);
+            throw err;
         }
     },
 
-    fetchDoctorListByKeyword: async (searchParams)=>{
-        // Convert searchParams object into query string
-        const queryString = new URLSearchParams(searchParams).toString();
-        let result = await axios.get(`${base_url}/search-doctor?${queryString}?status=approved`)
-        if(result.data.status === true){
-            const data = result.data.data
-            set({doctorList: data})
+    // Fetch doctors by specialty (e.g., for filters or homepage)
+    fetchDoctorListBySpeciality: async (specialityID) => {
+        try {
+            const result = await axios.get(
+                `${base_url}/fetch-doctors-by-specialty/${specialityID}?status=approved`
+            );
+            if (result.data.status === true) {
+                set({ doctorList: result.data.data });
+            }
+        } catch (err) {
+            unauthorized(err?.response?.status);
+            throw err;
         }
     },
-    saveDoctorProfile: async (data)=>{
-        try{
-            let result = await axios.post(`${base_url}/save-doctor-profile`, data, {withCredentials: true});
-            return result.data
-        }catch(error){
-            unauthorized(error?.response?.statusCode);
+
+    // Search doctors by keyword with query params
+    fetchDoctorListByKeyword: async (searchParams) => {
+        try {
+            const queryString = new URLSearchParams(searchParams).toString();
+            const result = await axios.get(
+                `${base_url}/search-doctor?${queryString}&status=approved`
+            );
+            if (result.data.status === true) {
+                set({ doctorList: result.data.data });
+            }
+        } catch (err) {
+            unauthorized(err?.response?.status);
+            throw err;
         }
-    }
-}))
+    },
+
+    // update doctor profile
+    updateDoctorProfile: async (data) => {
+        try {
+            const result = await axios.put(`${base_url}/update-doctor-profile`, data, {
+                withCredentials: true,
+            });
+            return result.data;
+        } catch (err) {
+            unauthorized(err?.response?.status);
+            throw err;
+        }
+    },
+
+    // Update doctor verification status (admin only)
+    updateDoctorStatus: async (doctorID, data) => {
+        try {
+            const result = await axios.put(
+                `${base_url}/verify-doctor-request/${doctorID}`,
+                data,
+                { withCredentials: true }
+            );
+            return result.data;
+        } catch (err) {
+            unauthorized(err?.response?.status);
+            throw err;
+        }
+    },
+
+    // Delete doctor by admin
+    deleteDoctorByAdmin: async (doctorID) => {
+        try {
+            const result = await axios.delete(
+                `${base_url}/delete-doctor/${doctorID}`,
+                { withCredentials: true }
+            );
+            return result.data;
+        } catch (err) {
+            unauthorized(err?.response?.status);
+            throw err;
+        }
+    },
+}));

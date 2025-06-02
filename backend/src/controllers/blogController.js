@@ -4,7 +4,7 @@ import {
     fetchBlogListService,
     readBlogService,
     updateBlogService,
-    fetchBlogsByCategoryService, viewIncrementService
+    fetchBlogsByCategoryService, viewIncrementService, fetchDoctorBlogService
 } from "../services/blogService.js";
 
 export const createBlog  = async (req, res) => {
@@ -13,7 +13,7 @@ export const createBlog  = async (req, res) => {
 }
 
 export const fetchBlogs  = async (req, res) => {
-    const result = await fetchBlogListService(req)
+    const result = await fetchBlogListService()
     return res.status(result.statusCode).json(result)
 }
 
@@ -39,5 +39,10 @@ export const viewIncrement  = async (req, res) => {
 
 export const deleteBlog  = async (req, res) => {
     const result = await deleteBlogService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+export const fetchDoctorBlog  = async (req, res) => {
+    const result = await fetchDoctorBlogService(req)
     return res.status(result.statusCode).json(result)
 }

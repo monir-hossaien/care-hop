@@ -1,10 +1,13 @@
 import React from 'react';
-import DashboardLayout from "../../../layout/DashboardLayout.jsx";
+import DashboardLayout from "../../layout/DashboardLayout.jsx";
+import AllBlog from "../../components/dashboard/AllBlog.jsx";
 
 const DoctorBlogPage = () => {
+
+
     return (
         <DashboardLayout>
-            <h1>This is doctor blog page</h1>
+            <AllBlog />
         </DashboardLayout>
     );
 };

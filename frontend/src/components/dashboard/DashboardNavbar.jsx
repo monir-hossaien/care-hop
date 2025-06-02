@@ -1,32 +1,42 @@
 import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import Skeleton from "react-loading-skeleton";
-import {FaUser} from "react-icons/fa";
 import {userStore} from "../../store/userStore.js";
-import {getRole, successToast} from "../../helpers/helper.js";
+import {successToast} from "../../helpers/helper.js";
 import {FiLogOut} from "react-icons/fi";
 
 const DashboardNavbar = ({ toggleSidebar }) => {
     const [avatarOpen, setAvatarOpen] = useState(false);
-    const { isLogin, logoutRequest, profile, fetchDoctorProfile } = userStore();
-    const role = getRole()
+    const { isLogin, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile, role, getRole} = userStore();
+
     const navigate = useNavigate();
 
-    useEffect(()=>{
+    useEffect(() => {
+        (async () => {
+            if (isLogin() && !role) {
+                await getRole();
+            }
+        })();
+    }, []);
+
+    useEffect(() => {
         (async ()=>{
-            if(role === "doctor"){
-                await fetchDoctorProfile()
+            if (isLogin() && role === "doctor") {
+                await fetchDoctorProfile();
+            }else{
+                isLogin() && await fetchProfileDetails()
             }
         })()
-    },[])
+    }, [role]);
 
     const logoutHandler = () => {
         let res = logoutRequest();
         successToast(res?.message);
-        localStorage.removeItem("role");
         navigate("/");
         window.location.reload();
     };
+
+    let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};
+    let email = role === "doctor" ? profile?.user?.email : profileDetails?.email;
 
     return (
         <nav className="flex items-center justify-between px-4 py-3 bg-white">
@@ -59,7 +69,7 @@ const DashboardNavbar = ({ toggleSidebar }) => {
                             aria-label="Toggle avatar menu"
                         >
                             {
-                                profile === null ? (
+                                profileDetails === null ? (
                                     <img
                                         src="/images/default-avatar.png"
                                         alt="User Avatar"
@@ -67,7 +77,7 @@ const DashboardNavbar = ({ toggleSidebar }) => {
                                     />
                                 ) : (
                                     <img
-                                        src={profile?.image}
+                                        src={profile?.image || "/images/default-avatar.png"}
                                         alt="User Avatar"
                                         className="w-6 h-6 object-cover rounded-full"
                                     />
@@ -78,8 +88,9 @@ const DashboardNavbar = ({ toggleSidebar }) => {
                         {avatarOpen && (
                             <div
                                 className="py-3 absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded shadow-md z-50">
-                                <p className="text-[12px] py-1 px-3 text-gray-500">{profile?.name || "Guest"}</p>
-                                <hr className="border-gray-300" />
+                                <p className="text-xs font-medium py-1 px-3 text-gray-500">{profile?.name || "Guest"}</p>
+                                <p className="text-xs py-1 px-3 text-gray-500">{email || "example@gmail.com"}</p>
+                                <hr className="border-gray-300 mt-1"/>
                                 <button
                                     onClick={logoutHandler}
                                     className="font-medium flex items-center gap-1 cursor-pointer w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-200"

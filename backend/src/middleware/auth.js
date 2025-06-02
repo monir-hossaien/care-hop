@@ -19,10 +19,9 @@ export const authenticateUser = async (req, res, next) => {
         if (!decodeToken) {
             return res.status(401).send({status: false, message:"Invalid or expired token. Please log in again."});
         }else{
-            let email = decodeToken.email;
-            let id = decodeToken._id;
-            req.headers.email = email;
-            req.headers.id = id;
+            req.headers.email = decodeToken.email;
+            req.headers.id = decodeToken._id;
+            req.headers.role = decodeToken.role;
             next()
         }
     }catch (e) {

@@ -1,7 +1,7 @@
 import {COOKIE_EXPIRE_TIME} from "../config/config.js";
 
 import {
-    changePasswordService, doctorProfileRequestService,
+    changePasswordService, deleteUserService, doctorProfileRequestService, fetchRoleService, fetchUserListService,
     fetchUserProfileService,
     loginService,
     registerService,
@@ -63,5 +63,24 @@ export const fetchUserProfile = async (req, res) => {
 // request send to create doctor profile
 export const doctorProfileRequest = async (req, res) => {
     const result = await doctorProfileRequestService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+// fetch user list for admin
+export const fetchUserList = async (req, res) => {
+    const result = await fetchUserListService()
+    return res.status(result.statusCode).json(result)
+}
+
+
+// delete user
+export const deleteUser = async (req, res) => {
+    const result = await deleteUserService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+// auth
+export const fetchRole = async (req, res) => {
+    const result = await fetchRoleService(req)
     return res.status(result.statusCode).json(result)
 }

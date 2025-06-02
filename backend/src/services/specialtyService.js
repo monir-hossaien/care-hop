@@ -9,11 +9,12 @@ export const assignSpecialtyService = async (req) => {
         const reqBody = req.body;
         // Check if hospital already exists
         const existingSpecialty = await Specialties.findOne({ name: reqBody.name });
+        const name = existingSpecialty?.name
         if (existingSpecialty) {
             return {
                 statusCode: 400,
                 status: false,
-                message: "This Specialty is already assigned"
+                message: `${name} already exists`
             };
         }
 
@@ -47,6 +48,49 @@ export const assignSpecialtyService = async (req) => {
         };
     }
 }
+
+// // read single specialty
+export const readSpecialtyService = async (req) => {
+    try {
+        const _id = new objID(req.params.id);
+        const matchStage = {
+            $match: {_id}
+        }
+        const projection = {
+            $project: {
+                _id: 0,
+                name: 1,
+                image: 1,
+                description: 1
+            }
+        }
+        const pipeline = [
+            matchStage,
+            projection
+        ]
+        let result = await Specialties.aggregate(pipeline);
+        if (!result) {
+            return {
+                statusCode: 404,
+                status: false,
+                message: "No specialty found"
+            };
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result[0]
+        };
+    } catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        };
+    }
+};
 
 // specialties list
 export const specialtiesListService = async (req) => {
@@ -92,8 +136,6 @@ export const specialtiesListService = async (req) => {
         };
     }
 };
-
-
 
 // specialties update
 export const updateSpecialtyService = async (req)=>{

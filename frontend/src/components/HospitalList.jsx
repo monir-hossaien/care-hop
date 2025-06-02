@@ -3,6 +3,7 @@ import { hospitalStore } from "../store/HospitalStore.js";
 import { useLocation } from "react-router-dom";
 import { commonStore } from "../store/commmonStore.js";
 import HospitalSkeleton from "../skeleton/hospitalSkeleton.jsx";
+import NotFound from "./NotFound.jsx";
 
 const HospitalList = () => {
     const { hospitalList } = hospitalStore();
@@ -24,12 +25,12 @@ const HospitalList = () => {
                             <HospitalSkeleton/>
                         )
                     ) : noHospitals ? (
-                        <p className="col-span-12 text-center text-gray-600 text-sm">
-                            No Hospital found!
-                        </p>
+                        <div className="col-span-12 text-center">
+                            <NotFound message="No Hospital Found"/>
+                        </div>
                     ) : (
                         hospitalList.map((hospital, index) => {
-                            const { name, area, phone, image, rating } = hospital;
+                            const {name, area, phone, image, rating } = hospital;
                             return (
                                 <div
                                     key={index}

@@ -10,7 +10,7 @@ const Footer = () => {
                 <div className="grid grid-cols-12 gap-4">
                     <div className="col-span-12 md:col-span-4 space-y-7">
                         <h2 className="text-[#1CA288] text-xl font-bold border-b-2 inline-block pb-2">About</h2>
-                        <p className="text-sm text-[#000052] leading-6">BD Doctor aims to break down barriers for revolutionary and transformative change and create a healthcare system that is sustainable, progressive, effective, and worthy for the people of Bangladesh.</p>
+                        <p className="text-sm text-[#000052] leading-6">CareHop aims to break down barriers for revolutionary and transformative change and create a healthcare system that is sustainable, progressive, effective, and worthy for the people of Bangladesh.</p>
                         <div className="flex gap-4">
                             <Link to="/" className="bg-white p-3 rounded-full"><FaFacebookF className="text-[#1CA288]" /></Link>
                             <Link to="/" className="bg-white p-3 rounded-full"><FaInstagram className="text-[#1CA288]"/></Link>

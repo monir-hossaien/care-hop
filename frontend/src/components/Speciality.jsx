@@ -3,17 +3,18 @@ import {Link, useLocation} from "react-router-dom";
 import {specialitiesStore} from "../store/specialitiesStore.js";
 import SpecialitySkeleton from "../skeleton/specialitySkeleton.jsx";
 import Banner from "./Banner.jsx";
-import {doctorStore} from "../store/doctorStore.js";
+import { motion } from 'framer-motion';
+
 
 const Speciality = () => {
     const location = useLocation();
     // const [currentPage, setCurrentPage] = useState(1);
-    const {specialities, fetchSpecialityList} = specialitiesStore();
+    const {specialities, fetchSpecialtiesList} = specialitiesStore();
 
     useEffect(() => {
 
         (async () => {
-            await fetchSpecialityList();
+            await fetchSpecialtiesList();
         })()
 
     }, [])
@@ -31,8 +32,28 @@ const Speciality = () => {
                     <Banner name={"Doctor Specialties"}/>
                 ) : (
                     <div className="text-center mt-10">
-                        <h1 className="text-4xl text-[#164193] font-bold">View Doctors by Specialities</h1>
-                        <p className="uppercase py-3 font-bold text-[#00B092] tracking-widest">Specialities</p>
+                        <motion.h1
+                            initial={{opacity: 0, x: -100}}
+                            whileInView={{opacity: 1, x: 0}}
+                            transition={{
+                                duration: 0.8,
+                            }}
+                            className="text-4xl md:text-5xl text-[#164193] font-bold text-center"
+                        >
+                            View Doctors by Specialities
+                        </motion.h1>
+
+                        <motion.p
+                            initial={{opacity: 0, x: 100}}
+                            whileInView={{opacity: 1, x: 0}}
+                            transition={{
+                                duration: 0.6,
+                            }}
+                            className="uppercase py-3 font-bold text-[#00B092] tracking-widest text-center"
+                        >
+                            Specialities
+                        </motion.p>
+
                     </div>
                 )
             }
@@ -41,21 +62,25 @@ const Speciality = () => {
                 {
                     specialities === null ? (<SpecialitySkeleton/>) : (
                         <div className="grid grid-cols-12 gap-5 py-14 px-4 md:px-0">
-                            {
-                                specialities.data.map((speciality) => {
+                        {
+                                specialities.data.map((speciality, index) => {
                                     const {_id, name, description, image} = speciality;
                                     return (
-                                        <div className="col-span-12 md:col-span-3" key={_id}>
+                                        <motion.div
+                                            initial={{opacity: 0, y: 100, scale: 0.95}}
+                                            whileInView={{opacity: 1, y: 0, scale: 1}}
+                                            transition={{duration: 0.6, ease: "easeOut"}}
+                                            className="col-span-12 md:col-span-3" key={_id}>
                                             <Link to={`/department/${name}/${_id}`}>
                                                 <div
-                                                    className="text-center shadow-sm rounded-lg text-gray-600 px-4 py-8 flex flex-col items-center space-y-4 hover:bg-[#164193] hover:text-white transition-all duration-300 hover:scale-102">
+                                                    className="shadow-sm rounded-lg text-gray-600 px-4 py-8 flex flex-col items-center  space-y-4 hover:bg-[#164193] hover:text-white transition-all duration-300 hover:scale-102">
                                                     <img className="w-28 bg-white rounded-full p-4" src={image}
                                                          alt="image"/>
-                                                    <h3 className="text-lg font-extrabold text-[#1BA288] group-hover:text-white transition-all duration-300">{name}</h3>
+                                                    <h3 className="text-start text-lg font-extrabold text-[#1BA288] group-hover:text-white transition-all duration-300">{name}</h3>
                                                     <p className="text-sm">{description}</p>
                                                 </div>
                                             </Link>
-                                        </div>
+                                        </motion.div>
                                     )
                                 })
                             }

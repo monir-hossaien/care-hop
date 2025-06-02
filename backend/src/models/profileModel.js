@@ -3,6 +3,13 @@ import { mongoose } from 'mongoose';
 
 const dataSchema = new mongoose.Schema(
     {
+        name: {
+            type: String,
+            required: true,
+            trim: true,
+            minlength: [4, "Name must be at least 4 characters"],
+            maxlength: [30, "Name must be less than 20 characters"],
+        },
         phone: {
             type: String,
             required: true
@@ -32,6 +39,6 @@ const dataSchema = new mongoose.Schema(
     }
 );
 
-const UserProfile = mongoose.model("userProfile", dataSchema);
+const Profile = mongoose.model("Profile", dataSchema);
 
-export default UserProfile;
+export default Profile;

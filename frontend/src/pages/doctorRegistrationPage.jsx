@@ -1,11 +1,11 @@
 import React from 'react';
-import DoctorForm from "../components/doctorForm.jsx";
+import DoctorRequestForm from "../components/doctorRequestForm.jsx";
 import MasterLayout from "../layout/MasterLayout.jsx";
 
 const DoctorRegistrationPage = () => {
     return (
         <MasterLayout>
-            <DoctorForm />
+            <DoctorRequestForm />
         </MasterLayout>
     );
 };

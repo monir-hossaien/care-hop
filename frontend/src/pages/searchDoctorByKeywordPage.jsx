@@ -13,7 +13,7 @@ import {userStore} from "../store/userStore.js";
 
 const SearchDoctorByKeywordPage = () => {
     const {districtList, fetchDistrictList, divisionList, fetchDivisionList, postList, fetchPostList} = commonStore()
-    const {specialities, fetchSpecialityList} = specialitiesStore()
+    const {specialities, fetchSpecialtiesList} = specialitiesStore()
     const {fetchDoctorListByKeyword} = doctorStore()
     const {searchParams, inputOnChange} = commonStore()
     const {setLoading} = userStore()
@@ -22,7 +22,7 @@ const SearchDoctorByKeywordPage = () => {
     useEffect(() => {
         (async ()=>{
             await fetchDivisionList();
-            await fetchSpecialityList();
+            await fetchSpecialtiesList();
             if(Object.values(searchParams).some(value => value !== "" && value !== null)){
                 setLoading(true)
                 await fetchDoctorListByKeyword(searchParams)
@@ -68,7 +68,7 @@ const SearchDoctorByKeywordPage = () => {
                                         value={searchParams.division}
                                         onChange={handleDistrictChange}
                                     >
-                                        <option value="">Select Division</option>
+                                        <option value="">Division</option>
                                         {divisionList?.map(({_id, name}) => (
                                             <option value={name} key={_id}>{name}</option>
                                         ))}
@@ -86,7 +86,7 @@ const SearchDoctorByKeywordPage = () => {
                                         value={searchParams.district}
                                         onChange={handlePostChange}
                                     >
-                                        <option value="">Select District</option>
+                                        <option value="">District</option>
                                         {districtList?.map(({_id, name}) => (
                                             <option value={name} key={_id}>{name}</option>
                                         ))}
@@ -104,7 +104,7 @@ const SearchDoctorByKeywordPage = () => {
                                         value={searchParams.post}
                                         onChange={(e) => inputOnChange("post", e.target.value)}
                                     >
-                                        <option value="">Select Post</option>
+                                        <option value="">Post</option>
                                         {postList?.map(({_id, name}) => (
                                             <option value={name} key={_id}>{name}</option>
                                         ))}
@@ -122,7 +122,7 @@ const SearchDoctorByKeywordPage = () => {
                                         value={searchParams.specialityID}
                                         onChange={(e) => inputOnChange("specialityID", e.target.value)}
                                     >
-                                        <option value="">Select Speciality</option>
+                                        <option value="">Speciality</option>
                                         {specialities?.data?.map(({_id, name}) => (
                                             <option value={_id} key={_id}>{name}</option>
                                         ))}

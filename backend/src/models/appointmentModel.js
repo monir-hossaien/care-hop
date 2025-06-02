@@ -25,6 +25,11 @@ const dataSchema = new mongoose.Schema(
             enum: ["Pending", "Confirmed", "Canceled"],
             default: "Pending"
         },
+        expiresAt: {
+            type: Date,
+            default: () => new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
+            index: { expires: 0 } // TTL index activates here
+        }
     },{
         timestamps: true,
         versionKey: false,

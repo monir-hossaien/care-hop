@@ -25,9 +25,7 @@ const BlogDetails = () => {
                     <div className="py-6 space-y-4">
                         <p className="text-sm text-gray-500">Category: {blogDetails?.category}</p>
                         <h1 className="text-3xl font-bold text-[#1CA288]">{blogDetails?.title}</h1>
-                        {blogDetails?.content.split('\n\n').map((para, idx) => (
-                            <p key={idx} className="text-base leading-7 text-gray-700">{parse(para)}</p>
-                        ))}
+                        <p className="whitespace-pre-line text-base leading-7 text-gray-700">{blogDetails?.content}</p>
                     </div>
                 </div>
 

@@ -48,7 +48,7 @@ export const createBlogService = async (req) => {
     }
 };
 
-export const fetchBlogListService = async (req) => {
+export const fetchBlogListService = async () => {
     try {
         const matchStage = {$match:{}}
         const joinWithUserCollection = {
@@ -83,7 +83,7 @@ export const fetchBlogListService = async (req) => {
             projection
         ]
         const result = await Blog.aggregate(pipeline)
-        if (!result || result.length === 0) {
+        if (!result) {
             return {
                 statusCode: 404,
                 status: false,
@@ -197,8 +197,8 @@ export const readBlogService = async (req) => {
 export const updateBlogService = async (req) => {
     try {
         const reqBody = req.body;
-        let views = parseInt(reqBody.views);
-        reqBody.views = views;
+        // let views = parseInt(reqBody.views);
+        // reqBody.views = views;
         const blogID = new objID(req.params.blogID);
         const blog = await Blog.findOne({_id: blogID})
         if(!blog || blog.length < 1){
@@ -302,6 +302,51 @@ export const deleteBlogService = async (req) => {
             statusCode: 200,
             status: true,
             message: "Request success",
+        };
+    } catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        };
+    }
+};
+
+export const fetchDoctorBlogService = async (req) => {
+    try {
+        const userID = new objID(req.headers.id)
+        const matchStage = {
+            $match:{ userID },
+        }
+
+        const projection = {
+            $project: {
+                title: 1,
+                image: 1,
+                shortDes: 1,
+                createdAt: 1,
+                views: 1,
+                category: 1
+            }
+        }
+        const pipeline = [
+            matchStage,
+            projection
+        ]
+        const result = await Blog.aggregate(pipeline)
+        if (!result) {
+            return {
+                statusCode: 404,
+                status: false,
+                message: "No blogs found"
+            };
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result
         };
     } catch (e) {
         return {

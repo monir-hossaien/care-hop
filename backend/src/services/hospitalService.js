@@ -2,7 +2,6 @@
 import Hospital from "../models/hospitalModel.js";
 import mongoose from "mongoose";
 import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
-import DoctorProfile from "../models/doctorProfileModel.js";
 const objID = mongoose.Types.ObjectId;
 
 // assign to hospital
@@ -10,7 +9,7 @@ export const assignHospitalService = async (req) => {
     try {
         const reqBody = req.body;
         // Check if hospital already exists
-        const existingHospital = await Hospital.findOne({ name: reqBody.name });
+        const existingHospital = await Hospital.findOne({ area: reqBody.area });
         if (existingHospital) {
             return {
                 statusCode: 400,
@@ -50,15 +49,42 @@ export const assignHospitalService = async (req) => {
     }
 };
 
+// fetch single hospital details
+export const fetchHospitalDetailService = async (req) => {
+    try {
+        const _id = new objID(req.params.id);
+        const matchStage = {
+            $match: {_id}
+        }
+        const pipeline = [matchStage]
+        let result = await Hospital.aggregate(pipeline);
+        if (!result) {
+            return {
+                statusCode: 404,
+                status: false,
+                message: "No hospital found"
+            };
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result[0]
+        };
+    } catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        };
+    }
+};
 
 // hospital list
-export const hospitalListService = async (req)=>{
+export const fetchHospitalListService = async ()=>{
     try {
-        // Get total count for pagination metadata
-        const totalItems = await Hospital.countDocuments();
-
-        // Fetch paginated data
-        const result = await Hospital.find().select('name')
+        const result = await Hospital.find().select(['-createdAt', '-updatedAt'])
 
         if(!result || result.length === 0) {
             return{
@@ -71,8 +97,7 @@ export const hospitalListService = async (req)=>{
             statusCode: 200,
             status: true,
             message: "Request success",
-            data: result,
-            totalItems: totalItems
+            data: result
         }
     }
     catch (e) {

@@ -1,8 +1,8 @@
 
 import {
     assignHospitalService,
-    deleteHospitalInfoService,
-    hospitalListService, searchHospitalService,
+    deleteHospitalInfoService, fetchHospitalDetailService, fetchHospitalListService,
+    searchHospitalService,
     updateHospitalInfoService
 } from "../services/hospitalService.js";
 
@@ -12,10 +12,16 @@ export const assignHospital = async (req, res) => {
     return res.status(result.statusCode).json(result)
 }
 
+// fetch single hospital details
+export const fetchHospitalDetails = async (req, res) => {
+    const result = await fetchHospitalDetailService(req)
+    return res.status(result.statusCode).json(result)
+}
+
 
 // hospital list
-export const hospitalList = async (req, res) => {
-    const result = await hospitalListService(req)
+export const fetchHospitalList = async (req, res) => {
+    const result = await fetchHospitalListService(req)
     return res.status(result.statusCode).json(result)
 }
 

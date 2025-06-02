@@ -1,22 +1,16 @@
 import React from 'react';
 
 import {IoMdClose} from "react-icons/io";
-import {appointmentStore} from "../store/appointmentStore.js";
-import ValidationHelper, {errorToast, successToast} from "../helpers/helper.js";
-import UserButton from "./UserButton.jsx";
-import {userStore} from "../store/userStore.js";
+import {appointmentStore} from "../../store/appointmentStore.js";
+import ValidationHelper, {errorToast, successToast} from "../../helpers/helper.js";
+import UserButton from "../UserButton.jsx";
+import {userStore} from "../../store/userStore.js";
 
 
 const AppointmentModal = ({ doctor, onClose }) => {
+
     const {createAppointment} = appointmentStore()
     const { formData, inputOnChange, setLoading, resetFormData} = userStore();
-    console.log(doctor);
-
-    const data = {
-        day: formData.day,
-        timeSlot: formData.timeSlot,
-    }
-
 
     const handleAppointment = async (_id) => {
 
@@ -26,34 +20,36 @@ const AppointmentModal = ({ doctor, onClose }) => {
             errorToast("Please select a time slot")
         }else{
             try{
+                const data = {
+                    day: formData.day,
+                    timeSlot: formData.timeSlot,
+                }
                 setLoading(true)
                 const result = await createAppointment(_id, data)
                 if(result?.status === true){
                     setLoading(false)
                     successToast(result?.message)
                     resetFormData()
-                }else{
-                    setLoading(false)
-                    errorToast(result.message)
                 }
             }catch(error){
-                setLoading(false)
-                errorToast(error?.response?.data?.message)
+                setLoading(false);
+                const msg = error?.response?.data?.message || error?.message || "Something went wrong!";
+                errorToast(msg);
             }
         }
     }
 
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-            <div className="relative bg-white rounded-lg px-6 py-8 w-full sm:w-2/3 md:w-1/2 lg:w-1/3 max-w-md shadow-lg">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 backdrop-blur-xs backdrop-brightness-90">
+            <div className="relative bg-white rounded-lg px-6 py-8 w-full max-w-md shadow-lg">
                 <button
                     onClick={onClose}
-                    className="absolute top-2 right-2 text-gray-600 hover:text-red-500 text-xl font-bold"
+                    className="cursor-pointer absolute top-2 right-2 text-gray-600 hover:text-red-500 hover:bg-gray-100 p-1 rounded-full transition-all duration-300 text-xl font-bold"
                 >
                     <IoMdClose />
                 </button>
-                <h2 className="text-lg font-bold text-[#164193] mb-4">
+                <h2 className="text-sm md:text-[16px] font-bold text-[#164193] py-4">
                     Book Appointment with {doctor?.name}
                 </h2>
 
@@ -65,7 +61,7 @@ const AppointmentModal = ({ doctor, onClose }) => {
                             onChange={(e)=> inputOnChange("day", e.target.value)}
                             className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                         >
-                            <option value="">Select Day</option>
+                            <option value="">Day</option>
                             {
                                 doctor?.availableSlot?.days.map((day, index) => (
                                     <option key={index} value={day}>{day}</option>
@@ -80,7 +76,7 @@ const AppointmentModal = ({ doctor, onClose }) => {
                             onChange={(e)=> inputOnChange("timeSlot", e.target.value)}
                             className="text-sm w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
                         >
-                            <option value="">Select Slot</option>
+                            <option value="">Slot</option>
                             {
                                 doctor?.availableSlot?.timeSlots.map((slot, index) => (
                                     <option key={index} value={slot}>{slot}</option>

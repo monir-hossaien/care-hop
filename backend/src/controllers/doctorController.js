@@ -1,8 +1,7 @@
 
 // save profile
 import {
-    viewProfileService
-    ,
+    viewProfileService,
     searchDoctorService,
     fetchDoctorsBySpecialtyService,
     fetchDoctorProfileService,

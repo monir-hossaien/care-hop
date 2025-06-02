@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { doctorStore } from "../store/doctorStore.js";
-import AppointmentModal from "./AppointmentModal.jsx";
+import AppointmentModal from "./modal/AppointmentModal.jsx";
 import DoctorSkeleton from "../skeleton/doctorSkeleton.jsx";
 import { useLocation } from "react-router-dom";
 import { commonStore } from "../store/commmonStore.js";
+import NotFound from "./NotFound.jsx";
 
 const DoctorList = () => {
     const { doctorList } = doctorStore();
@@ -31,10 +32,12 @@ const DoctorList = () => {
                         <DoctorSkeleton/>
                     )
                 ) : noDoctors ? (
-                    <p className="col-span-12 text-center text-gray-600 text-sm">No Doctor found!</p>
+                    <div className="col-span-12 text-center">
+                        <NotFound message="No Doctor Found" />
+                    </div>
                 ) : (
                     doctorList.map((doctor) => {
-                        const { _id, image, name, degrees, specialities } = doctor;
+                        const { _id, name, image, degrees, specialities } = doctor;
                         return (
                             <div className="col-span-12 md:col-span-6" key={_id}>
                                 <div className="bg-white border border-gray-300 shadow-sm rounded w-full flex flex-col sm:flex-row items-center sm:items-start px-5 py-8 gap-6 group">

@@ -1,6 +1,6 @@
 
 // contact hospital
-import {contactService, contactListService} from "../services/contactService.js";
+import {contactService, deleteMessageService, messageListService} from "../services/contactService.js";
 
 export const contact = async (req, res) => {
     const result = await contactService(req)
@@ -8,7 +8,13 @@ export const contact = async (req, res) => {
 }
 
 // contact list
-export const contactList = async (req, res) => {
-    const result = await contactListService(req)
+export const messageList = async (req, res) => {
+    const result = await messageListService()
+    return res.status(result.statusCode).json(result)
+}
+
+// delete message
+export const deleteMessage = async (req, res) => {
+    const result = await deleteMessageService(req)
     return res.status(result.statusCode).json(result)
 }

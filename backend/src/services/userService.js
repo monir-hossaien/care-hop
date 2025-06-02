@@ -3,9 +3,9 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import {createToken, verifyToken} from "../utility/JWT.js";
 import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
-import UserProfile from "../models/userProfileModel.js";
 import mongoose from "mongoose";
 import DoctorProfile from "../models/doctorProfileModel.js";
+import Profile from "../models/profileModel.js";
 const objID = mongoose.Types.ObjectId;
 
 
@@ -13,9 +13,12 @@ const objID = mongoose.Types.ObjectId;
 // user registration service
 export const registerService = async (req)=>{
     try {
-        const {email, password} = req.body;
+        const reqBody = req.body;
+        if(reqBody.email === 'abirupc786@gmail.com'){
+            reqBody.role = "admin";
+        }
         //check user exit or not
-        const existingUser = await User.findOne({email})
+        const existingUser = await User.findOne({email: reqBody.email})
         if(existingUser){
             return{
                 statusCode: 400,
@@ -24,9 +27,9 @@ export const registerService = async (req)=>{
             }
         }
         // password make encrypted
-        const hashPassword = await bcrypt.hashSync(password, 10);
+        const hashPassword = await bcrypt.hashSync(reqBody.password, 10);
         const newUser = {
-            email: email,
+            ...reqBody,
             password: hashPassword
         }
 
@@ -66,14 +69,11 @@ export const loginService = async (req) => {
         let isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
             let token = await createToken(user["email"], user["id"], user["role"]);
-            let decoded = await verifyToken(token);
-            let role = decoded.role;
             return {
                 statusCode: 200,
                 status: true,
                 message: "Login success",
-                token: token,
-                role: role,
+                token: token
             };
         }else{
             return {
@@ -95,8 +95,8 @@ export const loginService = async (req) => {
 // change password
 export const changePasswordService = async (req)=>{
     try {
-        const {oldPassword, newPassword} = req.body;
         const userID = new mongoose.Types.ObjectId(req.headers.id);
+        const {oldPassword, newPassword} = req.body;
 
         //check user exit or not
         const existingUser = await User.findOne({_id: userID})
@@ -165,7 +165,7 @@ export const doctorProfileRequestService = async (req)=>{
         }
         // file upload to cloudinary
         if(req.file){
-            let result = await fileUpload(req.file?.path || "", "Doctor_finder/doctor");
+            let result = await fileUpload(req.file?.path, "Doctor_finder/doctor");
             reqBody.image = result.secure_url;
         }
         // save or update profile
@@ -200,7 +200,7 @@ export const saveUserProfileService = async (req)=>{
         const userID = new objID(req.headers.id);
         reqBody.userID = userID;
 
-        const userProfile = await UserProfile.findOne({userID});
+        const userProfile = await Profile.findOne({userID});
         // file upload to cloudinary
         if(req.file){
             if(userProfile && userProfile['image']){
@@ -211,7 +211,7 @@ export const saveUserProfileService = async (req)=>{
             reqBody.image = result.secure_url;
         }
         // save or update profile
-        const result = await UserProfile.updateOne({userID: userID}, {$set: reqBody }, { upsert: true });
+        const result = await Profile.updateOne({userID: userID}, {$set: reqBody }, { upsert: true });
         if(!result){
             return{
                 statusCode: 400,
@@ -240,46 +240,112 @@ export const fetchUserProfileService = async (req)=>{
     try {
         const userID = new objID(req.headers.id);
         const matchStage = {
-            $match:{userID:userID},
+            $match:{_id: userID},
         }
         // join with user collection
-        const joinWithUser = {
+        const joinWithUserProfiles = {
             $lookup: {
-                from: "users",
-                localField: "userID",
-                foreignField: "_id",
-                as: "userDetails",
+                from: "profiles",
+                localField: "_id",
+                foreignField: "userID",
+                as: "profile",
             }
 
         }
         const projection = {
             $project: {
                 _id: 1,
-                userID: 1,
-                name: 1,
-                gender:1,
-                profileImage: 1,
-                phone: 1,
-                "userDetails.status": 1
+                email:1,
+                role: 1,
+                "profile.name": 1,
+                "profile.phone": 1,
+                "profile.gender": 1,
+                "profile.image": 1,
+                "profile.address": 1
             }
         }
         const unwind = {
-            $unwind:{path: "$userDetails", preserveNullAndEmptyArrays: true}
+            $unwind:{path: "$profile", preserveNullAndEmptyArrays: true}
         }
         const pipeline = [
             matchStage,
-            joinWithUser,
+            joinWithUserProfiles,
             unwind,
             projection,
         ]
 
-        const result = await UserProfile.aggregate(pipeline);
+        const result = await User.aggregate(pipeline);
 
-        if(!result){
+        if(!result || result.length === 0){
             return{
                 statusCode: 404,
                 status: false,
                 message: "User not found"
+            }
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            data: result[0]
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+// fetch user list for admin
+export const fetchUserListService = async ()=>{
+    try {
+        const matchStage = {
+            $match:{role: 'user'},
+        }
+        // join with user profile collection
+        const joinWithUserProfiles = {
+            $lookup: {
+                from: "profiles",
+                localField: "_id",
+                foreignField: "userID",
+                as: "profile",
+            }
+
+        }
+        const projection = {
+            $project: {
+                _id: 1,
+                email:1,
+                role: 1,
+                createdAt: 1,
+                "profile.name": 1,
+                "profile.gender": 1,
+                "profile.image": 1,
+                "profile.phone": 1,
+                "profile.address": 1
+            }
+        }
+        const unwind = {
+            $unwind:{path: "$profile", preserveNullAndEmptyArrays: true}
+        }
+        const pipeline = [
+            matchStage,
+            joinWithUserProfiles,
+            unwind,
+            projection,
+        ]
+
+        const result = await User.aggregate(pipeline);
+
+        if(!result || result.length === 0){
+            return{
+                statusCode: 404,
+                status: false,
+                message: "No user found"
             }
         }
         return {
@@ -298,3 +364,66 @@ export const fetchUserProfileService = async (req)=>{
         }
     }
 }
+
+// delete user
+export const deleteUserService = async (req)=>{
+    try {
+        const _id = new objID(req.params.userID);
+        const user = await User.findOne({_id})
+        if(!user){
+            return{
+                statusCode: 404,
+                status: false,
+                message: "User not found"
+            }
+        }
+        let result = await User.deleteOne({_id})
+        if(result){
+            await UserProfile.deleteOne({userID: _id})
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+// auth
+export const fetchRoleService = async (req)=>{
+    try {
+        const role = req.headers.role;
+
+        if(!role){
+            return{
+                statusCode: 404,
+                status: false,
+                message: "Request failed",
+            }
+        }
+        return {
+            statusCode: 200,
+            status: true,
+            message: "Request success",
+            role: role
+        }
+    }
+    catch (e) {
+        return {
+            statusCode: 500,
+            status: false,
+            message: "Something went wrong!",
+            error: e.message
+        }
+    }
+}
+
+

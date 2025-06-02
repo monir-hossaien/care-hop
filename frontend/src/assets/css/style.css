@@ -11,10 +11,10 @@
 /*    margin: 0;*/
 /*}*/
 
-/*body{*/
-/*    overflow: hidden;*/
+body{
+    overflow-x: hidden;
 
-/*}*/
+}
 
 
 .container{

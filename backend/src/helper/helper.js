@@ -1,6 +1,8 @@
 import { cloud_name, api_key, api_secret } from "../config/config.js";
 import { v2 as cloudinary } from 'cloudinary';
 import multer from "multer";
+import sharp from 'sharp';
+import fs from 'fs';
 
 // Configure Cloudinary
 cloudinary.config({
@@ -29,7 +31,13 @@ const fileFilter = (req, file, cb) => {
 };
 
 // Multer Middleware (With Storage & File Filter)
-export const upload = multer({ storage, fileFilter });
+export const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 2 * 1024 * 1024, // 2MB
+    },
+    fileFilter: fileFilter,
+});
 
 //file upload to cloudinary
 export const fileUpload = async (imageURL, folder)=>{

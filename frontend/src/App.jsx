@@ -1,5 +1,5 @@
 // React core and hooks
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Scroll-to-top button component
 import ScrollToTop from "react-scroll-to-top";
@@ -22,28 +22,23 @@ import BlogDetailsPage from "./pages/blogDetailsPage.jsx";
 import { ScrollToTopOnNavigation } from "./helpers/helper.js";
 
 // Admin dashboard pages
-import AdminHomePage from "./pages/dashboard/admin/adminHomePage.jsx";
-import BlogManagePage from "./pages/dashboard/admin/blogManagePage.jsx";
-import DoctorManagePage from "./pages/dashboard/admin/doctorManagePage.jsx";
-import UserManagePage from "./pages/dashboard/admin/userManagePage.jsx";
-import AppointmentManagePage from "./pages/dashboard/admin/appointmentManagePage.jsx";
-import AdminProfilePage from "./pages/dashboard/admin/adminProfilePage.jsx";
-import HospitalManagePage from "./pages/dashboard/admin/hospitalManagePage.jsx";
-import SpecialtyManagePage from "./pages/dashboard/admin/specialtyManagePage.jsx";
+import AdminHomePage from "./pages/dashboard/adminHomePage.jsx";
+import BlogManagePage from "./pages/dashboard/blogManagePage.jsx";
+import DoctorManagePage from "./pages/dashboard/doctorManagePage.jsx";
+import UserManagePage from "./pages/dashboard/userManagePage.jsx";
+import HospitalManagePage from "./pages/dashboard/hospitalManagePage.jsx";
+import SpecialtyManagePage from "./pages/dashboard/specialtyManagePage.jsx";
 
 // Doctor dashboard pages
-import DoctorHomePage from "./pages/dashboard/doctor/doctorHomePage.jsx";
-import AllAppointmentPage from "./pages/dashboard/doctor/allAppointmentPage.jsx";
-import DoctorBlogPage from "./pages/dashboard/doctor/doctorBlogPage.jsx";
-import DoctorProfilePage from "./pages/dashboard/doctor/doctorProfilePage.jsx";
+import DoctorHomePage from "./pages/dashboard/doctorHomePage.jsx";
+import AllAppointmentPage from "./pages/dashboard/allAppointmentPage.jsx";
+import DoctorBlogPage from "./pages/dashboard/doctorBlogPage.jsx";
+import DoctorProfilePage from "./pages/dashboard/doctorProfilePage.jsx";
 
 // User dashboard pages
-import UserHomePage from "./pages/dashboard/user/userHomePage.jsx";
-import UserAppointmentPage from "./pages/dashboard/user/userAppointmentPage.jsx";
-import UserProfilePage from "./pages/dashboard/user/userProfilePage.jsx";
+import UserHomePage from "./pages/dashboard/userHomePage.jsx";
+import UserAppointmentPage from "./pages/dashboard/userAppointmentPage.jsx";
 
-// Shared settings page for all roles
-import AccountSettingPage from "./pages/accountSettingPage.jsx";
 
 // Error page for undefined routes
 import ErrorPage from "./pages/errorPage.jsx";
@@ -51,6 +46,8 @@ import ErrorPage from "./pages/errorPage.jsx";
 // Role-based route protection
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import DoctorRegistrationPage from "./pages/doctorRegistrationPage.jsx";
+import AllMessagePage from "./pages/dashboard/allMessagePage.jsx";
+import ProfileManagePage from "./pages/dashboard/profileManagePage.jsx";
 
 const App = () => {
     return (
@@ -85,11 +82,10 @@ const App = () => {
                     <Route path="/admin/blog" element={<BlogManagePage />} />
                     <Route path="/admin/doctor" element={<DoctorManagePage />} />
                     <Route path="/admin/user" element={<UserManagePage />} />
-                    <Route path="/admin/profile" element={<AdminProfilePage />} />
-                    <Route path="/admin/appointment" element={<AppointmentManagePage />} />
+                    <Route path="/admin/profile" element={<ProfileManagePage />} />
                     <Route path="/admin/hospital" element={<HospitalManagePage />} />
                     <Route path="/admin/specialty" element={<SpecialtyManagePage />} />
-                    <Route path="/admin/account-settings" element={<AccountSettingPage />} />
+                    <Route path="/admin/message" element={<AllMessagePage />} />
                 </Route>
 
                 {/* Doctor routes - Protected by PrivateRoute */}
@@ -98,7 +94,6 @@ const App = () => {
                     <Route path="/doctor/appointments" element={<AllAppointmentPage />} />
                     <Route path="/doctor/blog" element={<DoctorBlogPage />} />
                     <Route path="/doctor/profile" element={<DoctorProfilePage />} />
-                    <Route path="/doctor/account-settings" element={<AccountSettingPage />} />
                 </Route>
 
                 {/* User routes - Protected by PrivateRoute */}
@@ -106,8 +101,7 @@ const App = () => {
                     <Route path="/user/dashboard" element={<UserHomePage />} />
                     <Route path="/registration-form" element={<DoctorRegistrationPage />} />
                     <Route path="/user/appointments" element={<UserAppointmentPage />} />
-                    <Route path="/user/profile" element={<UserProfilePage />} />
-                    <Route path="/user/account-settings" element={<AccountSettingPage />} />
+                    <Route path="/user/profile" element={<ProfileManagePage />} />
                 </Route>
 
             </Routes>

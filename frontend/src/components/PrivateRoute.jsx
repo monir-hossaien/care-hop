@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {userStore} from "../store/userStore.js";
 
 // Navigate allows redirection to a different route
 import {Navigate, Outlet} from 'react-router-dom';
@@ -7,24 +8,31 @@ import {Navigate, Outlet} from 'react-router-dom';
 import cookies from "js-cookie";
 
 // Helper function to extract role from token or local data
-import { getRole } from "../helpers/helper.js";
+// import { getRole } from "../helpers/helper.js";
+
 
 // PrivateRoute component protects routes based on user authentication and role
-const PrivateRoute = ({allowedRoles}) => {
-    // Get token from cookies
+const PrivateRoute = ({ allowedRoles }) => {
+    const { role, getRole } = userStore();
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        (async () => {
+            if (!role) {
+                await getRole();
+            }
+            setLoading(false);
+        })();
+    }, [role]);
+
     const token = cookies.get('token');
 
-    // If no token found, redirect user to login page
     if (!token) return <Navigate to="/login" replace />;
+    if (loading) return <div></div>;
 
-    // Get the user's role
-    const role = getRole();
-
-    // If user's role is allowed, render the children (protected route)
     if (allowedRoles.includes(role)) {
-        return <Outlet />
+        return <Outlet />;
     } else {
-        // If role is not permitted, redirect to login page
         return <Navigate to="/" replace />;
     }
 };

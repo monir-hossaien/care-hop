@@ -9,10 +9,9 @@ const DashboardSidebar = ({ navItems }) => {
     const navigate = useNavigate();
     const {logoutRequest} = userStore();
 
-    const logoutHandler = () => {
-        let res = logoutRequest();
-        successToast(res?.message);
-        localStorage.removeItem("role");
+    const logoutHandler = async () => {
+        const res = await logoutRequest();
+        successToast(res?.message || "Logout successful");
         navigate("/");
         window.location.reload();
     };

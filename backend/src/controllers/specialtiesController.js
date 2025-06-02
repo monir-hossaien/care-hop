@@ -1,13 +1,20 @@
 
-// assign specialties
+
 import {
-    assignSpecialtyService, deleteSpecialtyService,
+    assignSpecialtyService, deleteSpecialtyService, readSpecialtyService,
     specialtiesListService,
     updateSpecialtyService
 } from "../services/specialtyService.js";
 
+// assign specialties
 export const assignSpecialty = async (req, res) => {
     const result = await assignSpecialtyService(req)
+    return res.status(result.statusCode).json(result)
+}
+
+// read single specialty
+export const readSpecialty = async (req, res) => {
+    const result = await readSpecialtyService(req)
     return res.status(result.statusCode).json(result)
 }
 

@@ -1,5 +1,6 @@
 // Import toast for showing success/error notifications
-import toast from "react-hot-toast";
+import {toast} from "react-toastify";
+import Swal from 'sweetalert2'
 
 // React Router hooks for navigation and route change detection
 import { useLocation, useNavigate } from "react-router-dom";
@@ -82,11 +83,54 @@ export const ScrollToTopOnNavigation = () => {
 export const unauthorized = (code) => {
     if (code === 401) {
         cookies.remove("token");
-        window.location.href = "/login";
+        window.location.href = ('/login');
     }
 };
 
-// Get user role from localStorage
-export const getRole = () => {
-    return localStorage.getItem("role");
-};
+
+export const  DeleteAlert = async ()=> {
+    const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to remove this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, remove it!",
+        allowOutsideClick: false
+    });
+    return result.isConfirmed;
+}
+
+export const SuccessAlert = async (msg)=> {
+    const result = await Swal.fire({
+        text: msg,
+        icon: "success",
+        confirmButtonColor: "#198754",
+        confirmButtonText: "OK",
+        allowOutsideClick: false
+    });
+    return result.isConfirmed;
+}
+
+export const FailAlert = async (msg)=> {
+    const result = await Swal.fire({
+        text: msg,
+        icon: "warning",
+        confirmButtonColor: "#fcac3f",
+        confirmButtonText: "Try Again",
+        allowOutsideClick: false
+    });
+    return result.isConfirmed;
+}
+
+export const InfoAlert = async (msg)=> {
+    const result = await Swal.fire({
+        text: msg,
+        icon: "info",
+        confirmButtonColor: "#198754",
+        confirmButtonText: "Go Ahead",
+        allowOutsideClick: false
+    });
+    return result.isConfirmed;
+}

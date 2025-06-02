@@ -17,6 +17,7 @@ import {
     REQUEST_LIMIT_NUMBER,
     WEB_CACHE
 } from "./src/config/config.js";
+import errorHandler from "./src/middleware/errorHandler.js";
 
 const app = express();
 
@@ -75,13 +76,7 @@ app.use((req, res, next) => {
 });
 
 // General server error handling
-app.use((error, req, res, next) => {
-    res.status(500).json({
-        status: "fail",
-        message: "Internal Server Error",
-        error: error.message,
-    });
-    next();
-});
+// General server error handling
+app.use(errorHandler);
 
 export default app;

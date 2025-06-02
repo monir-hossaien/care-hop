@@ -5,6 +5,9 @@ const dataSchema = new mongoose.Schema(
         name: {
             type: String,
             required: true,
+            trim: true,
+            minlength: [4, "Name must be at least 4 characters"],
+            maxlength: [30, "Name must be less than 20 characters"],
         },
         designation: {
             type: String,
@@ -21,7 +24,11 @@ const dataSchema = new mongoose.Schema(
         experience: { type: Number, required: true },
         degree: { type: String, required: true },
         consultationFee: { type: Number, required: true },
-        gender: { type: String, default: "" },
+        gender: {
+            type: String,
+            enum: ["Male", "Female", "Other"],
+            required: true
+        },
         availableSlot: {
             days: {
                 type: [String],
@@ -51,7 +58,6 @@ const dataSchema = new mongoose.Schema(
         },
         image: {
             type: String,
-            default: "https://www.ibnsinatrust.com/upload/default.jpg"
         },
         hospitalID: {
             type: mongoose.Schema.Types.ObjectId,

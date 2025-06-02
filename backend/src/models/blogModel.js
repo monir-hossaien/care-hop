@@ -7,8 +7,8 @@ const dataSchema = new mongoose.Schema(
             required: [true, "Blog title is required"],
             trim: true,
             unique: true,
-            minLength: [10, "Title must be at least 10 characters"],
-            maxLength: [100, "Title must be under 50 characters"]
+            minLength: [4, "Title must be at least 4 characters"],
+            maxLength: [100, "Title must be under 100 characters"]
         },
         shortDes: {
             type: String,
@@ -20,13 +20,12 @@ const dataSchema = new mongoose.Schema(
         content: {
             type: String,
             required: [true, "Content is required"],
-            trim: true,
             minLength: [100, "Content must be at least 100 characters"],
             maxLength: [5000, "Content must be under 5000 characters"],
         },
         image: {
             type: String,
-            default: ''
+            required: true,
         },
         userID: {
             type: mongoose.Schema.Types.ObjectId,

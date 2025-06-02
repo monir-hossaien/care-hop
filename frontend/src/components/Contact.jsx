@@ -1,7 +1,8 @@
 // Import necessary libraries and icons
 import React from 'react';
 import { FaLocationDot } from "react-icons/fa6"; // Location icon
-import { MdEmail } from "react-icons/md";        // Email icon
+import { MdEmail } from "react-icons/md";
+import { motion } from 'framer-motion';
 
 // Import global state stores
 import { contactStore } from "../store/contactStore.js";
@@ -19,34 +20,30 @@ const Contact = () => {
     const { formData, inputOnChange, setLoading, resetFormData} = userStore();
     const { createContact } = contactStore();
 
+    const {name, email, phone, subject, message} = formData;
+
     // Prepare contact data payload
-    const data = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        subject: formData.subject,
-        message: formData.message,
-    };
+    const data = {name, email, phone, subject, message};
 
     // Handle contact form submission
     const handleCreateContact = async () => {
         // Client-side validation
-        if (ValidationHelper.IsEmpty(formData.name)) {
+        if (ValidationHelper.IsEmpty(name)) {
             errorToast("Name is required");
-        } else if (ValidationHelper.IsEmpty(formData.email)) {
+        } else if (ValidationHelper.IsEmpty(email)) {
             errorToast("Email is required");
         }
-        else if(!ValidationHelper.IsEmail(formData.email)) {
+        else if(!ValidationHelper.IsEmail(email)) {
             errorToast("Enter valid email");
         }
-        else if (ValidationHelper.IsEmpty(formData.phone)) {
+        else if (ValidationHelper.IsEmpty(phone)) {
             errorToast("Phone number required");
-        } else if(!ValidationHelper.IsMobile(formData.phone)) {
+        } else if(!ValidationHelper.IsMobile(phone)) {
             errorToast("Enter valid phone number");
         }
-        else if (ValidationHelper.IsEmpty(formData.subject)) {
+        else if (ValidationHelper.IsEmpty(subject)) {
             errorToast("Subject is required");
-        } else if (ValidationHelper.IsEmpty(formData.message)) {
+        } else if (ValidationHelper.IsEmpty(message)) {
             errorToast("Message is required");
         } else {
             // Submit data
@@ -77,13 +74,17 @@ const Contact = () => {
                 {/* Grid container for layout */}
                 <div className="grid grid-cols-12 gap-5 px-4 md:px-0">
                     {/* Contact Form Section */}
-                    <div className="col-span-12 md:col-span-6 shadow-sm">
+                    <motion.div
+                        initial={{ opacity: 0, x: -100 }}
+                        whileInView={{opacity: 1, x: 0, scale: 1}}
+                        transition={{duration: 0.6, ease: "easeOut"}}
+                        className="col-span-12 md:col-span-6 shadow-sm">
                         <div className="grid grid-cols-12 gap-5 px-4 sm:px-6 md:px-10 py-10">
 
                             {/* Name Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={formData.name}
+                                    value={name}
                                     onChange={(e) => inputOnChange("name", e.target.value)}
                                     type="text"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -94,7 +95,7 @@ const Contact = () => {
                             {/* Email Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={formData.email}
+                                    value={email}
                                     onChange={(e) => inputOnChange("email", e.target.value)}
                                     type="email"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -105,7 +106,7 @@ const Contact = () => {
                             {/* Phone Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={formData.phone}
+                                    value={phone}
                                     onChange={(e) => inputOnChange("phone", e.target.value)}
                                     type="text"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -116,7 +117,7 @@ const Contact = () => {
                             {/* Subject Field */}
                             <div className="col-span-12 sm:col-span-6">
                                 <input
-                                    value={formData.subject}
+                                    value={subject}
                                     onChange={(e) => inputOnChange("subject", e.target.value)}
                                     type="text"
                                     className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -127,7 +128,7 @@ const Contact = () => {
                             {/* Message Field */}
                             <div className="col-span-12">
                             <textarea
-                                value={formData.message}
+                                value={message}
                                 onChange={(e) => inputOnChange("message", e.target.value)}
                                 rows={4}
                                 className="text-sm text-gray-600 focus:outline-0 focus:shadow-sm focus:bg-slate-50 w-full border border-gray-200 px-3 py-2 rounded"
@@ -144,10 +145,14 @@ const Contact = () => {
                                 />
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                     {/* Contact Info Section */}
-                    <div className="col-span-12 md:col-span-6">
+                    <motion.div
+                        initial={{ opacity: 0, x: 100 }}
+                        whileInView={{opacity: 1, x: 0, scale: 1}}
+                        transition={{duration: 0.6, ease: "easeOut"}}
+                        className="col-span-12 md:col-span-6">
                         <div className="shadow-sm px-4 py-10 space-y-10">
 
                             {/* Address Information */}
@@ -172,7 +177,7 @@ const Contact = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
 
                 </div>
             </div>

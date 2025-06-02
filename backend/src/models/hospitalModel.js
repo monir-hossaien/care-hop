@@ -24,6 +24,7 @@ const dataSchema = new mongoose.Schema(
         },
         area: {
             type: String,
+            required: true
         },
         phone: {
             type: String,
@@ -34,12 +35,6 @@ const dataSchema = new mongoose.Schema(
         },
         website: {
             type: String
-        },
-        rating: {
-            type: Number,
-            min: 1,
-            max: 5,
-            default: 5
         }
     },{
         timestamps: true,

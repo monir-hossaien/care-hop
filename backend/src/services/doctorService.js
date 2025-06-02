@@ -9,6 +9,11 @@ export const updateDoctorProfileService = async (req)=>{
     try {
         const reqBody = req.body;
         const userID = new objID(req.headers.id);
+        let availableSlot = reqBody.availableSlot;
+        if (typeof availableSlot === 'string') {
+            availableSlot = JSON.parse(availableSlot);
+        }
+        reqBody.availableSlot = availableSlot;
 
         const profile = await DoctorProfile.findOne({userID});
         // file upload to cloudinary
@@ -52,6 +57,15 @@ export const fetchDoctorProfileService = async (req)=>{
         const matchStage = {
             $match: {userID}
         }
+        // join with user collection
+        const joinWithUser = {
+            $lookup:{
+                from: "users",
+                localField: "userID",
+                foreignField: "_id",
+                as: "user",
+            }
+        }
         // join with hospital collection
         const joinWithHospital = {
             $lookup:{
@@ -80,36 +94,23 @@ export const fetchDoctorProfileService = async (req)=>{
                 as: "reviews",
             }
         }
-        const projection = {
-            $project: {
-                _id: 1,
-                name: 1,
-                designation: 1,
-                image: 1,
-                degrees: 1,
-                consultationFee: 1,
-                availableSlots: 1,
-                specialization: 1,
-                "hospitalDetails.name": 1,
-                "hospitalDetails.area": 1,
-                "specialities.name": 1,
-            }
-        }
+
         const pipeline = [
             matchStage,
+            joinWithUser,
+            {$unwind: {path: "$user", preserveNullAndEmptyArrays: true}},
             joinWithHospital,
             {$unwind: {path: "$hospitalDetails", preserveNullAndEmptyArrays: true}},
             joinWithSpecialities,
             {$unwind: {path: "$specialities", preserveNullAndEmptyArrays: true}},
             joinWithReview,
             {$unwind: {path: "$reviews", preserveNullAndEmptyArrays: true}},
-            projection,
         ]
         const result = await DoctorProfile.aggregate(pipeline);
 
-        if(!result){
+        if(!result || result.length === 0){
             return{
-                statusCode: 400,
+                statusCode: 404,
                 status: false,
                 message: "Request failed"
             }
@@ -175,7 +176,7 @@ export const viewProfileService = async (req)=>{
                 profileImage: 1,
                 degrees: 1,
                 consultationFee: 1,
-                availableSlots: 1,
+                availableSlot: 1,
                 specialization: 1,
                 "hospitalDetails.name": 1,
                 "hospitalDetails.area": 1,
@@ -228,6 +229,15 @@ export const fetchDoctorsBySpecialtyService = async (req)=>{
                 status: status.toLowerCase()
             },
         }
+        // join with user collection
+        const joinWithUser = {
+            $lookup:{
+                from: "users",
+                localField: "userID",
+                foreignField: "_id",
+                as: "user",
+            }
+        }
         // join with hospital collection
         const joinWithHospital = {
             $lookup:{
@@ -248,7 +258,7 @@ export const fetchDoctorsBySpecialtyService = async (req)=>{
         }
         const projection = {
             $project: {
-                name: 1,
+                name:1,
                 image: 1,
                 userID: 1,
                 designation: 1,
@@ -256,7 +266,7 @@ export const fetchDoctorsBySpecialtyService = async (req)=>{
                 degrees: 1,
                 profileImage: 1,
                 consultationFee: 1,
-                availableSlots: 1,
+                availableSlot: 1,
                 specialization: 1,
                 "hospitalDetails.name": 1,
                 "hospitalDetails.area": 1,
@@ -265,6 +275,8 @@ export const fetchDoctorsBySpecialtyService = async (req)=>{
         }
         const pipeline = [
             matchStage,
+            joinWithUser,
+            {$unwind: {path: "$user", preserveNullAndEmptyArrays: true}},
             joinWithHospital,
             {$unwind: {path:"$hospitalDetails", preserveNullAndEmptyArrays: true} },
             joinWithSpecialities,
@@ -314,7 +326,15 @@ export const searchDoctorService = async (req)=>{
         const matchStage = {
             $match: searchQuery
         }
-
+        // join with user collection
+        const joinWithUser = {
+            $lookup:{
+                from: "users",
+                localField: "userID",
+                foreignField: "_id",
+                as: "user",
+            }
+        }
         // join with hospital collection
         const joinWithHospital = {
             $lookup:{
@@ -335,13 +355,13 @@ export const searchDoctorService = async (req)=>{
         }
         const projection = {
             $project: {
-                name: 1,
+                name:1,
                 userID: 1,
                 designation: 1,
                 experience: 1,
                 degrees: 1,
                 consultationFee: 1,
-                availableSlots: 1,
+                availableSlot: 1,
                 specialization: 1,
                 image: 1,
                 "hospitalDetails.name": 1,
@@ -351,6 +371,8 @@ export const searchDoctorService = async (req)=>{
         }
         const pipeline = [
             matchStage,
+            joinWithUser,
+            {$unwind: {path: "$user", preserveNullAndEmptyArrays: true}},
             joinWithHospital,
             {$unwind: {path:"$hospitalDetails",  preserveNullAndEmptyArrays: true}},
             joinWithSpecialities,
@@ -385,3 +407,4 @@ export const searchDoctorService = async (req)=>{
         }
     }
 }
+

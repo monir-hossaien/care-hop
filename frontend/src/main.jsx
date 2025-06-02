@@ -1,14 +1,23 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
-import {Toaster} from 'react-hot-toast';
+import { ToastContainer} from 'react-toastify';
 import App from './App.jsx'
 // external css file
 import "../src/assets/css/style.css"
 import 'react-loading-skeleton/dist/skeleton.css'
+import 'react-toastify/dist/ReactToastify.css'
 
 createRoot(document.getElementById('root')).render(
-    <StrictMode>
+    <>
         <App/>
-        <Toaster position="top-right"/>
-    </StrictMode>
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            toastStyle={{
+                width:"250px",
+                minHeight: '32px',
+                fontSize: '14px',
+            }}
+        />
+    </>
 )
