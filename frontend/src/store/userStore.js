@@ -114,11 +114,11 @@ export const userStore = create((set) => ({
         }
     },
 
-    logoutRequest: async () => {
-        let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
-        return result.data
-        // return cookies.remove("token")
-    },
+    // logoutRequest: async () => {
+    //     let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
+    //     return result.data
+    //     // return cookies.remove("token")
+    // },
     profileDetails: null,
     fetchProfileDetails: async () => {
         try {

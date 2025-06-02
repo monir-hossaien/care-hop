@@ -3,6 +3,7 @@ import React, {useEffect, useState} from "react";
 import {userStore} from "../../store/userStore.js";
 import {successToast} from "../../helpers/helper.js";
 import {FiLogOut} from "react-icons/fi";
+import cookies from "js-cookie";
 
 const DashboardNavbar = ({ toggleSidebar }) => {
     const [avatarOpen, setAvatarOpen] = useState(false);
@@ -12,7 +13,7 @@ const DashboardNavbar = ({ toggleSidebar }) => {
 
     useEffect(() => {
         (async () => {
-            if (isLogin() && !role) {
+            if (isLogin()) {
                 await getRole();
             }
         })();
@@ -29,10 +30,9 @@ const DashboardNavbar = ({ toggleSidebar }) => {
     }, [role]);
 
     const logoutHandler = () => {
-        let res = logoutRequest();
-        successToast(res?.message);
+        cookies.remove("token");
+        successToast("Logout successful");
         navigate("/");
-        window.location.reload();
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};

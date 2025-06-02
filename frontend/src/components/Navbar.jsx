@@ -8,6 +8,7 @@ import {MdDashboard} from "react-icons/md";
 
 import {userStore} from "../store/userStore.js";
 import {successToast} from "../helpers/helper.js";
+import cookies from "js-cookie";
 
 
 const Navbar = () => {
@@ -67,11 +68,10 @@ const Navbar = () => {
         if (url) window.open(url, "_blank");
     };
 
-    const logoutHandler = async () => {
-        const res = await logoutRequest();
-        successToast(res?.message || "Logout successful");
+    const logoutHandler = () => {
+        cookies.remove("token");
+        successToast("Logout successful");
         navigate("/");
-        window.location.reload();
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};
