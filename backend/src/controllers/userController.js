@@ -21,7 +21,7 @@ export const login = async (req, res) => {
     const token = result?.token;
     const cookieOptions = {
         httpOnly: true,
-        secure: false, // only true in production with HTTPS
+        secure: true, // only true in production with HTTPS
         sameSite: "none", // "none" only works with secure: true
         maxAge: COOKIE_EXPIRE_TIME,
         path: "/",
