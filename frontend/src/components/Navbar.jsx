@@ -40,7 +40,7 @@ const Navbar = () => {
 
     useEffect(() => {
         (async () => {
-            if (isLogin() && !role) {
+            if (isLogin()) {
                 await getRole();
             }
         })();

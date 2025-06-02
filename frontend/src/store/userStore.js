@@ -116,7 +116,6 @@ export const userStore = create((set) => ({
 
     logoutRequest: async () => {
         let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
-        set({userRole: null})
         return result.data
         // return cookies.remove("token")
     },
