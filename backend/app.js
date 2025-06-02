@@ -23,7 +23,7 @@ const app = express();
 
 // Global Application Middleware
 const corsOptions = {
-    origin: ["https://care-hop-service.vercel.app", "http://localhost:517"],
+    origin: ["https://care-hop-service.vercel.app", "http://localhost:5173"],
     credentials: true,
 };
 app.use(cors(corsOptions));
