@@ -4,7 +4,7 @@ import UserButton from "./UserButton.jsx";
 import {userStore} from "../store/userStore.js";
 import {specialitiesStore} from "../store/specialitiesStore.js";
 import {commonStore} from "../store/commmonStore.js";
-import {hospitalStore} from "../store/HospitalStore.js";
+import {hospitalStore} from "../store/hospitalStore.js";
 import ValidationHelper, {errorToast, successToast} from "../helpers/helper.js";
 import {useRef} from "react";
 

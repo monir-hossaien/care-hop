@@ -9,7 +9,7 @@ import NotFound from "../NotFound.jsx";
 import {Link} from "react-router-dom";
 import AddHospitalModal from "../modal/AddHospitalModal.jsx";
 import UpdateHospitalModal from "../modal/UpdateHospitalModal.jsx";
-import {hospitalStore} from "../../store/HospitalStore.js";
+import {hospitalStore} from "../../store/hospitalStore.js";
 
 const AllHospital = () => {
 

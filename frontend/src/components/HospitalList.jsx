@@ -1,5 +1,5 @@
 import React from 'react';
-import { hospitalStore } from "../store/HospitalStore.js";
+import { hospitalStore } from "../store/hospitalStore.js";
 import { useLocation } from "react-router-dom";
 import { commonStore } from "../store/commmonStore.js";
 import HospitalSkeleton from "../skeleton/hospitalSkeleton.jsx";

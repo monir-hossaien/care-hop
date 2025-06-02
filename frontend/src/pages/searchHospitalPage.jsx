@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import { CiLocationOn } from "react-icons/ci";
 import { RxDividerVertical } from "react-icons/rx";

@@ -6,7 +6,7 @@ import ValidationHelper, {errorToast, successToast} from "../../helpers/helper.j
 import {useRef} from "react";
 import {doctorStore} from "../../store/doctorStore.js";
 import {specialitiesStore} from "../../store/specialitiesStore.js";
-import {hospitalStore} from "../../store/HospitalStore.js";
+import {hospitalStore} from "../../store/hospitalStore.js";
 import {userStore} from "../../store/userStore.js";
 
 

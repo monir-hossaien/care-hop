@@ -4,7 +4,7 @@ import { MdAttachFile } from 'react-icons/md';
 import { userStore } from '../../store/userStore.js';
 import ValidationHelper, { errorToast, successToast } from '../../helpers/helper.js';
 import UserButton from '../UserButton.jsx';
-import {hospitalStore} from "../../store/HospitalStore.js";
+import {hospitalStore} from "../../store/hospitalStore.js";
 import {commonStore} from "../../store/commmonStore.js";
 
 const AddHospitalModal = ({onClose}) => {

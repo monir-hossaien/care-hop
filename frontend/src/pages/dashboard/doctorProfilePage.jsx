@@ -7,7 +7,7 @@ import {userStore} from "../../store/userStore.js";
 import {doctorStore} from "../../store/doctorStore.js";
 import {commonStore} from "../../store/commmonStore.js";
 import {specialitiesStore} from "../../store/specialitiesStore.js";
-import {hospitalStore} from "../../store/HospitalStore.js";
+import {hospitalStore} from "../../store/hospitalStore.js";
 import DoctorProfile from "../../components/dashboard/DoctorProfile.jsx";
 
 const DoctorProfilePage = () => {
