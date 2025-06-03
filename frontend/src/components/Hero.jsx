@@ -33,9 +33,9 @@ const Hero = () => {
     }, [currentIndex]);
 
     return (
-        <div className="relative">
+        <div className="relative overflow-x-hidden">
             {/* Hero Section */}
-            <div className="relative h-screen py-9 px-3 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat flex items-center">
+            <div className="relative min-h-[80vh] md:h-screen py-9 px-3 bg-[url(/images/hero_bg.jpg)] bg-center bg-cover bg-no-repeat flex items-center">
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-[#57958C] opacity-40 z-10"></div>
 
@@ -47,7 +47,7 @@ const Hero = () => {
                                 key={sliders[currentIndex].image}
                                 src={sliders[currentIndex].image}
                                 alt="Slide"
-                                className="w-full h-auto"
+                                className="w-full h-auto max-w-full object-contain"
                                 initial={{ opacity: 0, x: -50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 exit={{ opacity: 0, x: 50 }}
@@ -66,10 +66,12 @@ const Hero = () => {
                                 exit={{ opacity: 0, y: -30 }}
                                 transition={{ duration: 0.6 }}
                             >
-                                <h2 className="text-2xl md:text-6xl font-bold md:leading-20">
+                                <h2 className="text-2xl md:text-6xl font-bold md:leading-[4.5rem] break-words">
                                     {sliders[currentIndex]?.content}
                                 </h2>
-                                <p className="mt-4 text-lg text-[#164193]">{sliders[currentIndex]?.short_des}</p>
+                                <p className="mt-4 text-lg text-[#164193]">
+                                    {sliders[currentIndex]?.short_des}
+                                </p>
                             </motion.div>
                         </AnimatePresence>
                     </div>

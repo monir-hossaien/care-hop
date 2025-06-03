@@ -8,7 +8,7 @@ import SearchBanner from "../components/SearchBanner.jsx";
 const HomePage = () => {
     return (
         <MasterLayout>
-            <div className="overflow-hidden">
+            <div>
                 <Hero/>
                 <Speciality/>
                 <SearchBanner/>
