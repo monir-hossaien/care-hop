@@ -4,6 +4,8 @@ import { useLocation } from "react-router-dom";
 import { commonStore } from "../store/commmonStore.js";
 import HospitalSkeleton from "../skeleton/hospitalSkeleton.jsx";
 import NotFound from "./NotFound.jsx";
+import { motion } from 'framer-motion';
+
 
 const HospitalList = () => {
     const { hospitalList } = hospitalStore();
@@ -30,9 +32,12 @@ const HospitalList = () => {
                         </div>
                     ) : (
                         hospitalList.map((hospital, index) => {
-                            const {name, area, phone, image, rating } = hospital;
+                            const {name, area, phone, image} = hospital;
                             return (
-                                <div
+                                <motion.div
+                                    initial={{ opacity: 0, y: 100}}
+                                    whileInView={{opacity: 1, y: 0, scale: 1}}
+                                    transition={{duration: 0.6, ease: "easeOut"}}
                                     key={index}
                                     className="col-span-12 sm:col-span-6 md:col-span-4 space-y-4 shadow-sm rounded py-8"
                                 >
@@ -46,7 +51,7 @@ const HospitalList = () => {
                                             <p>Phone: {phone}</p>
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             );
                         })
                     )

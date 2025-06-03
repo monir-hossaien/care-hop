@@ -5,6 +5,7 @@ import DoctorSkeleton from "../skeleton/doctorSkeleton.jsx";
 import { useLocation } from "react-router-dom";
 import { commonStore } from "../store/commmonStore.js";
 import NotFound from "./NotFound.jsx";
+import { motion } from 'framer-motion';
 
 const DoctorList = () => {
     const { doctorList } = doctorStore();
@@ -39,7 +40,11 @@ const DoctorList = () => {
                     doctorList.map((doctor) => {
                         const { _id, name, image, degrees, specialities } = doctor;
                         return (
-                            <div className="col-span-12 md:col-span-6" key={_id}>
+                            <motion.div
+                                initial={{ opacity: 0, y: 100}}
+                                whileInView={{opacity: 1, y: 0, scale: 1}}
+                                transition={{duration: 0.6, ease: "easeOut"}}
+                                className="col-span-12 md:col-span-6" key={_id}>
                                 <div className="bg-white border border-gray-300 shadow-sm rounded w-full flex flex-col sm:flex-row items-center sm:items-start px-5 py-8 gap-6 group">
                                     <div className="w-44 h-44 flex justify-center items-center rounded-full bg-[#EFEFEF] shrink-0">
                                         <img
@@ -75,7 +80,7 @@ const DoctorList = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         );
                     })
                 )}

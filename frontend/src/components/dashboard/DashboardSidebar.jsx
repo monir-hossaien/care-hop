@@ -3,17 +3,16 @@ import {NavLink, useNavigate} from "react-router-dom";
 import {FiLogOut} from "react-icons/fi";
 import {successToast} from "../../helpers/helper.js";
 import {userStore} from "../../store/userStore.js";
+import cookies from "js-cookie";
 
 const DashboardSidebar = ({ navItems }) => {
 
     const navigate = useNavigate();
-    const {logoutRequest} = userStore();
 
-    const logoutHandler = async () => {
-        const res = await logoutRequest();
-        successToast(res?.message || "Logout successful");
+    const logoutHandler = () => {
+        cookies.remove("token");
+        successToast("Logout successful");
         navigate("/");
-        window.location.reload();
     };
 
     return (
