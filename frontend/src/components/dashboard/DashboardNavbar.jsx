@@ -33,6 +33,7 @@ const DashboardNavbar = ({ toggleSidebar }) => {
         cookies.remove("token");
         successToast("Logout successful");
         navigate("/");
+        window.location.reload();
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};

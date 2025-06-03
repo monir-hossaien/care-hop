@@ -68,10 +68,11 @@ const Navbar = () => {
         if (url) window.open(url, "_blank");
     };
 
-    const logoutHandler = () => {
+    let logoutHandler = () => {
         cookies.remove("token");
         successToast("Logout successful");
         navigate("/");
+        window.location.reload();
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};

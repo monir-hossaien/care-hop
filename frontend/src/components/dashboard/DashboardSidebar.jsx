@@ -13,6 +13,7 @@ const DashboardSidebar = ({ navItems }) => {
         cookies.remove("token");
         successToast("Logout successful");
         navigate("/");
+        window.location.reload();
     };
 
     return (

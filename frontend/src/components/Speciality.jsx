@@ -16,7 +16,7 @@ const Speciality = () => {
     }, []);
 
     return (
-        <div className="overflow-x-hidden">
+        <div className="overflow-hidden">
             {
                 location.pathname === "/specialities" ? (
                     <Banner name={"Doctor Specialties"} />
