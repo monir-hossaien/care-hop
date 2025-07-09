@@ -31,7 +31,6 @@ const Navbar = () => {
 
     const {
         isLogin,
-        logoutRequest,
         profileDetails,
         fetchProfileDetails,
         fetchDoctorProfile,
@@ -49,13 +48,14 @@ const Navbar = () => {
 
     useEffect(() => {
         (async ()=>{
-            if (isLogin() && role === "doctor") {
-                await fetchDoctorProfile();
-            }else{
-               isLogin() && await fetchProfileDetails()
-            }
+            // if (isLogin() && role === "doctor") {
+            //     await fetchDoctorProfile();
+            // }else{
+            //    isLogin() && await fetchProfileDetails()
+            // }
+            isLogin() && role === "doctor" ? await fetchDoctorProfile() : await fetchProfileDetails()
         })()
-    }, [role]);
+    }, []);
 
 
 
