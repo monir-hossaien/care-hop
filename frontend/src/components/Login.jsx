@@ -66,6 +66,10 @@ const Login = () => {
             {/* Login form container */}
             <div className="relative z-20 w-full md:w-1/3 px-4">
                 <div className="shadow-sm px-8 py-10 space-y-8 rounded-md bg-white">
+                    {/* Heading */}
+                    <h2 className="text-2xl font-semibold text-center text-[#164193]">
+                        Welcome to CareHop
+                    </h2>
                     <div className="relative">
                         <FaEnvelope className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"/>
                         <input

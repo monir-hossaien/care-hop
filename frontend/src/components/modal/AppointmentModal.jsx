@@ -5,9 +5,11 @@ import {appointmentStore} from "../../store/appointmentStore.js";
 import ValidationHelper, {errorToast, successToast} from "../../helpers/helper.js";
 import UserButton from "../UserButton.jsx";
 import {userStore} from "../../store/userStore.js";
+import {useNavigate} from "react-router-dom";
 
 
 const AppointmentModal = ({ doctor, onClose }) => {
+    const navigate = useNavigate();
 
     const {createAppointment} = appointmentStore()
     const { formData, inputOnChange, setLoading, resetFormData} = userStore();
@@ -32,6 +34,7 @@ const AppointmentModal = ({ doctor, onClose }) => {
                     resetFormData()
                 }
             }catch(error){
+                navigate("/login")
                 setLoading(false);
                 const msg = error?.response?.data?.message || error?.message || "Something went wrong!";
                 errorToast(msg);

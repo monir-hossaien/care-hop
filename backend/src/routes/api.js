@@ -79,7 +79,7 @@ router.get("/search-doctor", DoctorController.searchDoctor)
 
 
 // appointment api
-router.post("/book-appointment/:doctorID", authenticateUser, isRole('user'), AppointmentController.bookAppointment)
+router.post("/book-appointment/:doctorID", authenticateUser, AppointmentController.bookAppointment)
 router.get("/get-user-appointments", authenticateUser, isRole('user'), AppointmentController.getUserAppointments)
 router.get("/get-doctor-appointments", authenticateUser, isRole('doctor'), AppointmentController.getDoctorAppointments)
 router.put("/update-appointment-status/:id", authenticateUser, isRole('doctor'), AppointmentController.updateAppointmentStatus)

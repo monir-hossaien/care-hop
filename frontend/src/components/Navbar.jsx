@@ -53,9 +53,11 @@ const Navbar = () => {
             // }else{
             //    isLogin() && await fetchProfileDetails()
             // }
-            isLogin() && role === "doctor" ? await fetchDoctorProfile() : await fetchProfileDetails()
+            if(isLogin()) {
+                role === "doctor" ? await fetchDoctorProfile() : await fetchProfileDetails()
+            }
         })()
-    }, []);
+    }, [role]);
 
 
 

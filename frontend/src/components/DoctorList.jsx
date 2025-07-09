@@ -70,7 +70,7 @@ const DoctorList = () => {
                                             <p className="text-gray-400">Working Area:</p>
                                             <p className="text-gray-500">{doctor?.hospitalDetails?.area}</p>
                                         </div>
-                                        <div className="md:hidden md:group-hover:block">
+                                        <div className="md:hidden md:group-hover:block mt-5">
                                             <button
                                                 onClick={() => handleModalOpen(doctor)}
                                                 className="cursor-pointer px-8 py-2 bg-sky-50 outline-0 rounded-lg text-gray-500 font-bold hover:bg-sky-100 duration-300"
