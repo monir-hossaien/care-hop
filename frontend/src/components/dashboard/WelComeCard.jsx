@@ -17,7 +17,7 @@ const WelcomeCard = ({name}) => {
             transition={{duration: 0.5}}
             className="py-3">
             <div className="bg-indigo-50 shadow-sm rounded-md p-4 max-w-md w-full text-gray-700">
-                <h1 className="text-2xl font-bold mb-3">🌤️{getGreeting()}, {name}!</h1>
+                <h1 className="text-2xl font-bold mb-3">🌤️{getGreeting()}, {name || "Guest"}</h1>
                 <p className="text-base leading-relaxed">
                     {/*Your next appointment is at <span className="font-semibold">{nextTime}</span> with{' '}*/}
                     {/*<span className="font-semibold">{nextPatient}</span>*/}

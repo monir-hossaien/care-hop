@@ -12,7 +12,7 @@ export const appointmentStore = create((set)=>({
             let result = await axios.post(`${base_url}/book-appointment/${doctorID}`, data, {withCredentials: true})
             return result.data
         }catch(error){
-            unauthorized(error?.response?.statusCode)
+            unauthorized(error?.response?.status)
             throw error;
         }
     },
