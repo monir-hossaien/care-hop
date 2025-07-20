@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 import Appointment from "../models/appointmentModel.js";
 import DoctorProfile from "../models/doctorProfileModel.js";
-import SendEmail from "../utility/email.js";
 import User from "../models/userModel.js";
 import Profile from "../models/profileModel.js";
+import {SendEmail} from "../utility/email.js";
 const objectId = mongoose.Types.ObjectId
 
 // book Appointment
