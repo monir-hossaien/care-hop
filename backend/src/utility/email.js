@@ -29,7 +29,6 @@
 //
 // export default SendEmail;
 
-
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -37,7 +36,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const SendEmail = async (email, subject, text) => {
     try {
         const result = await resend.emails.send({
-            from: 'CareHop <noreply@carehop.onresend.com>', // No need to verify domain
+            from: 'onboarding@resend.dev', // ✅ Must be EXACTLY this
             to: email,
             subject,
             text,
@@ -48,6 +47,7 @@ export const SendEmail = async (email, subject, text) => {
         throw err;
     }
 };
+
 
 
 
