@@ -7,8 +7,8 @@ import {FiLogOut} from "react-icons/fi";
 import {MdDashboard} from "react-icons/md";
 
 import {userStore} from "../store/userStore.js";
-import {successToast} from "../helpers/helper.js";
-import cookies from "js-cookie";
+import {errorToast, successToast} from "../helpers/helper.js";
+
 
 
 const Navbar = () => {
@@ -35,7 +35,8 @@ const Navbar = () => {
         fetchProfileDetails,
         fetchDoctorProfile,
         role,
-        getRole
+        getRole,
+        logoutRequest,
     } = userStore();
 
     useEffect(() => {
@@ -48,11 +49,6 @@ const Navbar = () => {
 
     useEffect(() => {
         (async ()=>{
-            // if (isLogin() && role === "doctor") {
-            //     await fetchDoctorProfile();
-            // }else{
-            //    isLogin() && await fetchProfileDetails()
-            // }
             if(isLogin()) {
                 role === "doctor" ? await fetchDoctorProfile() : await fetchProfileDetails()
             }
@@ -70,11 +66,17 @@ const Navbar = () => {
         if (url) window.open(url, "_blank");
     };
 
-    let logoutHandler = () => {
-        cookies.remove("token");
-        successToast("Logout successful");
-        navigate("/");
-        window.location.reload();
+    let logoutHandler = async () => {
+        try {
+            const res = await logoutRequest();
+            if (res.status === true) {
+                successToast(res?.message);
+                navigate("/");
+                window.location.reload();
+            }
+        }catch (error){
+            errorToast(error?.response?.data?.message || "Something went wrong");
+        }
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};

@@ -1,7 +1,8 @@
 import {create} from "zustand"
 import axios from "axios";
-import cookies from "js-cookie"
+
 import {unauthorized} from "../helpers/helper.js";
+import cookies from "js-cookie";
 
 const base_url = "https://care-hop.vercel.app/api/v1"
 
@@ -85,7 +86,7 @@ export const userStore = create((set) => ({
     }),
 
     isLogin: () => {
-        return !!cookies.get("token");
+        return !cookies.get("accessToken");
     },
 
     signUpRequest: async (data) => {
@@ -108,17 +109,14 @@ export const userStore = create((set) => ({
     },
     loginRequest: async (data) => {
         let result = await axios.post(`${base_url}/login`, data, {withCredentials: true});
-        if (result.data.status === true) {
-            cookies.set("token", result.data?.token)
-            return result.data
-        }
+        return result.data
     },
 
-    // logoutRequest: async () => {
-    //     let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
-    //     return result.data
-    //     // return cookies.remove("token")
-    // },
+    logoutRequest: async () => {
+        let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
+        return result.data
+        // return cookies.remove("token")
+    },
     profileDetails: null,
     fetchProfileDetails: async () => {
         try {

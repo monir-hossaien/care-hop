@@ -1,12 +1,15 @@
-import {COOKIE_EXPIRE_TIME} from "../config/config.js";
-
+import dotenv from 'dotenv';
+dotenv.config();
+import { OAuth2Client } from 'google-auth-library';
 import {
     changePasswordService, deleteUserService, doctorProfileRequestService, fetchRoleService, fetchUserListService,
     fetchUserProfileService,
-    loginService,
     registerService,
     saveUserProfileService
 } from "../services/userService.js";
+import User from "../models/userModel.js";
+import bcrypt from "bcrypt";
+import {createToken, verifyRefreshToken} from "../utility/JWT.js";
 
 
 // user register
@@ -17,23 +20,97 @@ export const register = async (req, res) => {
 
 // user login
 export const login = async (req, res) => {
-    let result = await loginService(req);
-    const token = result?.token;
-    const cookieOptions = {
-        httpOnly: true,
-        secure: true, // only true in production with HTTPS
-        sameSite: "none", // "none" only works with secure: true
-        maxAge: COOKIE_EXPIRE_TIME,
-        path: "/",
-    };
-    res.cookie("token", token, cookieOptions);
-    return res.status(result.statusCode).json(result);
+    try {
+        const { email, password } = req.body;
+        // find user is exits or not
+        let user = await User.findOne({email});
+        if (!user) {
+            return { statusCode: 404, status: false, message: "User not found" };
+        }
+        let isMatch = await bcrypt.compare(password, user.password);
+        if(!isMatch){
+            return { statusCode: 400, status: false, message: "Invalid Credentials"}
+        }
+        let token = await createToken(user);
+        user.refreshToken = token.refreshToken;
+        await user.save();
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000,
+            path: "/",
+        };
+        res.cookie("refreshToken", token.refreshToken, cookieOptions);
+        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken });
+    } catch (err) {
+        return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
+    }
 };
+
+//google login
+export const googleLogin = async (req, res) => {
+    const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+    try {
+        const { tokenId } = req.body;
+        const ticket = await client.verifyIdToken({ idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID });
+        const {  email } = ticket.getPayload();
+        let user = await User.findOne({email});
+        if (!user) user = await User.create({ email, provider: 'google' });
+        const token = createToken(user);
+        user.refreshToken = token.refreshToken;
+        await user.save();
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000,
+            path: "/",
+        };
+        res.cookie("refreshToken", token.refreshToken, cookieOptions);
+        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken });
+    } catch (err) {
+        return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
+    }
+};
+
+// refresh token
+export const refreshToken = async (req, res) => {
+    try {
+        const token = req.cookies.refreshToken;
+
+        const decodeToken = await verifyRefreshToken(token);
+        let user = await User.findOne({email: decodeToken.email});
+        if (!user || user.refreshToken !== token) {
+            return res.status(403).json({ status: false, message: 'Invalid token' });
+        }
+        const tokens = createToken(user);
+        user.refreshToken = tokens.refreshToken;
+        await user.save();
+        const cookieOptions = {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000,
+            path: "/",
+        };
+        res.cookie("refreshToken", tokens.refreshToken, cookieOptions);
+        return res.status(200).json({status: true, message: "Refresh token successfully", accessToken: token.accessToken });
+    }catch(err){
+        res.status(500).json({status: false, message: 'Something went wrong!', error: err.message });
+    }
+}
 
 // user logout
 export const logout = async(req, res)=>{
     try {
-        res.clearCookie("token");
+        const token = req.cookies.refreshToken;
+        const user = await User.findOne({refreshToken: token})
+        if(user){
+            user.refreshToken = "";
+            await user.save()
+        }
+        res.clearCookie("refreshToken");
         return res.status(200).json({ status: true , message: "Logout success" });
     } catch (error) {
         res.status(500).json({status: false, message: "Something went wrong"})

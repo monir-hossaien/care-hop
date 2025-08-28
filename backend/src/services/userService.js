@@ -1,7 +1,6 @@
 
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import {createToken, verifyToken} from "../utility/JWT.js";
 import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
 import mongoose from "mongoose";
 import DoctorProfile from "../models/doctorProfileModel.js";
@@ -57,40 +56,7 @@ export const registerService = async (req)=>{
     }
 }
 
-// user login service
-export const loginService = async (req) => {
-    try {
-        const { email, password } = req.body;
-        // find user is exits or not
-        let user = await User.findOne({email});
-        if (!user) {
-            return { statusCode: 404, status: false, message: "User not found" };
-        }
-        let isMatch = await bcrypt.compare(password, user.password);
-        if (isMatch) {
-            let token = await createToken(user["email"], user["id"], user["role"]);
-            return {
-                statusCode: 200,
-                status: true,
-                message: "Login success",
-                token: token
-            };
-        }else{
-            return {
-                statusCode: 400,
-                status: false,
-                message: "Invalid Credentials",
-            };
-        }
-    } catch (err) {
-        return {
-            statusCode: 500,
-            status: false,
-            message: "Something went wrong!",
-            error: err.message,
-        };
-    }
-};
+
 
 // change password
 export const changePasswordService = async (req)=>{

@@ -19,6 +19,7 @@ import {authenticateUser, isRole} from "../middleware/auth.js";
 //user api
 router.post("/register", UserController.register);
 router.post("/login", UserController.login);
+router.post("/refresh-token", UserController.refreshToken);
 router.get("/logout", UserController.logout);
 router.get("/auth", authenticateUser, UserController.fetchRole);
 router.post("/send-doctor-request", authenticateUser, isRole('user'), upload.single('image'), UserController.doctorProfileRequest);

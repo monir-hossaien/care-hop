@@ -21,6 +21,14 @@ const dataSchema = new mongoose.Schema(
         isDoctorApproved: {
             type: Boolean,
             default: false
+        },
+        provider: {
+            type: String,
+            enum: ["google", "email"],
+            default: "email",
+        },
+        refreshToken: {
+            type: String,
         }
     },
     {

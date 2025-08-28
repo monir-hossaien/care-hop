@@ -25,7 +25,7 @@ const PrivateRoute = ({ allowedRoles }) => {
         })();
     }, [role]);
 
-    const token = cookies.get('token');
+    const token = cookies.get('accessToken');
 
     if (!token) return <Navigate to="/login" replace />;
     if (loading) return <div></div>;
