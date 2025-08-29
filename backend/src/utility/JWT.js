@@ -6,13 +6,26 @@ import {
     JWT_SECRET_REFRESH_TOKEN
 } from "../config/config.js";
 
-export const createToken = (user)=>{
-    const payload = {email: user.email, _id: user._id, role: user.role};
-    const accessToken = jwt.sign(payload, JWT_SECRET_ACCESS_TOKEN, {expiresIn: JWT_EXPIRATION_TIME_ACCESS_TOKEN});
-    const refreshToken  = jwt.sign(payload, JWT_SECRET_REFRESH_TOKEN, {expiresIn: JWT_EXPIRATION_TIME_REFRESH_TOKEN});
 
-    return {accessToken, refreshToken};
-}
+
+export const createToken = (user) => {
+    const payload = { email: user.email, _id: user._id, role: user.role };
+
+    const accessToken = jwt.sign(
+        payload,
+        process.env.SECRET_KEY_ACCESS_TOKEN,       // must be string
+        { expiresIn: process.env.JWT_EXPIRATION_TIME_ACCESS_TOKEN || "15m" } // fallback
+    );
+
+    const refreshToken = jwt.sign(
+        payload,
+        process.env.SECRET_KEY_REFRESH_TOKEN,      // must be string
+        { expiresIn: process.env.JWT_EXPIRATION_TIME_REFRESH_TOKEN || "7d" } // fallback
+    );
+
+    return { accessToken, refreshToken };
+};
+
 
 export const verifyAccessToken = async (token)=>{
     try {
