@@ -4,7 +4,7 @@ import axios from "axios"
 
 import {unauthorized} from "../helpers/helper.js";
 
-import {base_url} from "../../baseURL/index.js";
+import {base_url} from "../baseURL/index.js";
 import cookies from "js-cookie";
 
 

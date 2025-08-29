@@ -1,6 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import {base_url} from "../../baseURL/index.js";
+import {base_url} from "../baseURL/index.js";
 
 
 const api = axios.create({

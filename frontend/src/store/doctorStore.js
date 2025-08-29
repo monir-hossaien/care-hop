@@ -4,7 +4,7 @@ import { unauthorized } from "../helpers/helper.js";
 import { userStore } from "./userStore.js";
 
 
-import {base_url} from "../../baseURL/index.js";
+import {base_url} from "../baseURL/index.js";
 import api from "../axios/api.js";
 export const doctorStore = create((set, get) => ({
     doctorList: null,

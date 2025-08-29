@@ -1,7 +1,7 @@
 import {create} from "zustand"
 import axios from "axios";
 import {unauthorized} from "../helpers/helper.js";
-import {base_url} from "../../baseURL/index.js";
+import {base_url} from "../baseURL/index.js";
 import api from "../axios/api.js";
 
 export const blogStore = create((set)=>({
