@@ -109,9 +109,13 @@ export const userStore = create((set) => ({
         }
     },
     loginRequest: async (data) => {
-        const res = await api.post("/login", data);
-        cookies.set("accessToken", res.data.accessToken, {expires : 1});
-        return res.data;
+        try {
+            const res = await api.post("/login", data);
+            cookies.set("accessToken", res.data.accessToken, {expires : 1});
+            return res.data;
+        }catch(error) {
+            throw error;
+        }
     },
 
     logoutRequest: async () => {

@@ -25,13 +25,13 @@ export const login = async (req, res) => {
         // find user is exits or not
         let user = await User.findOne({email});
         if (!user) {
-            return { statusCode: 404, status: false, message: "User not found" };
+            return res.status(404).json({status: false, message: "User not found"});
         }
         let isMatch = await bcrypt.compare(password, user.password);
         if(!isMatch){
-            return { statusCode: 400, status: false, message: "Invalid Credentials"}
+            return res.status(400).json({status: false, message: "Invalid Credentials"});
         }
-        let token = await createToken(user);
+        let token = createToken(user);
         user.refreshToken = token.refreshToken;
         await user.save();
         const cookieOptions = {
