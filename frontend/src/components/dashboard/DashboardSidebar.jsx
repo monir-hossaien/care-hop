@@ -1,19 +1,25 @@
 import React from "react";
 import {NavLink, useNavigate} from "react-router-dom";
 import {FiLogOut} from "react-icons/fi";
-import {successToast} from "../../helpers/helper.js";
+import {errorToast, successToast} from "../../helpers/helper.js";
 import {userStore} from "../../store/userStore.js";
-import cookies from "js-cookie";
 
 const DashboardSidebar = ({ navItems }) => {
 
+    const {logoutRequest} = userStore()
     const navigate = useNavigate();
 
-    const logoutHandler = () => {
-        cookies.remove("token");
-        successToast("Logout successful");
-        navigate("/");
-        window.location.reload();
+    let logoutHandler = async () => {
+        try {
+            const res = await logoutRequest();
+            if (res.status === true) {
+                successToast(res?.message);
+                navigate("/");
+                window.location.reload();
+            }
+        }catch (error){
+            errorToast(error?.response?.data?.message || "Something went wrong");
+        }
     };
 
     return (

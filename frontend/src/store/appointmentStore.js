@@ -1,15 +1,13 @@
 
 import {create} from "zustand"
-import axios from "axios";
+import api from "../axios/api.js"
 import {unauthorized} from "../helpers/helper.js";
-const base_url = "https://care-hop.vercel.app/api/v1"
-
 
 export const appointmentStore = create((set)=>({
 
     createAppointment: async (doctorID, data) => {
         try{
-            let result = await axios.post(`${base_url}/book-appointment/${doctorID}`, data, {withCredentials: true})
+            let result = await api.post(`/book-appointment/${doctorID}`, data)
             return result.data
         }catch(error){
             unauthorized(error?.response?.status)
@@ -19,7 +17,7 @@ export const appointmentStore = create((set)=>({
     appointmentList: null,
     fetchDoctorAppointmentList: async () => {
         try{
-            let result = await axios.get(`${base_url}/get-doctor-appointments`, {withCredentials: true})
+            let result = await api.get("/get-doctor-appointments")
             if(result.data.status === true){
                 const data = result.data?.data
                 set({appointmentList: data})
@@ -31,7 +29,7 @@ export const appointmentStore = create((set)=>({
     },
     fetchPatientAppointmentList: async () => {
         try{
-            let result = await axios.get(`${base_url}/get-user-appointments`, {withCredentials: true})
+            let result = await api.get("/get-user-appointments")
             if(result.data.status === true){
                 const data = result.data?.data
                 set({appointmentList: data})
@@ -43,7 +41,7 @@ export const appointmentStore = create((set)=>({
     },
     updateAppointmentStatus: async (id, data) => {
         try{
-            let result = await axios.put(`${base_url}/update-appointment-status/${id}`, data, {withCredentials: true})
+            let result = await api.put(`/update-appointment-status/${id}`, data)
             return result.data
         }catch(error){
             unauthorized(error?.response?.statusCode)

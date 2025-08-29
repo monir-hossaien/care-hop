@@ -2,7 +2,9 @@
 import {create} from 'zustand'
 import axios from 'axios'
 import {unauthorized} from "../helpers/helper.js";
-const base_url = "https://care-hop.vercel.app/api/v1"
+import api from "../axios/api.js"
+
+
 
 
 export const adminStore = create((set)=>({
@@ -10,7 +12,7 @@ export const adminStore = create((set)=>({
     doctorCount: null,
     fetchDoctorCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/doctor-count`, {withCredentials: true});
+            const result = await api.get("/doctor-count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({doctorCount: data});
@@ -24,7 +26,7 @@ export const adminStore = create((set)=>({
     userCount: null,
     fetchUserCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/user-count`, {withCredentials: true});
+            const result = await api.get("/user-count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({userCount: data});
@@ -38,7 +40,7 @@ export const adminStore = create((set)=>({
     doctorRequestCount: null,
     fetchDoctorRequestCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/doctor-request-count`, {withCredentials: true});
+            const result = await api.get("/doctor-request-count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({doctorRequestCount: data});
@@ -52,7 +54,7 @@ export const adminStore = create((set)=>({
     blogCount: null,
     fetchBlogCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/blog-count`, {withCredentials: true});
+            const result = await api.get("/blog-count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({blogCount: data});
@@ -66,7 +68,7 @@ export const adminStore = create((set)=>({
     hospitalCount: null,
     fetchHospitalCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/hospital-Count`, {withCredentials: true});
+            const result = await api.get("/hospital-Count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({hospitalCount: data});
@@ -80,7 +82,7 @@ export const adminStore = create((set)=>({
     specialitiesCount: null,
     fetchSpecialitiesCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/specialties-count`, {withCredentials: true});
+            const result = await api.get("/specialties-count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({specialitiesCount: data});
@@ -94,7 +96,7 @@ export const adminStore = create((set)=>({
     messageCount: null,
     fetchMessageCount: async () =>{
         try{
-            const result = await axios.get(`${base_url}/message-Count`, {withCredentials: true});
+            const result = await api.get("/message-Count");
             if(result.data.status === true){
                 const data = result?.data?.data
                 set({messageCount: data});

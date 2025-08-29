@@ -1,11 +1,11 @@
 import {create} from "zustand"
-import axios from "axios";
+import api from "../axios/api.js"
+import axios from "axios"
 
 import {unauthorized} from "../helpers/helper.js";
+
+import {base_url} from "../../baseURL/index.js";
 import cookies from "js-cookie";
-
-const base_url = "https://care-hop.vercel.app/api/v1"
-
 
 
 export const userStore = create((set) => ({
@@ -86,8 +86,9 @@ export const userStore = create((set) => ({
     }),
 
     isLogin: () => {
-        return !cookies.get("accessToken");
+        return !!cookies.get("accessToken");
     },
+
 
     signUpRequest: async (data) => {
         let result = await axios.post(`${base_url}/register`, data)
@@ -97,7 +98,7 @@ export const userStore = create((set) => ({
     role: null,
     getRole: async () => {
         try {
-            let result = await axios.get(`${base_url}/auth`, {withCredentials: true});
+            let result = await api.get("/auth");
             if(result.data.status === true) {
                 const userRole = result.data?.role;
                 set({role: userRole})
@@ -108,19 +109,20 @@ export const userStore = create((set) => ({
         }
     },
     loginRequest: async (data) => {
-        let result = await axios.post(`${base_url}/login`, data, {withCredentials: true});
-        return result.data
+        const res = await api.post("/login", data);
+        cookies.set("accessToken", res.data.accessToken, {expires : 1});
+        return res.data;
     },
 
     logoutRequest: async () => {
-        let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
+        let result = await api.get(`/logout`);
+        cookies.remove("accessToken");
         return result.data
-        // return cookies.remove("token")
     },
     profileDetails: null,
     fetchProfileDetails: async () => {
         try {
-            let result = await axios.get(`${base_url}/fetch-user-profile`, {withCredentials: true});
+            let result = await api.get("/fetch-user-profile");
             if(result.data.status === true) {
                 const data = result?.data?.data;
                 set((state) => ({
@@ -139,9 +141,7 @@ export const userStore = create((set) => ({
     // Fetch logged-in doctor's profile
     fetchDoctorProfile: async () => {
         try {
-            const result = await axios.get(`${base_url}/fetch-doctor-profile`, {
-                withCredentials: true,
-            });
+            const result = await api.get("/fetch-doctor-profile");
 
             if (result.data.status === true) {
                 const data = result.data?.data;
@@ -159,7 +159,7 @@ export const userStore = create((set) => ({
 
     saveUserProfile: async (data) => {
         try {
-            let result = await axios.post(`${base_url}/save-profile`, data, {withCredentials: true});
+            let result = await api.post("/save-profile", data);
             return result.data
         } catch (error) {
             unauthorized(error?.response?.status)
@@ -169,7 +169,7 @@ export const userStore = create((set) => ({
 
     sendDoctorRequest: async (data) => {
         try {
-            let result = await axios.post(`${base_url}/send-doctor-request`, data, {withCredentials: true});
+            let result = await api.post("/send-doctor-request", data);
             return result.data
         } catch (error) {
             unauthorized(error?.response?.status)
@@ -178,7 +178,7 @@ export const userStore = create((set) => ({
     userList : null,
     fetchUserList : async () =>{
         try {
-            let result = await axios.get(`${base_url}/fetch-user-list`, {withCredentials: true});
+            let result = await api.get("/fetch-user-list");
             if(result.data.status === true) {
                 const data = result.data.data;
                 set({userList: data})
@@ -189,7 +189,7 @@ export const userStore = create((set) => ({
     },
     deleteUserRequest : async (userID) =>{
         try {
-            let result = await axios.delete(`${base_url}/delete-user/${userID}`, {withCredentials: true});
+            let result = await api.delete(`/delete-user/${userID}`);
             return result.data
         } catch (error) {
             unauthorized(error?.response?.status)
@@ -197,7 +197,7 @@ export const userStore = create((set) => ({
     },
     changePassword : async (data) =>{
         try {
-            let result = await axios.post(`${base_url}/change-password`, data,{withCredentials: true});
+            let result = await api.post("/change-password", data);
             return result.data
         } catch (error) {
             unauthorized(error?.response?.status)

@@ -95,6 +95,17 @@ const SignUp = () => {
                         />
                     </div>
 
+                    {/*google login*/}
+
+                    <p className="text-sm text-center text-gray-600">Or, Login with</p>
+
+                    <div className="flex justify-center items-center">
+                        <button className="flex justify-center items-center gap-2 text-sm cursor-pointer">
+                            <img src="/images/google.png" className="w-5 h-5" alt="icon"/>
+                            <p className="text-gray-600">Google</p>
+                        </button>
+                    </div>
+
                     {/* Login Link */}
                     <div>
                         <p className="text-center text-sm text-gray-600">

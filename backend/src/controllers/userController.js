@@ -36,8 +36,8 @@ export const login = async (req, res) => {
         await user.save();
         const cookieOptions = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
+            secure: process.env.NODE_ENV === "production", // false on localhost
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 24 * 60 * 60 * 1000,
             path: "/",
         };
@@ -47,6 +47,8 @@ export const login = async (req, res) => {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
     }
 };
+
+
 
 //google login
 export const googleLogin = async (req, res) => {
@@ -62,9 +64,9 @@ export const googleLogin = async (req, res) => {
         await user.save();
         const cookieOptions = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            maxAge: 24 * 60 * 60 * 1000,
+            secure: process.env.NODE_ENV === "production", // false on localhost
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
         res.cookie("refreshToken", token.refreshToken, cookieOptions);
@@ -89,13 +91,13 @@ export const refreshToken = async (req, res) => {
         await user.save();
         const cookieOptions = {
             httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
+            secure: process.env.NODE_ENV === "production", // false on localhost
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 24 * 60 * 60 * 1000,
             path: "/",
         };
         res.cookie("refreshToken", tokens.refreshToken, cookieOptions);
-        return res.status(200).json({status: true, message: "Refresh token successfully", accessToken: token.accessToken });
+        return res.status(200).json({status: true, message: "Refresh token successfully", accessToken: tokens.accessToken });
     }catch(err){
         res.status(500).json({status: false, message: 'Something went wrong!', error: err.message });
     }

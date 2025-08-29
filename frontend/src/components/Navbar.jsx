@@ -39,6 +39,9 @@ const Navbar = () => {
         logoutRequest,
     } = userStore();
 
+    const loggedIn = isLogin()
+    console.log(loggedIn)
+
     useEffect(() => {
         (async () => {
             if (isLogin()) {
@@ -130,7 +133,7 @@ const Navbar = () => {
 
                         {/* Avatar or Login (Desktop) */}
                         <div className="relative">
-                            {isLogin() ? (
+                            { loggedIn ? (
                                 <>
                                     <button
                                         onClick={() => setAvatarOpen(!avatarOpen)}
@@ -221,7 +224,7 @@ const Navbar = () => {
                             ))}
 
 
-                        {isLogin() ? (
+                        { loggedIn ? (
                             <>
                                 <button
                                     onClick={() => {

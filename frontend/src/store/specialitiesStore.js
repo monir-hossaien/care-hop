@@ -2,8 +2,8 @@ import { create } from 'zustand'
 import axios from 'axios'
 import {unauthorized} from "../helpers/helper.js";
 
-const base_url = "https://care-hop.vercel.app/api/v1"
-
+import {base_url} from "../../baseURL/index.js";
+import api from "../axios/api.js";
 export const specialitiesStore = create((set) => ({
 
     formData: {
@@ -29,7 +29,7 @@ export const specialitiesStore = create((set) => ({
     }),
     createSpecialties: async (data)=>{
         try{
-            let result = await axios.post(`${base_url}/create-specialty`, data,{withCredentials: true})
+            let result = await api.post("/create-specialty", data)
             return result.data
         }catch(err){
             unauthorized(err?.response?.status);
@@ -39,7 +39,7 @@ export const specialitiesStore = create((set) => ({
 
     readSpecialty: async (id)=>{
         try{
-            let result = await axios.get(`${base_url}/read-specialty/${id}`,{withCredentials: true})
+            let result = await api.get(`/read-specialty/${id}`)
             if(result.data.status === true){
                 set({formData: result.data.data})
             }
@@ -51,7 +51,7 @@ export const specialitiesStore = create((set) => ({
 
     updateSpecialty: async (id, data)=>{
         try{
-            let result = await axios.put(`${base_url}/update-specialty/${id}`, data,{withCredentials: true})
+            let result = await api.put(`/update-specialty/${id}`, data)
             return result.data
         }catch(err){
             unauthorized(err?.response?.status);
@@ -69,7 +69,7 @@ export const specialitiesStore = create((set) => ({
     },
     deleteSpecialities: async (id)=>{
         try{
-            let result = await axios.delete(`${base_url}/delete-specialty/${id}`,{withCredentials: true})
+            let result = await api.delete(`/delete-specialty/${id}`)
             return result.data
         }catch(err){
             unauthorized(err?.response?.status);

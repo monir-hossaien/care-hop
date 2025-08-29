@@ -2,8 +2,8 @@
 import {create} from "zustand"
 import axios from "axios";
 import {unauthorized} from "../helpers/helper.js";
-const base_url = "https://care-hop.vercel.app/api/v1"
-
+import {base_url} from "../../baseURL/index.js";
+import api from "../axios/api.js";
 
 export const contactStore = create((set)=>({
 
@@ -16,7 +16,7 @@ export const contactStore = create((set)=>({
     messageList: null,
     fetchMessageList: async (data) => {
         try{
-            let result = await axios.get(`${base_url}/message-list`, {withCredentials: true})
+            let result = await api.get("/message-list")
             if(result.data.status === true){
                 const data = result.data?.data
                 set({messageList: data})
@@ -29,7 +29,7 @@ export const contactStore = create((set)=>({
 
     deleteMessageRequest: async (id) => {
         try{
-            let result = await axios.delete(`${base_url}/delete-message/${id}`, {withCredentials: true})
+            let result = await api.delete(`/delete-message/${id}`)
             return result.data
         }catch(error){
             unauthorized(error?.response?.status);

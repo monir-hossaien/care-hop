@@ -4,8 +4,8 @@ import { unauthorized } from "../helpers/helper.js";
 import { userStore } from "./userStore.js";
 
 
-const base_url = "https://care-hop.vercel.app/api/v1";
-
+import {base_url} from "../../baseURL/index.js";
+import api from "../axios/api.js";
 export const doctorStore = create((set, get) => ({
     doctorList: null,
 
@@ -15,9 +15,7 @@ export const doctorStore = create((set, get) => ({
     // Fetch all doctors (for admin or public)
     fetchDoctorList: async () => {
         try {
-            const result = await axios.get(`${base_url}/fetch-doctor-list`, {
-                withCredentials: true,
-            });
+            const result = await api.get("/fetch-doctor-list");
             if (result.data.status === true) {
                 set({ doctorList: result.data.data });
             }
@@ -61,9 +59,7 @@ export const doctorStore = create((set, get) => ({
     // update doctor profile
     updateDoctorProfile: async (data) => {
         try {
-            const result = await axios.put(`${base_url}/update-doctor-profile`, data, {
-                withCredentials: true,
-            });
+            const result = await api.put("/update-doctor-profile", data);
             return result.data;
         } catch (err) {
             unauthorized(err?.response?.status);
@@ -74,11 +70,8 @@ export const doctorStore = create((set, get) => ({
     // Update doctor verification status (admin only)
     updateDoctorStatus: async (doctorID, data) => {
         try {
-            const result = await axios.put(
-                `${base_url}/verify-doctor-request/${doctorID}`,
-                data,
-                { withCredentials: true }
-            );
+            const result = await api.put(
+                `/verify-doctor-request/${doctorID}`, data);
             return result.data;
         } catch (err) {
             unauthorized(err?.response?.status);
@@ -89,10 +82,8 @@ export const doctorStore = create((set, get) => ({
     // Delete doctor by admin
     deleteDoctorByAdmin: async (doctorID) => {
         try {
-            const result = await axios.delete(
-                `${base_url}/delete-doctor/${doctorID}`,
-                { withCredentials: true }
-            );
+            const result = await api.delete(
+                `/delete-doctor/${doctorID}`);
             return result.data;
         } catch (err) {
             unauthorized(err?.response?.status);

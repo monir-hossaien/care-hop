@@ -1,8 +1,8 @@
 import {create} from "zustand"
 import axios from "axios";
 import {unauthorized} from "../helpers/helper.js";
-const base_url = "https://care-hop.vercel.app/api/v1"
-
+import {base_url} from "../../baseURL/index.js";
+import api from "../axios/api.js";
 
 export const blogStore = create((set)=>({
 
@@ -41,7 +41,7 @@ export const blogStore = create((set)=>({
     },
     fetchDoctorBlogs: async () => {
         try{
-            let result = await axios.get(`${base_url}/fetch-doctor-blog` , {withCredentials: true})
+            let result = await api.get("/fetch-doctor-blog")
             if(result.data.status === true){
                 set({blogList: result.data?.data})
             }
@@ -72,7 +72,7 @@ export const blogStore = create((set)=>({
 
     postBlogRequest: async (data) => {
         try{
-            let result = await axios.post(`${base_url}/create-blog`, data, {withCredentials: true})
+            let result = await api.post("/create-blog", data)
             return result.data
         }catch(err){
             unauthorized(err?.response?.status);
@@ -82,7 +82,7 @@ export const blogStore = create((set)=>({
 
     updateBlogRequest: async (blogID, data) => {
         try{
-            let result = await axios.put(`${base_url}/update-blog/${blogID}`, data, {withCredentials: true})
+            let result = await api.put(`/update-blog/${blogID}`, data)
             return result.data
         }catch(err){
             unauthorized(err?.response?.status);
@@ -91,7 +91,7 @@ export const blogStore = create((set)=>({
     },
     deleteBlogRequest: async (blogID) => {
         try{
-            let result = await axios.delete(`${base_url}/delete-blog/${blogID}`, {withCredentials: true})
+            let result = await api.delete(`/delete-blog/${blogID}`)
             return result.data
         }catch(err){
             unauthorized(err?.response?.status);

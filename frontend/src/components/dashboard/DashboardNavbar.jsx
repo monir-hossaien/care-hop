@@ -1,7 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {userStore} from "../../store/userStore.js";
-import {successToast} from "../../helpers/helper.js";
+import {errorToast, successToast} from "../../helpers/helper.js";
 import {FiLogOut} from "react-icons/fi";
 import cookies from "js-cookie";
 
@@ -29,11 +29,17 @@ const DashboardNavbar = ({ toggleSidebar }) => {
         })()
     }, [role]);
 
-    const logoutHandler = () => {
-        cookies.remove("token");
-        successToast("Logout successful");
-        navigate("/");
-        window.location.reload();
+    let logoutHandler = async () => {
+        try {
+            const res = await logoutRequest();
+            if (res.status === true) {
+                successToast(res?.message);
+                navigate("/");
+                window.location.reload();
+            }
+        }catch (error){
+            errorToast(error?.response?.data?.message || "Something went wrong");
+        }
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};
