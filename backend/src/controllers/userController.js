@@ -22,6 +22,13 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+        if(!email || !password){
+            return{
+                statusCode: 400,
+                status: false,
+                message: "Email and password required"
+            }
+        }
         // find user is exits or not
         let user = await User.findOne({email});
         if (!user) {

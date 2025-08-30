@@ -9,9 +9,7 @@ const dataSchema = new mongoose.Schema(
             trim: true,
         },
         password: {
-            type: String,
-            required: true,
-            trim: true,
+            type: String
         },
         role: {
             type: String,
@@ -29,6 +27,7 @@ const dataSchema = new mongoose.Schema(
         },
         refreshToken: {
             type: String,
+            default: "",
         }
     },
     {

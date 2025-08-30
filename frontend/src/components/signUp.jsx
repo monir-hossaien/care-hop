@@ -1,17 +1,20 @@
 // Import necessary libraries and components
-import React from 'react';
+import React, {useState} from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { userStore } from "../store/userStore.js";
 import UserButton from "./UserButton.jsx";
 import ValidationHelper, { errorToast, successToast } from "../helpers/helper.js";
 import {FaEnvelope, FaLock, FaUser} from "react-icons/fa";
+import GoogleLoginSkeleton from "../skeleton/googleLoginSkeleton.jsx";
+import {GoogleLogin, GoogleOAuthProvider} from "@react-oauth/google";
+import Cookies from "js-cookie";
+import api from "../axios/api.js";
 
 const SignUp = () => {
-    // Extract state and methods from the global store
+    const [onloading, setOnLoading] = useState(false);
     const { formData, inputOnChange, setLoading, resetFormData, signUpRequest } = userStore();
     const navigate = useNavigate();
 
-    // Handle sign-up button click
     const handleSignUpRequest = async () => {
         try {
             // Validate form input fields
@@ -48,6 +51,26 @@ const SignUp = () => {
             // Show error if request fails
             errorToast(error?.response?.data?.message || "Something went wrong");
             setLoading(false);
+        }
+    };
+
+    // google login function
+    const handleGoogleLogin = async (credentialResponse) => {
+        try {
+            setOnLoading(true);
+            const res = await api.post(
+                "/google-login",
+                { tokenId: credentialResponse.credential },
+                { withCredentials: true }
+            );
+            if(res.status === 200) {
+                setOnLoading(false);
+                Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
+                navigate("/");
+            }
+
+        } catch (err) {
+            console.error(err.response?.data || err);
         }
     };
 
@@ -99,12 +122,18 @@ const SignUp = () => {
 
                     <p className="text-sm text-center text-gray-600">Or, Login with</p>
 
-                    <div className="flex justify-center items-center">
-                        <button className="flex justify-center items-center gap-2 text-sm cursor-pointer">
-                            <img src="/images/google.png" className="w-5 h-5" alt="icon"/>
-                            <p className="text-gray-600">Google</p>
-                        </button>
-                    </div>
+                    <GoogleOAuthProvider clientId={"843456280837-lfbavoj7n91eu5hbrc47n5qg2mabr0hs.apps.googleusercontent.com"}>
+                        {
+                            onloading ? (
+                                <GoogleLoginSkeleton/>
+                            ):(
+                                <GoogleLogin
+                                    onSuccess={handleGoogleLogin}
+                                    onError={() => console.log("Login Failed")}
+                                />
+                            )
+                        }
+                    </GoogleOAuthProvider>
 
                     {/* Login Link */}
                     <div>

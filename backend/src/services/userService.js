@@ -12,12 +12,16 @@ const objID = mongoose.Types.ObjectId;
 // user registration service
 export const registerService = async (req)=>{
     try {
-        const reqBody = req.body;
-        if(reqBody.email === 'abirupc786@gmail.com'){
-            reqBody.role = "admin";
+        const {email, password} = req.body;
+        if(!email || !password){
+            return{
+                statusCode: 400,
+                status: false,
+                message: "Email and password required"
+            }
         }
         //check user exit or not
-        const existingUser = await User.findOne({email: reqBody.email})
+        const existingUser = await User.findOne({email})
         if(existingUser){
             return{
                 statusCode: 400,
@@ -26,10 +30,11 @@ export const registerService = async (req)=>{
             }
         }
         // password make encrypted
-        const hashPassword = await bcrypt.hashSync(reqBody.password, 10);
-        const newUser = {
-            ...reqBody,
-            password: hashPassword
+        const hashPassword = await bcrypt.hashSync(password, 10);
+        let newUser = {
+            email,
+            password: hashPassword,
+            role: email === "abirupc786@gmail.com" ? "admin" : "user",
         }
 
         const user = await User.create(newUser);
