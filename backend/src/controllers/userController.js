@@ -38,7 +38,7 @@ export const login = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
         res.cookie("refreshToken", token.refreshToken, cookieOptions);
@@ -93,7 +93,7 @@ export const refreshToken = async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 24 * 60 * 60 * 1000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
         res.cookie("refreshToken", tokens.refreshToken, cookieOptions);
