@@ -130,6 +130,7 @@ export const userStore = create((set) => ({
             let result = await api.get("/fetch-user-profile");
             if(result?.data?.status === true) {
                 const data = result?.data?.data;
+                console.log(data)
                 set((state) => ({
                     profileDetails: data,
                     formData: {
@@ -150,6 +151,7 @@ export const userStore = create((set) => ({
 
             if (result?.data?.status === true) {
                 const data = result?.data?.data;
+                console.log(data)
                 set({
                     profileDetails: data,
                     formData: data

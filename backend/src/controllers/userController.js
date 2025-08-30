@@ -69,13 +69,14 @@ export const googleLogin = async (req, res) => {
         const token = createToken(user);
         user.refreshToken = token.refreshToken;
         await user.save();
-        const cookieOptions = {
+        let cookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
+        res.cookie("accessToken", token.accessToken, cookieOptions.maxAge = 24 * 60 * 60 * 1000);
         res.cookie("refreshToken", token.refreshToken, cookieOptions);
         return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken });
     } catch (err) {

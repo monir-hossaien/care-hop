@@ -49,7 +49,7 @@ const Navbar = () => {
         };
 
         fetchRole();
-    }, [isLogin]);
+    }, []);
 
     useEffect(() => {
         if (!isLogin() || !role) return;
@@ -63,7 +63,7 @@ const Navbar = () => {
         };
 
         fetchProfile();
-    }, [role, isLogin]);
+    }, [role]);
 
 
 
@@ -91,7 +91,7 @@ const Navbar = () => {
     };
 
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};
-    let email = role === "doctor" ? profile?.user?.email : profileDetails?.email;
+    let email = role === "doctor" ? profile?.user?.email : profileDetails?.email || "";
 
 
     // console.log(profile);
