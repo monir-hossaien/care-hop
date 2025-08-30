@@ -25,6 +25,7 @@ const app = express();
 const corsOptions = {
     origin: ["https://care-hop-service.vercel.app", "http://localhost:5173"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: Max_JSON_SIZE }));
