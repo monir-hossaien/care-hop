@@ -12,22 +12,28 @@ const DashboardNavbar = ({ toggleSidebar }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        (async () => {
-            if (isLogin()) {
-                await getRole();
-            }
-        })();
-    }, []);
+        if (!isLogin()) return;
+
+        const fetchRole = async () => {
+            await getRole(); // updates `role` state internally
+        };
+
+        fetchRole();
+    }, [isLogin]);
 
     useEffect(() => {
-        (async ()=>{
-            if (isLogin() && role === "doctor") {
+        if (!isLogin() || !role) return;
+
+        const fetchProfile = async () => {
+            if (role === "doctor") {
                 await fetchDoctorProfile();
-            }else{
-                isLogin() && await fetchProfileDetails()
+            } else {
+                await fetchProfileDetails();
             }
-        })()
-    }, [role]);
+        };
+
+        fetchProfile();
+    }, [role, isLogin]);
 
     let logoutHandler = async () => {
         try {

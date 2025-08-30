@@ -40,23 +40,31 @@ const Navbar = () => {
     } = userStore();
 
     const loggedIn = isLogin()
-    console.log(loggedIn)
 
     useEffect(() => {
-        (async () => {
-            if (isLogin()) {
-                await getRole();
-            }
-        })();
-    }, []);
+        if (!isLogin()) return;
+
+        const fetchRole = async () => {
+            await getRole(); // updates `role` state internally
+        };
+
+        fetchRole();
+    }, [isLogin]);
 
     useEffect(() => {
-        (async ()=>{
-            if(isLogin()) {
-                role === "doctor" ? await fetchDoctorProfile() : await fetchProfileDetails()
+        if (!isLogin() || !role) return;
+
+        const fetchProfile = async () => {
+            if (role === "doctor") {
+                await fetchDoctorProfile();
+            } else {
+                await fetchProfileDetails();
             }
-        })()
-    }, [role]);
+        };
+
+        fetchProfile();
+    }, [role, isLogin]);
+
 
 
 

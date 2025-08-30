@@ -94,20 +94,6 @@ export const userStore = create((set) => ({
         let result = await axios.post(`${base_url}/register`, data)
         return result.data
     },
-
-    role: null,
-    getRole: async () => {
-        try {
-            let result = await api.get("/auth");
-            if(result.data.status === true) {
-                const userRole = result.data?.role;
-                set({role: userRole})
-                return userRole
-            }
-        } catch (error) {
-            unauthorized(error?.response?.status)
-        }
-    },
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
@@ -115,6 +101,21 @@ export const userStore = create((set) => ({
             return res.data;
         }catch(error) {
             throw error;
+        }
+    },
+
+    role: null,
+    getRole: async () => {
+        try {
+            let result = await api.get("/auth");
+            if(result.data.status === true) {
+                const userRole = result.data?.role;
+                console.log(userRole)
+                set({role: userRole})
+                return userRole
+            }
+        } catch (error) {
+            unauthorized(error?.response?.status)
         }
     },
 
@@ -127,7 +128,7 @@ export const userStore = create((set) => ({
     fetchProfileDetails: async () => {
         try {
             let result = await api.get("/fetch-user-profile");
-            if(result.data.status === true) {
+            if(result?.data?.status === true) {
                 const data = result?.data?.data;
                 set((state) => ({
                     profileDetails: data,
@@ -147,8 +148,8 @@ export const userStore = create((set) => ({
         try {
             const result = await api.get("/fetch-doctor-profile");
 
-            if (result.data.status === true) {
-                const data = result.data?.data;
+            if (result?.data?.status === true) {
+                const data = result?.data?.data;
                 set({
                     profileDetails: data,
                     formData: data
