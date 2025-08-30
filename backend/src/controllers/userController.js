@@ -49,7 +49,7 @@ export const login = async (req, res) => {
             path: "/",
         };
         res.cookie("refreshToken", token.refreshToken, cookieOptions);
-        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken });
+        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken, data: user.role });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
     }
@@ -76,9 +76,8 @@ export const googleLogin = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
-        res.cookie("accessToken", token.accessToken, cookieOptions.maxAge = 24 * 60 * 60 * 1000);
         res.cookie("refreshToken", token.refreshToken, cookieOptions);
-        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken });
+        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken, data: user.role });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
     }

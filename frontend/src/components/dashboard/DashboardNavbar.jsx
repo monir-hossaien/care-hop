@@ -7,22 +7,14 @@ import cookies from "js-cookie";
 
 const DashboardNavbar = ({ toggleSidebar }) => {
     const [avatarOpen, setAvatarOpen] = useState(false);
-    const { isLogin, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile, role, getRole} = userStore();
+    const { isLogin, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile, role} = userStore();
 
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!isLogin()) return;
 
-        const fetchRole = async () => {
-            await getRole(); // updates `role` state internally
-        };
-
-        fetchRole();
-    }, [isLogin]);
 
     useEffect(() => {
-        if (!isLogin() || !role) return;
+        if (!isLogin() || role === null) return;
 
         const fetchProfile = async () => {
             if (role === "doctor") {

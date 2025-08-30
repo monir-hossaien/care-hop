@@ -94,30 +94,30 @@ export const userStore = create((set) => ({
         let result = await axios.post(`${base_url}/register`, data)
         return result.data
     },
+    role: null,
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
             cookies.set("accessToken", res.data.accessToken, {expires : 1});
+            set({role: res?.data?.role});
             return res.data;
         }catch(error) {
             throw error;
         }
     },
-
-    role: null,
-    getRole: async () => {
-        try {
-            let result = await api.get("/auth");
-            if(result.data.status === true) {
-                const userRole = result.data?.role;
-                console.log(userRole)
-                set({role: userRole})
-                return userRole
-            }
-        } catch (error) {
-            unauthorized(error?.response?.status)
-        }
-    },
+    // getRole: async () => {
+    //     try {
+    //         let result = await api.get("/auth");
+    //         if(result.data.status === true) {
+    //             const userRole = result.data?.role;
+    //             console.log(userRole)
+    //             set({role: userRole})
+    //             return userRole
+    //         }
+    //     } catch (error) {
+    //         unauthorized(error?.response?.status)
+    //     }
+    // },
 
     logoutRequest: async () => {
         let result = await api.get(`/logout`);

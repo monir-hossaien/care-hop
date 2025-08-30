@@ -13,22 +13,11 @@ import cookies from "js-cookie";
 
 // PrivateRoute component protects routes based on user authentication and role
 const PrivateRoute = ({ allowedRoles }) => {
-    const { role, getRole } = userStore();
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        (async () => {
-            if (!role) {
-                await getRole();
-            }
-            setLoading(false);
-        })();
-    }, [role]);
-
+    const { role} = userStore();
     const token = cookies.get('accessToken');
 
     if (!token) return <Navigate to="/login" replace />;
-    if (loading) return <div></div>;
+    if (role === null) return;
 
     if (allowedRoles.includes(role)) {
         return <Outlet />;
