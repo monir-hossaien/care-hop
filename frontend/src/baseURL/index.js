@@ -1,2 +1,2 @@
 
-export const base_url = "https://care-hop-service.vercel.app/api/v1";
+export const base_url = "https://care-hop.vercel.app/api/v1";

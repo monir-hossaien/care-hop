@@ -135,7 +135,7 @@ const Login = () => {
 
                     <p className="text-sm text-center text-gray-600">Or, Login with</p>
 
-                    <GoogleOAuthProvider clientId={"843456280837-lfbavoj7n91eu5hbrc47n5qg2mabr0hs.apps.googleusercontent.com"}>
+                    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                         {
                             onloading ? (
                                 <GoogleLoginSkeleton/>
