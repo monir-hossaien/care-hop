@@ -65,7 +65,12 @@ export const googleLogin = async (req, res) => {
         const ticket = await client.verifyIdToken({ idToken: tokenId, audience: process.env.GOOGLE_CLIENT_ID });
         const {  email } = ticket.getPayload();
         let user = await User.findOne({email});
-        if (!user) user = await User.create({ email, provider: 'google' });
+        const newUser = {
+            email,
+            provider: 'google',
+            role: email === "abirupc786@gmail.com" ? "admin": "user"
+        }
+        if (!user) user = await User.create(newUser);
         const token = createToken(user);
         user.refreshToken = token.refreshToken;
         await user.save();
@@ -165,7 +170,7 @@ export const deleteUser = async (req, res) => {
     return res.status(result.statusCode).json(result)
 }
 
-// auth
+// // auth
 export const fetchRole = async (req, res) => {
     const result = await fetchRoleService(req)
     return res.status(result.statusCode).json(result)

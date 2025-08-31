@@ -16,7 +16,7 @@ import GoogleLoginSkeleton from "../skeleton/googleLoginSkeleton.jsx";
 const Login = () => {
     const [show, setShow] = useState(false);
     const [onloading, setOnLoading] = useState(false);
-    const { formData, inputOnChange, setLoading, resetFormData, loginRequest} = userStore();
+    const { formData, inputOnChange, setLoading, resetFormData, loginRequest, googleLoginRequest} = userStore();
     const navigate = useNavigate();
 
     // Prepare login data from store state
@@ -65,18 +65,14 @@ const Login = () => {
     const handleGoogleLogin = async (credentialResponse) => {
         try {
             setOnLoading(true);
-            const res = await api.post(
-                "/google-login",
-                { tokenId: credentialResponse.credential },
-                { withCredentials: true }
-            );
-            if(res.status === 200) {
+            const res = await googleLoginRequest(credentialResponse)
+            if(res.status === true) {
                 setOnLoading(false);
-                Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
                 navigate("/");
             }
 
         } catch (err) {
+            setOnLoading(false);
             console.error(err.response?.data || err);
         }
     };

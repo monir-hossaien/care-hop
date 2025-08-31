@@ -1,21 +1,38 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {userStore} from "../store/userStore.js";
 import {Navigate, Outlet} from 'react-router-dom';
-import cookies from "js-cookie";
+import GoogleLoginSkeleton from "../skeleton/googleLoginSkeleton.jsx";
 
 
 const PrivateRoute = ({ allowedRoles }) => {
-    const { role} = userStore();
-    const token = cookies.get('accessToken');
+    const { role, getRole, isLogin } = userStore();
+    const [loading, setLoading] = useState(true);
 
-    if (!token) return <Navigate to="/login" replace />;
-    if (role === null) return;
+    useEffect(() => {
+        const fetchRole = async () => {
+            if (isLogin() && role === null) {
+                setLoading(true);
+                await getRole();
+            }
+            setLoading(false);
+        };
 
-    if (allowedRoles.includes(role)) {
-        return <Outlet />;
-    } else {
-        return <Navigate to="/" replace />;
+        fetchRole();
+    }, [role, isLogin, getRole]);
+
+    if (!isLogin()) {
+        return <Navigate to="/login" replace />;
     }
+
+    if (loading) {
+        return <GoogleLoginSkeleton />
+    }
+
+    return allowedRoles.includes(role) ? (
+        <Outlet />
+    ) : (
+        <Navigate to="/" replace />
+    );
 };
 
 export default PrivateRoute;

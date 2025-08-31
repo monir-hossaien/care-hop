@@ -372,7 +372,6 @@ export const deleteUserService = async (req)=>{
 export const fetchRoleService = async (req)=>{
     try {
         const role = req.headers.role;
-        console.log(role)
 
         if(!role){
             return{

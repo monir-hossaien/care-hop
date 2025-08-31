@@ -15,7 +15,6 @@ export const authenticateUser = async (req, res, next) => {
             });
         }
         let decodeToken = await verifyAccessToken(token);
-        console.log(decodeToken)
         if (!decodeToken) {
             return res.status(401).send({status: false, message:"Invalid or expired token. Please log in again."});
         }else{

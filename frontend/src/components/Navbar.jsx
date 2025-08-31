@@ -35,10 +35,17 @@ const Navbar = () => {
         fetchProfileDetails,
         fetchDoctorProfile,
         role,
+        getRole,
         logoutRequest,
     } = userStore();
 
-    const loggedIn = isLogin()
+    useEffect(() => {
+        (async ()=>{
+            if(role === null){
+                isLogin() && await getRole()
+            }
+        })()
+    }, [isLogin,role]);
 
 
     useEffect(() => {
@@ -131,7 +138,7 @@ const Navbar = () => {
 
                         {/* Avatar or Login (Desktop) */}
                         <div className="relative">
-                            { loggedIn ? (
+                            { isLogin() ? (
                                 <>
                                     <button
                                         onClick={() => setAvatarOpen(!avatarOpen)}
@@ -222,7 +229,7 @@ const Navbar = () => {
                             ))}
 
 
-                        { loggedIn ? (
+                        { isLogin() ? (
                             <>
                                 <button
                                     onClick={() => {

@@ -1,14 +1,15 @@
 import {create} from "zustand"
 import api from "../axios/api.js"
-import axios from "axios"
 
 import {unauthorized} from "../helpers/helper.js";
 
 import {base_url} from "../baseURL/index.js";
 import cookies from "js-cookie";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 
-export const userStore = create((set) => ({
+export const userStore = create((set, get) => ({
 
 
     loading: false,
@@ -94,30 +95,44 @@ export const userStore = create((set) => ({
         let result = await axios.post(`${base_url}/register`, data)
         return result.data
     },
-    role: null,
+
+
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
-            cookies.set("accessToken", res.data.accessToken, {expires : 1});
-            set({role: res?.data?.role});
+            cookies.set("accessToken", res.data.accessToken, { expires: 1 });
             return res.data;
-        }catch(error) {
+        } catch (error) {
             throw error;
         }
     },
-    // getRole: async () => {
-    //     try {
-    //         let result = await api.get("/auth");
-    //         if(result.data.status === true) {
-    //             const userRole = result.data?.role;
-    //             console.log(userRole)
-    //             set({role: userRole})
-    //             return userRole
-    //         }
-    //     } catch (error) {
-    //         unauthorized(error?.response?.status)
-    //     }
-    // },
+
+    googleLoginRequest: async (credentialResponse) => {
+        try {
+            const res = await api.post(
+                "/google-login",
+                { tokenId: credentialResponse.credential },
+                { withCredentials: true }
+            );
+            Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
+            return res.data;
+
+        } catch (err) {
+            throw err;
+        }
+    },
+    role: null,
+    getRole: async () => {
+        try {
+            let result = await api.get("/auth");
+            if(result.data.status === true) {
+                const userRole = result.data?.role;
+                set({role: userRole})
+            }
+        } catch (error) {
+            unauthorized(error?.response?.status)
+        }
+    },
 
     logoutRequest: async () => {
         let result = await api.get(`/logout`);
@@ -130,7 +145,6 @@ export const userStore = create((set) => ({
             let result = await api.get("/fetch-user-profile");
             if(result?.data?.status === true) {
                 const data = result?.data?.data;
-                console.log(data)
                 set((state) => ({
                     profileDetails: data,
                     formData: {
@@ -151,7 +165,6 @@ export const userStore = create((set) => ({
 
             if (result?.data?.status === true) {
                 const data = result?.data?.data;
-                console.log(data)
                 set({
                     profileDetails: data,
                     formData: data

@@ -12,7 +12,7 @@ import api from "../axios/api.js";
 
 const SignUp = () => {
     const [onloading, setOnLoading] = useState(false);
-    const { formData, inputOnChange, setLoading, resetFormData, signUpRequest } = userStore();
+    const { formData, inputOnChange, setLoading, resetFormData, signUpRequest, googleLoginRequest } = userStore();
     const navigate = useNavigate();
 
     const handleSignUpRequest = async () => {
@@ -58,18 +58,14 @@ const SignUp = () => {
     const handleGoogleLogin = async (credentialResponse) => {
         try {
             setOnLoading(true);
-            const res = await api.post(
-                "/google-login",
-                { tokenId: credentialResponse.credential },
-                { withCredentials: true }
-            );
-            if(res.status === 200) {
+            const res = await googleLoginRequest(credentialResponse)
+            if(res.status === true) {
                 setOnLoading(false);
-                Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
                 navigate("/");
             }
 
         } catch (err) {
+            setOnLoading(false);
             console.error(err.response?.data || err);
         }
     };
