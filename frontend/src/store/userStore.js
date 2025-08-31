@@ -100,7 +100,7 @@ export const userStore = create((set, get) => ({
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
-            cookies.set("accessToken", res.data.accessToken, { expires: 1 });
+            // cookies.set("accessToken", res.data.accessToken, { expires: 1 });
             return res.data;
         } catch (error) {
             throw error;
@@ -114,7 +114,7 @@ export const userStore = create((set, get) => ({
                 { tokenId: credentialResponse.credential },
                 { withCredentials: true }
             );
-            Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
+            // Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
             return res.data;
 
         } catch (err) {

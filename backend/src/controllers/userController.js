@@ -41,14 +41,23 @@ export const login = async (req, res) => {
         let token = createToken(user);
         user.refreshToken = token.refreshToken;
         await user.save();
-        const cookieOptions = {
+        let refreshCookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
-        res.cookie("refreshToken", token.refreshToken, cookieOptions);
+
+        let accessCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // false on localhost
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 24 * 60 * 60 * 1000,
+            path: "/",
+        };
+        res.cookie("refreshToken", token.refreshToken, refreshCookieOptions);
+        res.cookie("accessToken", token.accessToken, accessCookieOptions);
         return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken, data: user.role });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
@@ -74,14 +83,23 @@ export const googleLogin = async (req, res) => {
         const token = createToken(user);
         user.refreshToken = token.refreshToken;
         await user.save();
-        let cookieOptions = {
+        let refreshCookieOptions = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
             path: "/",
         };
-        res.cookie("refreshToken", token.refreshToken, cookieOptions);
+
+        let accessCookieOptions = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production", // false on localhost
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 24 * 60 * 60 * 1000,
+            path: "/",
+        };
+        res.cookie("refreshToken", token.refreshToken, refreshCookieOptions);
+        res.cookie("accessToken", token.accessToken, accessCookieOptions);
         return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken, data: user.role });
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
