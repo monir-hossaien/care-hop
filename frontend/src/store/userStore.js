@@ -1,10 +1,7 @@
 import {create} from "zustand"
 import api from "../axios/api.js"
-
 import {unauthorized} from "../helpers/helper.js";
-
 import {base_url} from "../baseURL/index.js";
-import cookies from "js-cookie";
 import Cookies from "js-cookie";
 import axios from "axios";
 
@@ -87,7 +84,7 @@ export const userStore = create((set, get) => ({
     }),
 
     isLogin: () => {
-        return !!cookies.get("accessToken");
+        return !!Cookies.get("accessToken");
     },
 
 
@@ -136,7 +133,7 @@ export const userStore = create((set, get) => ({
 
     logoutRequest: async () => {
         let result = await api.get(`/logout`);
-        cookies.remove("accessToken");
+        Cookies.remove("accessToken");
         return result.data
     },
     profileDetails: null,
