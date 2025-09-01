@@ -42,7 +42,7 @@ export const login = async (req, res) => {
         user.refreshToken = token.refreshToken;
         await user.save();
         let refreshCookieOptions = {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -50,7 +50,7 @@ export const login = async (req, res) => {
         };
 
         let accessCookieOptions = {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 24 * 60 * 60 * 1000,
@@ -84,7 +84,7 @@ export const googleLogin = async (req, res) => {
         user.refreshToken = token.refreshToken;
         await user.save();
         let refreshCookieOptions = {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -92,7 +92,7 @@ export const googleLogin = async (req, res) => {
         };
 
         let accessCookieOptions = {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 24 * 60 * 60 * 1000,
@@ -143,6 +143,7 @@ export const logout = async(req, res)=>{
             await user.save()
         }
         res.clearCookie("refreshToken");
+        res.clearCookie("accessToken");
         return res.status(200).json({ status: true , message: "Logout success" });
     } catch (error) {
         res.status(500).json({status: false, message: "Something went wrong"})

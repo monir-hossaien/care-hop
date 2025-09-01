@@ -118,7 +118,7 @@ const SignUp = () => {
 
                     <p className="text-sm text-center text-gray-600">Or, Login with</p>
 
-                    <div className="w-full">
+                    <div className="w-full flex justify-center items-center px-5">
                         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                             {
                                 onloading ? (

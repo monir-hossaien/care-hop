@@ -8,40 +8,19 @@ import axios from "axios";
 
 export const userStore = create((set, get) => ({
 
-
     loading: false,
     setLoading: (value) => {
         set({loading: value})
     },
-    formData: {
-        name: '',
-        email: '',
-        phone: '',
-        gender: '',
-        password: '',
-        designation: '',
-        degree: '',
-        registrationNo: '',
-        experience: '',
-        consultationFee: '',
-        subject: '',
-        message: '',
+    formData: { name: '', email: '', phone: '', gender: '', password: '', designation: '', degree: '', registrationNo: '', experience: '', consultationFee: '', subject: '', message: '',
         availableSlot: {
             days: [],
-            timeSlots: [],
+            timeSlots: []
         },
-        division: '',
-        district: '',
-        post: '',
-        area: '',
-        image: '',
-        hospitalID: '',
-        specialityID: '',
-        day: '',
-        timeSlot: '',
-        address: ''
-
+        division: '', district: '', post: '', area: '', image: '', hospitalID: '', specialityID: '', day: '', timeSlot: '', address: ''
     },
+
+
     inputOnChange: (name, value) => {
         set((state) => ({
             formData: {
@@ -51,41 +30,21 @@ export const userStore = create((set, get) => ({
         }))
     },
 
-    resetFormData: () => set({
-        formData: {
-            name: '',
-            email: '',
-            phone: '',
-            gender: '',
-            designation: '',
-            degree: '',
-            registrationNo: '',
-            experience: '',
-            consultationFee: '',
-            subject: '',
-            message: '',
+    resetFormData: () => set({formData: {
+        name: '', email: '', phone: '', gender: '', designation: '', degree: '', registrationNo: '', experience: '', consultationFee: '', subject: '', message: '',
             availableSlot: {
                 days: [],
                 timeSlots: [],
             },
-            division: '',
-            district: '',
-            post: '',
-            area: '',
-            image: '',
-            hospitalID: '',
-            specialityID: '',
-            day: '',
-            timeSlot: '',
-            address: '',
-            password: '',
+            division: '', district: '', post: '', area: '', image: '', hospitalID: '', specialityID: '', day: '', timeSlot: '', address: '', password: '',
 
         },
     }),
 
-    isLogin: () => {
+    isLogin: () =>{
         return !!Cookies.get("accessToken");
     },
+
 
 
     signUpRequest: async (data) => {
@@ -97,7 +56,7 @@ export const userStore = create((set, get) => ({
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
-            // cookies.set("accessToken", res.data.accessToken, { expires: 1 });
+            // Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
             return res.data;
         } catch (error) {
             throw error;
@@ -119,12 +78,12 @@ export const userStore = create((set, get) => ({
         }
     },
     role: null,
+
     getRole: async () => {
         try {
             let result = await api.get("/auth");
-            if(result.data.status === true) {
-                const userRole = result.data?.role;
-                set({role: userRole})
+            if(result?.data?.status === true) {
+                set({ role: result.data?.data?.role});
             }
         } catch (error) {
             unauthorized(error?.response?.status)
@@ -132,8 +91,7 @@ export const userStore = create((set, get) => ({
     },
 
     logoutRequest: async () => {
-        let result = await api.get(`/logout`);
-        Cookies.remove("accessToken");
+        let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
         return result.data
     },
     profileDetails: null,

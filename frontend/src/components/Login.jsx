@@ -7,19 +7,15 @@ import ValidationHelper, { errorToast, successToast } from "../helpers/helper.js
 import UserButton from "./UserButton.jsx";
 import {FaEnvelope, FaLock} from "react-icons/fa";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import Cookies from "js-cookie";
-import api from "../axios/api.js";
 import GoogleLoginSkeleton from "../skeleton/googleLoginSkeleton.jsx";
-
 
 
 const Login = () => {
     const [show, setShow] = useState(false);
     const [onloading, setOnLoading] = useState(false);
-    const { formData, inputOnChange, setLoading, resetFormData, loginRequest, googleLoginRequest} = userStore();
+    const {formData, inputOnChange, setLoading, resetFormData, loginRequest, googleLoginRequest} = userStore();
     const navigate = useNavigate();
 
-    // Prepare login data from store state
     const data = {
         email: formData.email,
         password: formData.password
@@ -28,8 +24,6 @@ const Login = () => {
     // Handle login request
     const handleLoginRequest = async () => {
         try {
-
-            // Validate input fields
             if (ValidationHelper.IsEmpty(formData.email)) {
                 errorToast("Email is required");
             } else if (!ValidationHelper.IsEmail(formData.email)) {
@@ -37,19 +31,15 @@ const Login = () => {
             } else if (ValidationHelper.IsEmpty(formData.password)) {
                 errorToast("Password is required");
             } else {
-                setLoading(true); // Show loading state
-
-                // Call login API
+                setLoading(true);
                 let result = await loginRequest(data);
-
                 if (result.status === true) {
-                    // Success: show toast, reset form, and redirect
                     setLoading(false);
                     successToast(result?.message);
                     resetFormData();
-                    window.location.replace("/")
+                    // window.location.replace("/")
+                    navigate("/");
                 } else {
-                    // Failed login
                     errorToast(result?.message);
                     setLoading(false);
                 }
@@ -131,7 +121,7 @@ const Login = () => {
 
                     <p className="text-sm text-center text-gray-600">Or, Login with</p>
 
-                    <div className="w-full">
+                    <div className="w-full flex justify-center items-center px-5">
                         <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
                             {
                                 onloading ? (

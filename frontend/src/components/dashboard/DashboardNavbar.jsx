@@ -12,11 +12,11 @@ const DashboardNavbar = ({ toggleSidebar }) => {
 
     useEffect(() => {
         (async ()=>{
-            if(role === null){
-                isLogin() && await getRole()
+            if(isLogin() && role === null){
+                await getRole()
             }
         })()
-    }, [isLogin,role]);
+    }, [role, isLogin]);
 
 
     useEffect(() => {

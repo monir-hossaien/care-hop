@@ -5,6 +5,8 @@ import {deleteImage, fileUpload, getPublicID} from "../helper/helper.js";
 import mongoose from "mongoose";
 import DoctorProfile from "../models/doctorProfileModel.js";
 import Profile from "../models/profileModel.js";
+import jwt from "jsonwebtoken";
+import {verifyAccessToken} from "../utility/JWT.js";
 const objID = mongoose.Types.ObjectId;
 
 
@@ -350,7 +352,7 @@ export const deleteUserService = async (req)=>{
         }
         let result = await User.deleteOne({_id})
         if(result){
-            await UserProfile.deleteOne({userID: _id})
+            await Profile.deleteOne({userID: _id})
         }
         return {
             statusCode: 200,
@@ -371,20 +373,22 @@ export const deleteUserService = async (req)=>{
 // auth
 export const fetchRoleService = async (req)=>{
     try {
-        const role = req.headers.role;
-
-        if(!role){
+        // const role = req.headers.role;
+        const token = req.cookies.accessToken;
+        if(!token){
             return{
-                statusCode: 404,
+                statusCode: 401,
                 status: false,
-                message: "Request failed",
+                message: "Unauthorized please login",
             }
         }
+        const decodedToken = await verifyAccessToken(token)
+        const userRole = await User.findOne({_id:decodedToken._id}).select("role");
         return {
             statusCode: 200,
             status: true,
             message: "Request success",
-            role: role
+            data: userRole
         }
     }
     catch (e) {

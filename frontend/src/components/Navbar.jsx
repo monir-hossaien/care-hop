@@ -5,47 +5,36 @@ import {FaBarsStaggered} from "react-icons/fa6";
 import {AiOutlineClose} from "react-icons/ai";
 import {FiLogOut} from "react-icons/fi";
 import {MdDashboard} from "react-icons/md";
-
 import {userStore} from "../store/userStore.js";
 import {errorToast, successToast} from "../helpers/helper.js";
-
-
+import {navItems} from "../const/index.js";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
 
-    const navItems = [
-        {path: "/", label: "Home"},
-        {path: "/registration-form", label: "Doctor Form"},
-        {path: "/about", label: "About Us"},
-        {path: "/specialities", label: "Doctors"},
-        {path: "/blogs", label: "Blogs"},
-        {path: "/search", label: "Search"},
-        {path: "/contact", label: "Contact"},
-    ];
-
     const location = useLocation();
     const navigate = useNavigate();
-
     const [menuOpen, setMenuOpen] = useState(false);
     const [avatarOpen, setAvatarOpen] = useState(false);
 
+
     const {
         isLogin,
+        getRole,
+        role,
         profileDetails,
         fetchProfileDetails,
         fetchDoctorProfile,
-        role,
-        getRole,
         logoutRequest,
     } = userStore();
 
     useEffect(() => {
         (async ()=>{
-            if(role === null){
-                isLogin() && await getRole()
+            if(isLogin() && role === null){
+                await getRole()
             }
         })()
-    }, [isLogin,role]);
+    }, [role, isLogin]);
 
 
     useEffect(() => {
@@ -61,8 +50,6 @@ const Navbar = () => {
 
         fetchProfile();
     }, [role, isLogin]);
-
-
 
 
     const dashboardNavigateHandler = () => {
@@ -90,8 +77,6 @@ const Navbar = () => {
     let profile = role === "doctor" ? profileDetails : profileDetails?.profile || {};
     let email = role === "doctor" ? profile?.user?.email : profileDetails?.email || "";
 
-
-    // console.log(profile);
 
     return (
         <div className="shadow-sm sticky top-0 bg-white z-[100]">
