@@ -84,7 +84,7 @@ export const googleLogin = async (req, res) => {
         user.refreshToken = token.refreshToken;
         await user.save();
         let refreshCookieOptions = {
-            httpOnly: true,
+            httpOnly: false,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -92,7 +92,7 @@ export const googleLogin = async (req, res) => {
         };
 
         let accessCookieOptions = {
-            httpOnly: true,
+            httpOnly: false,
             secure: process.env.NODE_ENV === "production", // false on localhost
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
             maxAge: 24 * 60 * 60 * 1000,
