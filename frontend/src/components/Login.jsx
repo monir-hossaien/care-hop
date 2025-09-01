@@ -131,18 +131,20 @@ const Login = () => {
 
                     <p className="text-sm text-center text-gray-600">Or, Login with</p>
 
-                    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-                        {
-                            onloading ? (
-                                <GoogleLoginSkeleton/>
-                            ):(
-                                <GoogleLogin
-                                    onSuccess={handleGoogleLogin}
-                                    onError={() => console.log("Login Failed")}
-                                />
-                            )
-                        }
-                    </GoogleOAuthProvider>
+                    <div className="w-full">
+                        <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+                            {
+                                onloading ? (
+                                    <GoogleLoginSkeleton/>
+                                ):(
+                                    <GoogleLogin
+                                        onSuccess={handleGoogleLogin}
+                                        onError={() => console.log("Login Failed")}
+                                    />
+                                )
+                            }
+                        </GoogleOAuthProvider>
+                    </div>
 
                     {/* Register link */}
                     <div>
