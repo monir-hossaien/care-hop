@@ -8,7 +8,6 @@ import {MdDashboard} from "react-icons/md";
 import {userStore} from "../store/userStore.js";
 import {errorToast, successToast} from "../helpers/helper.js";
 import {navItems} from "../const/index.js";
-import Cookies from "js-cookie";
 
 const Navbar = () => {
 

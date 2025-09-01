@@ -1,10 +1,7 @@
 import {toast} from "react-toastify";
 import Swal from 'sweetalert2'
-
 import { useLocation} from "react-router-dom";
-
 import { useEffect } from "react";
-
 import Cookies from "js-cookie";
 
 class ValidationHelper {
@@ -72,7 +69,7 @@ export const ScrollToTopOnNavigation = () => {
     return null;
 };
 
-// Handle unauthorized API responses (401) by removing token and redirecting to login
+// Handle unauthorized API responses (401) by removing token and redirecting to
 export const unauthorized = (code) => {
     if (code === 401) {
         Cookies.remove("accessToken");
