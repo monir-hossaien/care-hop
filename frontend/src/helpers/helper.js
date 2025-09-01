@@ -1,17 +1,12 @@
-// Import toast for showing success/error notifications
 import {toast} from "react-toastify";
 import Swal from 'sweetalert2'
 
-// React Router hooks for navigation and route change detection
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation} from "react-router-dom";
 
-// useEffect for side effects like scroll or redirects
 import { useEffect } from "react";
 
-// Cookie management for authentication
-import cookies from "js-cookie";
+import Cookies from "js-cookie";
 
-// Validation helper class with static methods
 class ValidationHelper {
 
     // Check if input contains only letters and common punctuation
@@ -51,12 +46,10 @@ class ValidationHelper {
 
 export default ValidationHelper;
 
-// Show a success toast notification
 export const successToast = (message) => {
     toast.success(message);
 };
 
-// Show an error toast notification
 export const errorToast = (message) => {
     toast.error(message);
 };
@@ -82,7 +75,7 @@ export const ScrollToTopOnNavigation = () => {
 // Handle unauthorized API responses (401) by removing token and redirecting to login
 export const unauthorized = (code) => {
     if (code === 401) {
-        cookies.remove("token");
+        Cookies.remove("accessToken");
         window.location.href = ('/login');
     }
 };
