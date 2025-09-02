@@ -56,7 +56,7 @@ export const userStore = create((set, get) => ({
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
-            // Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
+            Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
             return res.data;
         } catch (error) {
             throw error;
@@ -70,7 +70,7 @@ export const userStore = create((set, get) => ({
                 { tokenId: credentialResponse.credential },
                 { withCredentials: true }
             );
-            // Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
+            Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
             return res.data;
 
         } catch (err) {
@@ -91,7 +91,7 @@ export const userStore = create((set, get) => ({
     },
 
     logoutRequest: async () => {
-        let result = await axios.get(`${base_url}/logout`, {withCredentials: true});
+        let result = await api.get(`/logout`);
         return result.data
     },
     profileDetails: null,

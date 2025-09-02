@@ -27,6 +27,8 @@ const Navbar = () => {
         logoutRequest,
     } = userStore();
 
+    console.log(isLogin())
+
     useEffect(() => {
         (async ()=>{
             if(isLogin() && role === null){
