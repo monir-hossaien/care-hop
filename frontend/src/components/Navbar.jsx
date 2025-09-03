@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import {FaUser} from "react-icons/fa";
 import {FaBarsStaggered} from "react-icons/fa6";
 import {AiOutlineClose} from "react-icons/ai";
