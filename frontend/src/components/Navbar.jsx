@@ -26,7 +26,7 @@ const Navbar = () => {
 
     useEffect(()=>{
         (async()=>{
-            if(isLogin() && role === null)
+            if(isLogin())
             await getRole();
         })()
     },[])
@@ -73,7 +73,7 @@ const Navbar = () => {
 
 
     return (
-        <div className="shadow-sm sticky top-0 bg-white z-[100]">
+        <div className="fixed top-0 inset-x-0 z-[100] h-16 bg-white shadow">
             <nav className="container">
                 <div className="flex justify-between items-center px-4 md:px-0 py-3">
                     {/* Logo */}
