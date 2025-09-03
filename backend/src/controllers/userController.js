@@ -40,7 +40,7 @@ export const login = async (req, res) => {
         user.refreshToken = refreshToken;
         await user.save();
         res.cookie("refreshToken", refreshToken, refreshCookieOptions);
-        res.cookie("accessToken", accessToken, accessCookieOptions);
+        // res.cookie("accessToken", accessToken, accessCookieOptions);
         return res.status(200).json({status: true, message: "Login success", accessToken: accessToken});
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
@@ -68,7 +68,7 @@ export const googleLogin = async (req, res) => {
         user.refreshToken = refreshToken;
         await user.save();
         res.cookie("refreshToken", refreshToken, refreshCookieOptions);
-        res.cookie("accessToken", accessToken, accessCookieOptions);
+        // res.cookie("accessToken", accessToken, accessCookieOptions);
         return res.status(200).json({status: true, message: "Login success", accessToken: accessToken})
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
@@ -89,7 +89,7 @@ export const refreshToken = async (req, res) => {
         user.refreshToken = newRefreshToken;
         await user.save();
         res.cookie("refreshToken", newRefreshToken, refreshCookieOptions);
-        res.cookie("accessToken", newAccessToken, accessCookieOptions);
+        // res.cookie("accessToken", newAccessToken, accessCookieOptions);
 
         return res.status(200).json({status: true, message: "Refresh token successfully", accessToken: newAccessToken});
     }catch(err){
