@@ -78,10 +78,13 @@ export const userStore = create((set, get) => ({
         }
     },
     role: null,
+    // isLogin: false,
+    isFetchingRole: false,
 
     getRole: async () => {
+
         try {
-            let result = await api.get("/auth");
+            let result = await api.get("/fetch-role");
             if(result?.data?.status === true) {
                 set({ role: result.data?.data?.role});
             }

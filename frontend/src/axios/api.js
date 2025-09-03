@@ -38,12 +38,12 @@ api.interceptors.response.use(
                     { withCredentials: true } // sends refreshToken cookie
                 );
 
-                const newAccessToken = res.data.accessToken;
-                Cookies.set("accessToken", newAccessToken); // update token in cookie/local mem
-
-                // Retry original request with new token
-                originalRequest.headers.Authorization = newAccessToken;
-                return api(originalRequest);
+                // const newAccessToken = res.data.accessToken;
+                // Cookies.set("accessToken", newAccessToken); // update token in cookie/local mem
+                //
+                // // Retry original request with new token
+                // originalRequest.headers.Authorization = newAccessToken;
+                // return api(originalRequest);
             } catch (err) {
                 console.log("Refresh failed", err);
                 // logout if refresh also fails

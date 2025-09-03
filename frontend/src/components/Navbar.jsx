@@ -8,34 +8,32 @@ import {MdDashboard} from "react-icons/md";
 import {userStore} from "../store/userStore.js";
 import {errorToast, successToast} from "../helpers/helper.js";
 import {navItems} from "../const/index.js";
+import {useAuthContext} from "../context/authContext.jsx";
 
 const Navbar = () => {
-
+    // const {role, isLogin} = useAuthContext()
     const location = useLocation();
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const [avatarOpen, setAvatarOpen] = useState(false);
-
-
+    // console.log(role, isLogin);
     const {
+        role,
         isLogin,
         getRole,
-        role,
         profileDetails,
         fetchProfileDetails,
         fetchDoctorProfile,
         logoutRequest,
     } = userStore();
 
-    console.log(isLogin())
 
-    useEffect(() => {
-        (async ()=>{
-            if(isLogin() && role === null){
-                await getRole()
-            }
+    useEffect(()=>{
+        (async()=>{
+            if(isLogin() && role === null)
+            await getRole();
         })()
-    }, [role, isLogin]);
+    },[])
 
 
     useEffect(() => {
@@ -98,7 +96,7 @@ const Navbar = () => {
                     </div>
 
                     {/* Desktop Menu */}
-                    <ul className="hidden md:flex items-center gap-6">
+                    <ul className="hidden md:flex items-center gap-6 text-sm uppercase">
                         {navItems
                             .filter((item) => {
                                 // Show "Doctor Form" only if role is "user"
@@ -110,7 +108,7 @@ const Navbar = () => {
                             .map((item) => (
                                 <Link
                                     key={item.path}
-                                    className={`text-sm md:text-[16px] hover:text-[#164193] ${
+                                    className={`hover:text-[#164193] ${
                                         location.pathname === item.path
                                             ? "text-[#164193] font-semibold"
                                             : "text-gray-700"
@@ -139,11 +137,11 @@ const Navbar = () => {
 
                                     {avatarOpen && (
                                         <div
-                                            className="py-4 absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded shadow-md z-50">
+                                            className="capitalize py-4 absolute right-0 mt-2 w-52 bg-white border border-gray-200 rounded shadow-md z-50">
                                             <p className="text-xs font-medium py-1 px-3 text-gray-500">
                                                 {profile?.name || "Guest"}
                                             </p>
-                                            <p className="text-xs py-1 px-3 text-gray-500">
+                                            <p className="text-xs py-1 px-3 text-gray-500 lowercase">
                                                 {email || "example@gmail.com"}
                                             </p>
                                             <hr className="border-gray-300 mt-1"/>
@@ -165,9 +163,9 @@ const Navbar = () => {
                                     )}
                                 </>
                             ) : (
-                                <div className="flex items-center gap-1 text-sm md:text-base text-[#529188]">
+                                <div className="flex items-center gap-1 text-sm md:text-base text-gray-700">
                                     <FaUser/>
-                                    <Link to="/login" className="hover:underline">
+                                    <Link to="/login" className="hover:underline uppercase text-sm">
                                         Login
                                     </Link>
                                 </div>
@@ -190,7 +188,7 @@ const Navbar = () => {
                         />
                     </div>
 
-                    <ul className="flex flex-col space-y-1">
+                    <ul className="flex flex-col space-y-1 text-sm uppercase">
                         {navItems
                             .filter((item) => {
                                 if (item.path === "/registration-form") {
@@ -239,7 +237,7 @@ const Navbar = () => {
                         ) : (
                             <Link
                                 to="/login"
-                                className="flex items-center gap-2 px-4 py-2 text-[#529188] hover:bg-gray-100"
+                                className="text-sm flex items-center  gap-2 px-4 py-2 hover:underline uppercase"
                                 onClick={() => setMenuOpen(false)}
                             >
                                 <FaUser/>

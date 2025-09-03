@@ -373,7 +373,6 @@ export const deleteUserService = async (req)=>{
 // auth
 export const fetchRoleService = async (req)=>{
     try {
-        // const role = req.headers.role;
         const token = req.cookies.accessToken;
         if(!token){
             return{

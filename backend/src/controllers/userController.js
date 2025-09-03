@@ -9,7 +9,8 @@ import {
 } from "../services/userService.js";
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
-import {createToken, verifyRefreshToken} from "../utility/JWT.js";
+import {generateAccessToken, generateRefreshToken, verifyRefreshToken} from "../utility/JWT.js";
+import {accessCookieOptions, refreshCookieOptions} from "../const/index.js";
 
 
 // user register
@@ -34,18 +35,13 @@ export const login = async (req, res) => {
         if(!isMatch){
             return res.status(400).json({status: false, message: "Invalid Credentials"});
         }
-        let token = createToken(user);
-        user.refreshToken = token.refreshToken;
+        let refreshToken = generateRefreshToken(user);
+        let accessToken = generateAccessToken(user);
+        user.refreshToken = refreshToken;
         await user.save();
-        let cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // false on localhost
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/",
-        };
-        res.cookie("refreshToken", token.refreshToken, cookieOptions);
-        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken});
+        res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+        res.cookie("accessToken", accessToken, accessCookieOptions);
+        return res.status(200).json({status: true, message: "Login success", accessToken: accessToken});
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
     }
@@ -67,18 +63,13 @@ export const googleLogin = async (req, res) => {
             role: email === "abirupc786@gmail.com" ? "admin": "user"
         }
         if (!user) user = await User.create(newUser);
-        const token = createToken(user);
-        user.refreshToken = token.refreshToken;
+        let refreshToken = generateRefreshToken(user);
+        let accessToken = generateAccessToken(user);
+        user.refreshToken = refreshToken;
         await user.save();
-        let cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // false on localhost
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/",
-        };
-        res.cookie("refreshToken", token.refreshToken, cookieOptions);
-        return res.status(200).json({status: true, message: "Login success", accessToken: token.accessToken});
+        res.cookie("refreshToken", refreshToken, refreshCookieOptions);
+        res.cookie("accessToken", accessToken, accessCookieOptions);
+        return res.status(200).json({status: true, message: "Login success", accessToken: accessToken})
     } catch (err) {
         return res.status(500).json({ status: false, message: "Something went wrong!", error: err.message });
     }
@@ -88,24 +79,19 @@ export const googleLogin = async (req, res) => {
 export const refreshToken = async (req, res) => {
     try {
         const token = req.cookies.refreshToken;
-
         const decodeToken = await verifyRefreshToken(token);
         let user = await User.findOne({email: decodeToken.email});
         if (!user || user.refreshToken !== token) {
             return res.status(403).json({ status: false, message: 'Invalid token' });
         }
-        const tokens = createToken(user);
-        user.refreshToken = tokens.refreshToken;
+        let newRefreshToken = generateRefreshToken(user);
+        let newAccessToken = generateAccessToken(user);
+        user.refreshToken = newRefreshToken;
         await user.save();
-        const cookieOptions = {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // false on localhost
-            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            path: "/",
-        };
-        res.cookie("refreshToken", tokens.refreshToken, cookieOptions);
-        return res.status(200).json({status: true, message: "Refresh token successfully", accessToken: tokens.accessToken });
+        res.cookie("refreshToken", newRefreshToken, refreshCookieOptions);
+        res.cookie("accessToken", newAccessToken, accessCookieOptions);
+
+        return res.status(200).json({status: true, message: "Refresh token successfully", accessToken: newAccessToken});
     }catch(err){
         res.status(500).json({status: false, message: 'Something went wrong!', error: err.message });
     }

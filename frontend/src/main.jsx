@@ -6,9 +6,10 @@ import App from './App.jsx'
 import "../src/assets/css/style.css"
 import 'react-loading-skeleton/dist/skeleton.css'
 import 'react-toastify/dist/ReactToastify.css'
+import {AuthProvider} from "./context/authContext.jsx";
 
 createRoot(document.getElementById('root')).render(
-    <>
+    <AuthProvider>
         <App/>
         <ToastContainer
             position="top-right"
@@ -19,5 +20,5 @@ createRoot(document.getElementById('root')).render(
                 fontSize: '14px',
             }}
         />
-    </>
+    </AuthProvider>
 )

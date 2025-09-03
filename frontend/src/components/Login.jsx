@@ -8,6 +8,7 @@ import UserButton from "./UserButton.jsx";
 import {FaEnvelope, FaLock} from "react-icons/fa";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
 import GoogleLoginSkeleton from "../skeleton/googleLoginSkeleton.jsx";
+import {useAuthContext} from "../context/authContext.jsx";
 
 
 const Login = () => {
@@ -15,6 +16,9 @@ const Login = () => {
     const [onloading, setOnLoading] = useState(false);
     const {formData, inputOnChange, setLoading, resetFormData, loginRequest, googleLoginRequest} = userStore();
     const navigate = useNavigate();
+    // const {getRole} = useAuthContext()
+
+
 
     const data = {
         email: formData.email,
@@ -34,11 +38,11 @@ const Login = () => {
                 setLoading(true);
                 let result = await loginRequest(data);
                 if (result.status === true) {
+                    navigate("/");
                     setLoading(false);
                     successToast(result?.message);
                     resetFormData();
                     // window.location.replace("/")
-                    navigate("/");
                 } else {
                     errorToast(result?.message);
                     setLoading(false);

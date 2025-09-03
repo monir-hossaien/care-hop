@@ -8,28 +8,32 @@ import {
 
 
 
-export const createToken = (user) => {
+export const generateAccessToken = (user) => {
     const payload = { email: user.email, _id: user._id, role: user.role };
-
-    const accessToken = jwt.sign(
+    return jwt.sign(
         payload,
         process.env.SECRET_KEY_ACCESS_TOKEN,       // must be string
         { expiresIn: process.env.JWT_EXPIRATION_TIME_ACCESS_TOKEN || "15m" } // fallback
     );
+}
 
-    const refreshToken = jwt.sign(
+
+export const generateRefreshToken = (user) => {
+    const payload = { email: user.email, _id: user._id, role: user.role };
+    return jwt.sign(
         payload,
         process.env.SECRET_KEY_REFRESH_TOKEN,      // must be string
         { expiresIn: process.env.JWT_EXPIRATION_TIME_REFRESH_TOKEN || "7d" } // fallback
     );
+}
 
-    return { accessToken, refreshToken };
-};
+
 
 
 export const verifyAccessToken = async (token)=>{
     try {
-        return await jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN);
+        const decodeToken = await jwt.verify(token, process.env.SECRET_KEY_ACCESS_TOKEN);
+        return decodeToken;
     }catch (err) {
         throw err;
     }
@@ -37,7 +41,8 @@ export const verifyAccessToken = async (token)=>{
 
 export const verifyRefreshToken = async (token) => {
     try {
-        return await jwt.verify(token, process.env.SECRET_KEY_REFRESH_TOKEN);
+        const decodeToken = await jwt.verify(token, process.env.SECRET_KEY_REFRESH_TOKEN);
+        return decodeToken;
     } catch (err) {
         throw err;
     }

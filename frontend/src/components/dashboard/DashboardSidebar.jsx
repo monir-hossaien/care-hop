@@ -33,7 +33,7 @@ const DashboardSidebar = ({ navItems }) => {
                             to={path}
                             end // this ensures exact path matching
                             className={({ isActive }) =>
-                                `text-gray-700 block px-3 py-2 rounded hover:bg-gray-200 font-medium text-sm md:text-[15px] ${
+                                `text-gray-700 block px-3 py-2 rounded hover:bg-gray-200 font-medium text-sm ${
                                     isActive ? "bg-gray-200 text-gray-800" : ""
                                 }`
                             }
@@ -48,7 +48,7 @@ const DashboardSidebar = ({ navItems }) => {
                 })
             }
             <div>
-                <button onClick={logoutHandler} className="text-red-600 flex items-center gap-1 px-3 cursor-pointer w-full text-start py-2 rounded hover:bg-gray-200 font-medium"><FiLogOut/>Logout</button>
+                <button onClick={logoutHandler} className="text-red-600 flex items-center gap-1 px-3 cursor-pointer w-full text-start py-2 rounded hover:bg-gray-200 font-medium text-sm"><FiLogOut/>Logout</button>
             </div>
         </div>
     );
