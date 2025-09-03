@@ -8,15 +8,11 @@ import {MdDashboard} from "react-icons/md";
 import {userStore} from "../store/userStore.js";
 import {errorToast, successToast} from "../helpers/helper.js";
 import {navItems} from "../const/index.js";
-import {useAuthContext} from "../context/authContext.jsx";
 
 const Navbar = () => {
-    // const {role, isLogin} = useAuthContext()
     const location = useLocation();
-    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const [avatarOpen, setAvatarOpen] = useState(false);
-    // console.log(role, isLogin);
     const {
         role,
         isLogin,
@@ -65,8 +61,7 @@ const Navbar = () => {
             const res = await logoutRequest();
             if (res.status === true) {
                 successToast(res?.message);
-                navigate("/");
-                window.location.reload();
+                window.location.replace("/")
             }
         }catch (error){
             errorToast(error?.response?.data?.message || "Something went wrong");

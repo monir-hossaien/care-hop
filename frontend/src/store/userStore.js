@@ -78,8 +78,6 @@ export const userStore = create((set, get) => ({
         }
     },
     role: null,
-    // isLogin: false,
-    isFetchingRole: false,
 
     getRole: async () => {
 
@@ -94,7 +92,9 @@ export const userStore = create((set, get) => ({
     },
 
     logoutRequest: async () => {
-        let result = await api.get(`/logout`);
+        let result = await axios.get(`${base_url}/logout`,{
+            withCredentials: true
+        });
         return result.data
     },
     profileDetails: null,
