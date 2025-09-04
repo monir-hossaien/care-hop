@@ -47,6 +47,7 @@ api.interceptors.response.use(
             } catch (err) {
                 console.log("Refresh failed", err);
                 // logout if refresh also fails
+                localStorage.removeItem("accessToken");
                 Cookies.remove("accessToken");
                 window.location.href = "/login";
             }

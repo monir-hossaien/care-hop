@@ -8,15 +8,16 @@ import {MdDashboard} from "react-icons/md";
 import {userStore} from "../store/userStore.js";
 import {errorToast, successToast} from "../helpers/helper.js";
 import {navItems} from "../const/index.js";
+import {useAuthContext} from "../context/AuthProvider.jsx";
 
 const Navbar = () => {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [avatarOpen, setAvatarOpen] = useState(false);
+    const {role, isLogin} =useAuthContext()
+
     const {
-        role,
-        isLogin,
-        getRole,
+        loading,
         profileDetails,
         fetchProfileDetails,
         fetchDoctorProfile,
@@ -24,16 +25,8 @@ const Navbar = () => {
     } = userStore();
 
 
-    useEffect(()=>{
-        (async()=>{
-            if(isLogin())
-            await getRole();
-        })()
-    },[])
-
-
     useEffect(() => {
-        if (!isLogin() || role === null) return;
+        if (!isLogin || role === null) return;
 
         const fetchProfile = async () => {
             if (role === "doctor") {
@@ -117,7 +110,20 @@ const Navbar = () => {
 
                         {/* Avatar or Login (Desktop) */}
                         <div className="relative">
-                            { isLogin() ? (
+                            {
+                                loading ? (
+                                        <button
+                                            onClick={() => setAvatarOpen(!avatarOpen)}
+                                            className="flex justify-center items-center w-8 h-8 rounded-full border border-[#529188] p-1 cursor-pointer hover:shadow focus:outline-none"
+                                        >
+                                            <img
+                                                src={"/images/default-avatar.png"}
+                                                alt="User Avatar"
+                                                className="w-6 h-6 object-cover rounded-full"
+                                            />
+                                        </button>
+                                    ):
+                                isLogin ? (
                                 <>
                                     <button
                                         onClick={() => setAvatarOpen(!avatarOpen)}
@@ -208,7 +214,7 @@ const Navbar = () => {
                             ))}
 
 
-                        { isLogin() ? (
+                        { isLogin ? (
                             <>
                                 <button
                                     onClick={() => {

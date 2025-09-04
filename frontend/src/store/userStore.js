@@ -2,7 +2,6 @@ import {create} from "zustand"
 import api from "../axios/api.js"
 import {unauthorized} from "../helpers/helper.js";
 import {base_url} from "../baseURL/index.js";
-import Cookies from "js-cookie";
 import axios from "axios";
 
 
@@ -41,23 +40,18 @@ export const userStore = create((set, get) => ({
         },
     }),
 
-    isLogin: () =>{
-        return !!Cookies.get("accessToken");
-    },
-
-
-
     signUpRequest: async (data) => {
         let result = await axios.post(`${base_url}/register`, data)
         return result.data
     },
 
-
     loginRequest: async (data) => {
         try {
             const res = await api.post("/login", data);
-            Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
-            return res.data;
+            if(res.data.status === true){
+                localStorage.setItem("isLogin", "true");
+                return res.data;
+            }
         } catch (error) {
             throw error;
         }
@@ -70,7 +64,7 @@ export const userStore = create((set, get) => ({
                 { tokenId: credentialResponse.credential },
                 { withCredentials: true }
             );
-            Cookies.set("accessToken", res.data.accessToken, { expires: 1 / 24 });
+            localStorage.setItem("isLogin", "true");
             return res.data;
 
         } catch (err) {
@@ -78,24 +72,28 @@ export const userStore = create((set, get) => ({
         }
     },
     role: null,
-
     getRole: async () => {
 
         try {
+            set({loading: true});
             let result = await api.get("/fetch-role");
-            if(result?.data?.status === true) {
-                set({ role: result.data?.data?.role});
+            if (result?.data?.status) {
+                set({ role: result.data.data.role, loading: false });
+            } else {
+                set({ role: null, loading: false });
             }
         } catch (error) {
             unauthorized(error?.response?.status)
+            set({ role: null, loading: false });
         }
     },
 
     logoutRequest: async () => {
-        let result = await axios.get(`${base_url}/logout`,{
-            withCredentials: true
-        });
-        return result.data
+        let result = await api.get("/logout");
+        if(result.data?.status) {
+            localStorage.removeItem("isLogin");
+            return result.data
+        }
     },
     profileDetails: null,
     fetchProfileDetails: async () => {

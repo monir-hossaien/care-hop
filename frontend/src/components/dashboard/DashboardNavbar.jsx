@@ -3,24 +3,17 @@ import React, {useEffect, useState} from "react";
 import {userStore} from "../../store/userStore.js";
 import {errorToast, successToast} from "../../helpers/helper.js";
 import {FiLogOut} from "react-icons/fi";
-import cookies from "js-cookie";
+import {useAuthContext} from "../../context/AuthProvider.jsx";
 
 const DashboardNavbar = ({ toggleSidebar }) => {
     const [avatarOpen, setAvatarOpen] = useState(false);
-    const { isLogin, getRole, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile, role} = userStore();
+    const {loading, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile,} = userStore();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        (async ()=>{
-            if(isLogin() && role === null){
-                await getRole()
-            }
-        })()
-    }, [role, isLogin]);
+    const {role, isLogin} =useAuthContext()
 
 
     useEffect(() => {
-        if (!isLogin() || role === null) return;
+        if (!isLogin || role === null) return;
 
         const fetchProfile = async () => {
             if (role === "doctor") {
@@ -72,7 +65,20 @@ const DashboardNavbar = ({ toggleSidebar }) => {
             .
             {/* Avatar or Login (Desktop) */}
             <div className="relative hidden md:block">
-                {isLogin() && (
+                {
+                    loading ? (
+                        <button
+                            onClick={() => setAvatarOpen(!avatarOpen)}
+                            className="flex justify-center items-center w-8 h-8 rounded-full border border-[#529188] p-1 cursor-pointer hover:shadow focus:outline-none"
+                        >
+                            <img
+                                src={"/images/default-avatar.png"}
+                                alt="User Avatar"
+                                className="w-6 h-6 object-cover rounded-full"
+                            />
+                        </button>
+                        ):
+                    isLogin && (
                     <>
                         <button
                             onClick={() => setAvatarOpen(!avatarOpen)}

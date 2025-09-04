@@ -1,26 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {userStore} from "../store/userStore.js";
 import {Navigate, Outlet} from 'react-router-dom';
 import GoogleLoginSkeleton from "../skeleton/googleLoginSkeleton.jsx";
+import {useAuthContext} from "../context/AuthProvider.jsx";
 
 
 const PrivateRoute = ({ allowedRoles }) => {
-    const { role, getRole, isLogin } = userStore();
-    const [loading, setLoading] = useState(true);
+    const {loading } = userStore();
+    const {role, isLogin} = useAuthContext()
 
-    useEffect(() => {
-        const fetchRole = async () => {
-            if (isLogin() && role === null) {
-                setLoading(true);
-                await getRole();
-            }
-            setLoading(false);
-        };
-
-        fetchRole();
-    }, [role, isLogin, getRole]);
-
-    if (!isLogin()) {
+    if (!isLogin) {
         return <Navigate to="/login" replace />;
     }
 
@@ -28,11 +17,7 @@ const PrivateRoute = ({ allowedRoles }) => {
         return <GoogleLoginSkeleton />
     }
 
-    return allowedRoles.includes(role) ? (
-        <Outlet />
-    ) : (
-        <Navigate to="/" replace />
-    );
+    return allowedRoles.includes(role) && <Outlet />
 };
 
 export default PrivateRoute;
