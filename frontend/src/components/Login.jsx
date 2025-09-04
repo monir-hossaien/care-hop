@@ -46,7 +46,6 @@ const Login = () => {
                 }
             }
         } catch (error) {
-            // Handle error
             errorToast(error?.response?.data?.message);
             setLoading(false);
         }
