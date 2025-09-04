@@ -1,54 +1,45 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-import {base_url} from "../baseURL/index.js";
-
+import { base_url } from "../baseURL/index.js";
 
 const api = axios.create({
-    baseURL: base_url, // your backend
-    withCredentials: true, // IMPORTANT to send cookies
+    baseURL: base_url,
+    withCredentials: true, // send/receive cookies automatically
 });
 
-// Request interceptor → attach access token
+// Request interceptor → no need to attach access token manually
+// because the browser sends cookies automatically
 api.interceptors.request.use(
     (config) => {
-        const token = Cookies.get("accessToken"); // short-lived token
-        if (token) {
-            config.headers.Authorization = token;
-        }
+        console.log(config)
         return config;
     },
     (error) => Promise.reject(error)
 );
 
-// Response interceptor → refresh token if expired
+// Response interceptor → handle refresh token flow
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const originalRequest = error.config;
 
-        // If unauthorized (401) and not retried yet
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
             try {
-                // Call refresh endpoint
-                const res = await axios.post(
+                // call refresh endpoint (backend will read refreshToken cookie)
+                await axios.post(
                     `${base_url}/refresh-token`,
                     {},
-                    { withCredentials: true } // sends refreshToken cookie
+                    { withCredentials: true }
                 );
 
-                // const newAccessToken = res.data.accessToken;
-                // Cookies.set("accessToken", newAccessToken); // update token in cookie/local mem
-                //
-                // // Retry original request with new token
-                // originalRequest.headers.Authorization = newAccessToken;
-                // return api(originalRequest);
+                // retry original request after refresh
+                return api(originalRequest);
             } catch (err) {
-                console.log("Refresh failed", err);
-                // logout if refresh also fails
-                localStorage.removeItem("accessToken");
-                Cookies.remove("accessToken");
+                console.error("Refresh failed", err);
+
+                // clear frontend state (if you’re using Zustand or context)
+                localStorage.removeItem("isLogin");
                 window.location.href = "/login";
             }
         }

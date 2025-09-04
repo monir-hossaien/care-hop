@@ -3,17 +3,20 @@ import React, {useEffect, useState} from "react";
 import {userStore} from "../../store/userStore.js";
 import {errorToast, successToast} from "../../helpers/helper.js";
 import {FiLogOut} from "react-icons/fi";
-import {useAuthContext} from "../../context/AuthProvider.jsx";
 
 const DashboardNavbar = ({ toggleSidebar }) => {
     const [avatarOpen, setAvatarOpen] = useState(false);
-    const {loading, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile,} = userStore();
+    const {isLogin, role, getRole, loading, logoutRequest, profileDetails,fetchProfileDetails, fetchDoctorProfile,} = userStore();
     const navigate = useNavigate();
-    const {role, isLogin} =useAuthContext()
 
+    useEffect(()=>{
+        (async ()=>{
+            isLogin() && await getRole()
+        })()
+    },[])
 
     useEffect(() => {
-        if (!isLogin || role === null) return;
+        if (!isLogin || !role) return;
 
         const fetchProfile = async () => {
             if (role === "doctor") {

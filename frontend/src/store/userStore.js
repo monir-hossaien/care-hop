@@ -40,6 +40,10 @@ export const userStore = create((set, get) => ({
         },
     }),
 
+    isLogin: ()=>{
+        return !!localStorage.getItem("isLogin");
+    },
+
     signUpRequest: async (data) => {
         let result = await axios.post(`${base_url}/register`, data)
         return result.data
@@ -73,7 +77,6 @@ export const userStore = create((set, get) => ({
     },
     role: null,
     getRole: async () => {
-
         try {
             set({loading: true});
             let result = await api.get("/fetch-role");
@@ -83,7 +86,7 @@ export const userStore = create((set, get) => ({
                 set({ role: null, loading: false });
             }
         } catch (error) {
-            unauthorized(error?.response?.status)
+            // unauthorized(error?.response?.status)
             set({ role: null, loading: false });
         }
     },

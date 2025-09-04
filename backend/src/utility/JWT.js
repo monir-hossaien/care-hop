@@ -12,8 +12,8 @@ export const generateAccessToken = (user) => {
     const payload = { email: user.email, _id: user._id, role: user.role };
     return jwt.sign(
         payload,
-        process.env.SECRET_KEY_ACCESS_TOKEN,       // must be string
-        { expiresIn: process.env.JWT_EXPIRATION_TIME_ACCESS_TOKEN || "15m" } // fallback
+        process.env.SECRET_KEY_ACCESS_TOKEN,
+        { expiresIn: process.env.JWT_EXPIRATION_TIME_ACCESS_TOKEN } // fallback
     );
 }
 
@@ -22,7 +22,7 @@ export const generateRefreshToken = (user) => {
     const payload = { email: user.email, _id: user._id, role: user.role };
     return jwt.sign(
         payload,
-        process.env.SECRET_KEY_REFRESH_TOKEN,      // must be string
+        process.env.SECRET_KEY_REFRESH_TOKEN,
         { expiresIn: process.env.JWT_EXPIRATION_TIME_REFRESH_TOKEN || "7d" } // fallback
     );
 }
