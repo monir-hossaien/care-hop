@@ -59,7 +59,7 @@ const Login = () => {
             const res = await googleLoginRequest(credentialResponse)
             if(res.status === true) {
                 setOnLoading(false);
-                navigate("/");
+                window.location.replace("/")
             }
 
         } catch (err) {
